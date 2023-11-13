@@ -18,7 +18,7 @@ app.set('views', path.join(__dirname, "resource/views"));
 
 //Setup CSS
 app.use(express.static(path.join(__dirname, '../publicCus')));
-app.use(express.static(path.join(__dirname, '../publicAdmin')));
+app.use(express.static(path.join(__dirname, '../assets/publicAdmin')));
 
 app.use(express.urlencoded({
   extended: true
