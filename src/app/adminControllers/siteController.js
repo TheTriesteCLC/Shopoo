@@ -51,7 +51,7 @@ class siteController {
 
   //[GET] /sign-up
   signUp(req, res) {
-    res.render('admin/sign-Up', { layout: 'admin/customSignin' });
+    res.render('admin/sign-up', { layout: 'admin/customSignin' });
   }
 }
 
