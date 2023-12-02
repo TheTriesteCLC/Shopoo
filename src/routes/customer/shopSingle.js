@@ -5,7 +5,27 @@ const shopSingleController = require('../../app/customerControllers/shopSingleCo
 
 router.use('/item', shopSingleController.item);
 // router.use('/:id', shopSingleController.item);
-router.use('/:slug', shopSingleController.index);
+
+
+router.use('/outer', shopSingleController.outer);
+router.use('/top', shopSingleController.top);
+router.use('/bottom', shopSingleController.bottom);
+router.use('/accessories', shopSingleController.accessories);
+router.use('/shoes', shopSingleController.shoes);
+
+router.use('/price-asc', shopSingleController.priceAsc);
+router.use('/price-dec', shopSingleController.priceDec);
+router.use('/price-50', shopSingleController.price50);
+router.use('/price-100', shopSingleController.price100);
+router.use('/price-300', shopSingleController.price300);
+
+router.use('/england', shopSingleController.england);
+router.use('/japan', shopSingleController.japan);
+router.use('/korea', shopSingleController.korea);
+router.use('/viet-nam', shopSingleController.vietnam);
+router.use('/us', shopSingleController.us);
+
+router.use('/all', shopSingleController.index);
 router.use('/', shopSingleController.index);
 
 module.exports = router;

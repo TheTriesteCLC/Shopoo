@@ -8,7 +8,7 @@ const routeAdmin = require('./routes/admin');
 const db = require('./config/db');
 
 //Connect to DB
-const databaseUrl = 'mongodb+srv://vmtriet21:vmtriet21@ptudweb-ga02.dbulhp7.mongodb.net/';
+const databaseUrl = 'mongodb+srv://vmtriet21:vmtriet21@ptudweb-ga02.dbulhp7.mongodb.net/PTUDWEB-GA03';
 db.connect(databaseUrl);
 
 const app = express();

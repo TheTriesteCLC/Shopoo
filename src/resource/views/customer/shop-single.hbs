@@ -14,21 +14,23 @@
 
       <div class="row align-items-center mb-5">
         <div class="col-lg-8">
-          <h2 class="mb-3 mb-lg-0">Products</h2>
+          <h2 class="mb-3 mb-lg-0">{{title}}</h2>
         </div>
         <div class="col-lg-4">
 
-          <div class="d-flex sort align-items-center justify-content-lg-end">
-            <strong class="mr-3">Sort by:</strong>
-            <form action="#">
-              <select class="" required>
-                <option value="">Newest Items</option>
-                <option value="1">Best Selling</option>
-                <option value="2">Price: Ascending</option>
-                <option value="2">Price: Descending</option>
-                <option value="3">Rating(High to Low)</option>
-              </select>
-            </form>
+          <div class="d-flex pt-4 align-items-center justify-content-lg-end">
+            <div class="dropdown bg-transparent">
+                <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Price
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="/customer/shop-single/price-asc">Ascending</a>
+                  <a class="dropdown-item" href="/customer/shop-single/price-dec">Decending</a>
+                  <a class="dropdown-item" href="/customer/shop-single/price-50">Under $50</a>
+                  <a class="dropdown-item" href="/customer/shop-single/price-100">Under $100</a>
+                  <a class="dropdown-item" href="/customer/shop-single/price-300">Under $300</a>
+                </div>
+              </div>
           </div>
         </div>
       </div>
@@ -37,110 +39,52 @@
 
         <div class="col-md-3">
           <ul class="list-unstyled categories">
-            <li><a href="#">New <span>2,919</span></a></li>
-            <li><a href="#">Men <span>5,381</span></a></li>
-            <li><a href="#">Women <span>7,119</span></a></li>
-            <li><a href="#">Jewelries <span>1,012</span></a></li>
-            <li><a href="#">Accessories <span>919</span></a></li>
-            <li><a href="#">Shoes <span>4,344</span></a></li>
-            <li><a href="#">Clothing <span>7,919</span></a></li>
+            <li><a href="/customer/shop-single/all">All <span></span></a></li>
+            <li><a href="/customer/shop-single/outer">Outerwear <span></span></a></li>
+            <li><a href="/customer/shop-single/top">Top <span></span></a></li>
+            <li><a href="/customer/shop-single/bottom">Bottom <span></span></a></li>
+            <li><a href="/customer/shop-single/accessories">Accessories <span></span></a></li>
+            <li><a href="/customer/shop-single/shoes">Shoes <span></span></a></li>
+            <li>
+              <div class="dropdown bg-transparent">
+                <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  From
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="/customer/shop-single/england">England</a>
+                  <a class="dropdown-item" href="/customer/shop-single/japan">Japan</a>
+                  <a class="dropdown-item" href="/customer/shop-single/viet-nam">Viet Nam</a>
+                  <a class="dropdown-item" href="/customer/shop-single/korea">Korea</a>
+                  <a class="dropdown-item" href="/customer/shop-single/us">US</a>
+                </div>
+              </div>
+            </li>
           </ul>
         </div>
         <div class="col-md-9">
           <div class="row">
-            <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
-              <div class="product-item">
-                <a href="/customer/shop-single/item" class="product-img">
+            {{#each products}}
+              <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
+                <div class="product-item">
+                  <a href="/customer/shop-single/{{this.slug}}" class="product-img">
 
-                  <div class="label new top-right">
-                    <div class='content'>New</div>
+                    <div class="label new top-right">
+                      <div class='content'>New</div>
+                    </div>
+
+
+                    <img src="/images/products/{{this.image}}" alt="Image" class="img-fluid">
+                  </a>
+                  <h3 class="title"><a href="/customer/shop-single/{{this.slug}}">{{this.name}}</a></h3>
+                  <div class="price">
+                    <span>$ {{this.price}}</span>
                   </div>
-
-
-                  <img src="/images/products/dark-jacket.jpg" alt="Image" class="img-fluid">
-                </a>
-                <h3 class="title"><a href="#">Dark Jacket</a></h3>
-                <div class="price">
-                  <span>£69.00</span>
                 </div>
               </div>
-            </div>
-
-            <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
-              <div class="product-item">
-                <a href="/customer/shop-single/item" class="product-img">
-                  <div class="label new top-right">
-                    <div class='content'>New</div>
-                  </div>
-
-                  <div class="label sale top-right second">
-                    <div class='content'>Sale</div>
-                  </div>
-                  <img src="/images/products/chino-bottoms.jpg" alt="Image" class="img-fluid">
-                </a>
-                <h3 class="title"><a href="#">Chino Bottoms</a></h3>
-                <div class="price">
-                  <del>£99.00</del> &mdash; <span>£69.00</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
-              <div class="product-item">
-                <a href="/customer/shop-single/item" class="product-img">
-                  <img src="/images/products/brown-shoes.jpg" alt="Image" class="img-fluid">
-                </a>
-                <h3 class="title"><a href="#">Brown Shoe</a></h3>
-                <div class="price">
-                  <span>£29.00</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
-              <div class="product-item">
-                <a href="/customer/shop-single/item" class="product-img">
-                  <img src="/images/products/the-mordern-sock.jpg" alt="Image" class="img-fluid">
-                </a>
-                <h3 class="title"><a href="#">The Modern Sock</a></h3>
-                <div class="price">
-                  <span>£29.00</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
-              <div class="product-item">
-                <a href="/customer/shop-single/item" class="product-img">
-                  <div class="label sale top-right">
-                    <div class='content'>Sale</div>
-                  </div>
-                  <img src="/images/products/double-knit-sweater.jpg" alt="Image" class="img-fluid">
-                </a>
-                <h3 class="title"><a href="#">Double Knit Sweater</a></h3>
-                <div class="price">
-                  <del>£99.00</del> &mdash; <span>£69.00</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
-              <div class="product-item">
-                <a href="/customer/shop-single/item" class="product-img">
-                  <div class="label sale top-right">
-                    <div class='content'>Sale</div>
-                  </div>
-                  <img src="/images/products/the-murray.jpg" alt="Image" class="img-fluid">
-                </a>
-                <h3 class="title"><a href="#">The Murray</a></h3>
-                <div class="price">
-                  <del>£99.00</del> &mdash; <span>£69.00</span>
-                </div>
-              </div>
-            </div>
+            {{/each}}
           </div>
 
-          <div class="row mt-5 pb-5">
+          {{!-- <div class="row mt-5 pb-5">
             <div class="col-lg-12">
               <div class="custom-pagination">
                 <ul class="list-unstyled">
@@ -168,7 +112,7 @@
                 </ul>
               </div>
             </div>
-          </div>
+          </div> --}}
 
 
         </div>
