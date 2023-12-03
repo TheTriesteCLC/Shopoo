@@ -296,7 +296,8 @@ class shopSingleController {
         datesChoice = dates;
       })
       .catch(error => next(error));
-
+    
+    
     Product.find({ from: req.query.country })
       .then(products => {
         res.render('customer/shop-single',
@@ -333,9 +334,18 @@ class shopSingleController {
 
 
 
-  //[GET] /shop-single/:id
-  item(req, res) {
-    res.render('customer/item', { layout: 'customer/main' });
+  //[GET] /shop-single/:slug
+  item(req, res, next) {
+    
+    // res.render('customer/item', { layout: 'customer/main' });
+    console.log(req.params);
+    Product.findOne({slug: req.params.slug})
+      .then(product => {
+        res.render('customer/item',
+          { layout: 'customer/main', title: 'Item', product: singleMongooseToObject(product)});
+        // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
+      })
+      .catch(error => next(error));
   }
 
 }
