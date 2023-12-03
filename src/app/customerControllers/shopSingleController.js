@@ -4,20 +4,10 @@ const Product = require('../models/Product');
 class shopSingleController {
 
   //[GET] /shop-single/all
-  index(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async index(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({})
       .then(products => {
@@ -33,20 +23,10 @@ class shopSingleController {
 
 
   //[GET] /shop-single/outer
-  outer(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async outer(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({ outer: true })
       .then(products => {
@@ -57,20 +37,11 @@ class shopSingleController {
       .catch(error => next(error));
   }
   //[GET] /shop-single/top
-  top(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async top(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
+
 
     Product.find({ top: true })
       .then(products => {
@@ -81,20 +52,10 @@ class shopSingleController {
       .catch(error => next(error));
   }
   //[GET] /shop-single/bottom
-  bottom(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async bottom(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({ bottom: true })
       .then(products => {
@@ -105,20 +66,10 @@ class shopSingleController {
       .catch(error => next(error));
   }
   //[GET] /shop-single/accessories
-  accessories(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async accessories(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({ accessories: true })
       .then(products => {
@@ -129,20 +80,10 @@ class shopSingleController {
       .catch(error => next(error));
   }
   //[GET] /shop-single/shoes
-  shoes(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async shoes(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({ shoes: true })
       .then(products => {
@@ -158,20 +99,10 @@ class shopSingleController {
 
 
   //[GET] /shop-single/price-asc
-  priceAsc(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async priceAsc(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({}).sort({ price: 1 })
       .then(products => {
@@ -182,20 +113,10 @@ class shopSingleController {
       .catch(error => next(error));
   }
   //[GET] /shop-single/price-dec
-  priceDec(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async priceDec(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({}).sort({ price: -1 })
       .then(products => {
@@ -206,20 +127,10 @@ class shopSingleController {
       .catch(error => next(error));
   }
   //[GET] /shop-single/price-50
-  price50(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async price50(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({ price: { $lt: 50 } }).sort({ price: 1 })
       .then(products => {
@@ -230,20 +141,10 @@ class shopSingleController {
       .catch(error => next(error));
   }
   //[GET] /shop-single/price-100
-  price100(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async price100(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({ price: { $lt: 100 } }).sort({ price: 1 })
       .then(products => {
@@ -254,20 +155,10 @@ class shopSingleController {
       .catch(error => next(error));
   }
   //[GET] /shop-single/price-300
-  price300(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async price300(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({ price: { $lt: 300 } }).sort({ price: 1 })
       .then(products => {
@@ -282,22 +173,11 @@ class shopSingleController {
 
 
   //[GET] /shop-single/from
-  from(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async from(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
-    
-    
+    const datesChoice = await Product.distinct('date').lean();
+
     Product.find({ from: req.query.country })
       .then(products => {
         res.render('customer/shop-single',
@@ -308,20 +188,10 @@ class shopSingleController {
   }
 
   //[GET] /shop-single/collection
-  collection(req, res, next) {
-    let constriesChoice;
-    Product.distinct('from').lean()
-      .then(countries => {
-        constriesChoice = countries;
-      })
-      .catch(error => next(error));
+  async collection(req, res, next) {
+    const constriesChoice = await Product.distinct('from').lean();
 
-    let datesChoice;
-    Product.distinct('date').lean()
-      .then(dates => {
-        datesChoice = dates;
-      })
-      .catch(error => next(error));
+    const datesChoice = await Product.distinct('date').lean();
 
     Product.find({ date: req.query.date })
       .then(products => {
