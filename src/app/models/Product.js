@@ -10,7 +10,7 @@ const Product = new Schema({
     description: { type: String, required: true },
     price: { type: Number, required: true },
     image: { type: String, required: true },
-    buyers: { type: String, required: true },
+    buyers: { type: Number, required: true },
     top: { type: Boolean, required: true },
     bottom: { type: Boolean, required: true },
     accessories: { type: Boolean, required: true },
