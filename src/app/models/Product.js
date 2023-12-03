@@ -8,6 +8,7 @@ const ObjectId = Schema.ObjectId;
 const Product = new Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
+    price: { type: Number, required: true },
     image: { type: String, required: true },
     buyers: { type: String, required: true },
     top: { type: Boolean, required: true },
@@ -15,6 +16,9 @@ const Product = new Schema({
     accessories: { type: Boolean, required: true },
     outer: { type: Boolean, required: true },
     shoes: { type: Boolean, required: true },
+    popular: { type: Boolean, required: true },
+    from: { type: String, required: true },
+    date: { type: Number, required: true },
     slug: { type: String, slug: 'name', unique: true },
     // createdAt: { type: Date, default: Date.now },
     // updatedAt: { type: Date, default: Date.now },

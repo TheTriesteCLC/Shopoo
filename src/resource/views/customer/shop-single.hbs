@@ -51,11 +51,21 @@
                   From
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="/customer/shop-single/england">England</a>
-                  <a class="dropdown-item" href="/customer/shop-single/japan">Japan</a>
-                  <a class="dropdown-item" href="/customer/shop-single/viet-nam">Viet Nam</a>
-                  <a class="dropdown-item" href="/customer/shop-single/korea">Korea</a>
-                  <a class="dropdown-item" href="/customer/shop-single/us">US</a>
+                  {{#each countries}}
+                    <a href="/customer/shop-single/from?country={{this}}" class="dropdown-item">{{this}}</a>
+                  {{/each}}
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="dropdown bg-transparent">
+                <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Year
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  {{#each years}}
+                    <a href="/customer/shop-single/colection?year={{this}}" class="dropdown-item">{{this}}</a>
+                  {{/each}}
                 </div>
               </div>
             </li>

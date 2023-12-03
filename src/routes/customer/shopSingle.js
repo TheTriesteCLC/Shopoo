@@ -19,11 +19,9 @@ router.use('/price-50', shopSingleController.price50);
 router.use('/price-100', shopSingleController.price100);
 router.use('/price-300', shopSingleController.price300);
 
-router.use('/england', shopSingleController.england);
-router.use('/japan', shopSingleController.japan);
-router.use('/korea', shopSingleController.korea);
-router.use('/viet-nam', shopSingleController.vietnam);
-router.use('/us', shopSingleController.us);
+router.use('/from', shopSingleController.from);
+router.use('/collection', shopSingleController.collection);
+
 
 router.use('/all', shopSingleController.index);
 router.use('/', shopSingleController.index);
