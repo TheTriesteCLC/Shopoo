@@ -4,7 +4,7 @@ const Product = require('../models/Product');
 class shopSingleController {
 
   //[GET] /shop-single/all
-  index(req, res) {
+  index(req, res, next) {
     Product.find({})
       .then(products => {
         res.render('customer/shop-single', { layout: 'customer/main', title: 'All', products: multipleMongooseToObject(products) });
