@@ -206,28 +206,46 @@ class shopSingleController {
 
   //[GET] /shop-single/:slug
   async item(req, res, next) {
-    
+
     // res.render('customer/item', { layout: 'customer/main' });
     console.log(req.params);
-    const product = await Product.findOne({slug: req.params.slug}).lean();
+    const product = await Product.findOne({ slug: req.params.slug }).lean();
     var related = [];
 
-    
-      for (var propt in product){
-          if (product[propt] === true){
-            related.push(... await Product.find({[propt]: true, slug : {$ne: product.slug}}).lean());
-            //console.log(`${propt} : ${product[propt]}`);  
-          }
+
+    for (var propt in product) {
+      if (product[propt] === true) {
+        related.push(... await Product.find({ [propt]: true, slug: { $ne: product.slug } }).lean());
+        //console.log(`${propt} : ${product[propt]}`);  
       }
-      while(related.length > 4) related.pop();
+    }
+    while (related.length > 4) related.pop();
     console.log(related);
 
     res.render('customer/item',
-      { layout: 'customer/main', title: 'Item', product, related});
+      { layout: 'customer/main', title: 'Item', product, related });
     // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
-  
+
   }
 
+
+
+  //[GET] /shop-single/search
+  async search(req, res, next) {
+    const formData = req.body;
+    const constriesChoice = await Product.distinct('from').lean();
+
+    const datesChoice = await Product.distinct('date').lean();
+
+    Product.find({ $text: { $search: formData.nameSearch, $caseSensitive: false } })
+      .then(products => {
+        res.render('customer/shop-single',
+          { layout: 'customer/main', title: `Result for "${formData.nameSearch}"`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        // res.json({ products: multipleMongooseToObject(products) });
+      })
+      .catch(error => next(error));
+
+  }
 }
 
 module.exports = new shopSingleController;
