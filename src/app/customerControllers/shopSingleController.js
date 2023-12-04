@@ -205,17 +205,27 @@ class shopSingleController {
 
 
   //[GET] /shop-single/:slug
-  item(req, res, next) {
+  async item(req, res, next) {
     
     // res.render('customer/item', { layout: 'customer/main' });
     console.log(req.params);
-    Product.findOne({slug: req.params.slug})
-      .then(product => {
-        res.render('customer/item',
-          { layout: 'customer/main', title: 'Item', product: singleMongooseToObject(product)});
-        // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
-      })
-      .catch(error => next(error));
+    const product = await Product.findOne({slug: req.params.slug}).lean();
+    var related = [];
+
+    
+      for (var propt in product){
+          if (product[propt] === true){
+            related.push(... await Product.find({[propt]: true, slug : {$ne: product.slug}}).lean());
+            //console.log(`${propt} : ${product[propt]}`);  
+          }
+      }
+      while(related.length > 4) related.pop();
+    console.log(related);
+
+    res.render('customer/item',
+      { layout: 'customer/main', title: 'Item', product, related});
+    // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
+  
   }
 
 }
