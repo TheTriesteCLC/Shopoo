@@ -1,252 +1,121 @@
-  <div class="page-heading bg-light">
-    <div class="container">
-      <div class="row align-items-end text-center">
-        <div class="col-lg-7 mx-auto">
-          <h1>Shop</h1>  
-          <p class="mb-4"><a href="/customer/home">Home</a> / <strong>Shop</strong></p>        
-        </div>
+<div class="page-heading bg-light">
+  <div class="container">
+    <div class="row align-items-end text-center">
+      <div class="col-lg-7 mx-auto">
+        <h1>Shop</h1>  
+        <p class="mb-4"><a href="/customer/home">Home</a> / <strong>Shop</strong></p>        
       </div>
     </div>
   </div>
+</div>
 
-  <div class="untree_co-section pt-3">
-    <div class="container">
+<div class="untree_co-section pt-3">
+  <div class="container">
 
-      <div class="row align-items-center mb-5">
-        <div class="col-lg-8">
-          <h2 class="mb-3 mb-lg-0">{{title}}</h2>
+    <div class="row align-items-center mb-5">
+      <div class="col-lg-8">
+        <h2 class="mb-3 mb-lg-0">{{title}}</h2>
+      </div>
+      <div class="col-lg-4">
+
+        <div class="d-flex pt-4 align-items-center justify-content-lg-end">
+          <div class="dropdown bg-transparent">
+              <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Price
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="/customer/shop-single/price-asc">Ascending</a>
+                <a class="dropdown-item" href="/customer/shop-single/price-dec">Decending</a>
+                <a class="dropdown-item" href="/customer/shop-single/price-50">Under $50</a>
+                <a class="dropdown-item" href="/customer/shop-single/price-100">Under $100</a>
+                <a class="dropdown-item" href="/customer/shop-single/price-300">Under $300</a>
+              </div>
+            </div>
         </div>
-        <div class="col-lg-4">
+      </div>
+    </div>
 
-          <div class="d-flex pt-4 align-items-center justify-content-lg-end">
+    <div class="row">
+      <div class="col-md-3">
+        <ul class="list-unstyled categories">
+          <li><a href="/customer/shop-single/">All <span></span></a></li>
+          <li><a href="/customer/shop-single/outer">Outerwear <span></span></a></li>
+          <li><a href="/customer/shop-single/top">Top <span></span></a></li>
+          <li><a href="/customer/shop-single/bottom">Bottom <span></span></a></li>
+          <li><a href="/customer/shop-single/accessories">Accessories <span></span></a></li>
+          <li><a href="/customer/shop-single/shoes">Shoes <span></span></a></li>
+          <li>
             <div class="dropdown bg-transparent">
-                <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Price
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="/customer/shop-single/price-asc">Ascending</a>
-                  <a class="dropdown-item" href="/customer/shop-single/price-dec">Decending</a>
-                  <a class="dropdown-item" href="/customer/shop-single/price-50">Under $50</a>
-                  <a class="dropdown-item" href="/customer/shop-single/price-100">Under $100</a>
-                  <a class="dropdown-item" href="/customer/shop-single/price-300">Under $300</a>
-                </div>
+              <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                From
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {{#each countries}}
+                  <a href="/customer/shop-single/from?country={{this}}" class="dropdown-item">{{this}}</a>
+                {{/each}}
               </div>
-          </div>
-        </div>
+            </div>
+          </li>
+          <li>
+            <div class="dropdown bg-transparent">
+              <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Year
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {{#each dates}}
+                  <a href="/customer/shop-single/collection?date={{this}}" class="dropdown-item">{{this}}</a>
+                {{/each}}
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
-
-      <div class="row">
-
-        <div class="col-md-3">
-          <ul class="list-unstyled categories">
-            <li><a href="/customer/shop-single/">All <span></span></a></li>
-            <li><a href="/customer/shop-single/outer">Outerwear <span></span></a></li>
-            <li><a href="/customer/shop-single/top">Top <span></span></a></li>
-            <li><a href="/customer/shop-single/bottom">Bottom <span></span></a></li>
-            <li><a href="/customer/shop-single/accessories">Accessories <span></span></a></li>
-            <li><a href="/customer/shop-single/shoes">Shoes <span></span></a></li>
-            <li>
-              <div class="dropdown bg-transparent">
-                <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  From
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  {{#each countries}}
-                    <a href="/customer/shop-single/from?country={{this}}" class="dropdown-item">{{this}}</a>
-                  {{/each}}
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="dropdown bg-transparent">
-                <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Year
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  {{#each dates}}
-                    <a href="/customer/shop-single/collection?date={{this}}" class="dropdown-item">{{this}}</a>
-                  {{/each}}
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div class="col-md-9">
-          <div class="row">
-            {{#each products}}
-              <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
-                <div class="product-item">
-                  <a href="/customer/shop-single/{{this.slug}}" class="product-img">
-
-                    <div class="label new top-right">
-                      <div class='content'>New</div>
-                    </div>
-
-
-                    <img src="/images/products/{{this.image}}" alt="Image" class="img-fluid">
-                  </a>
-                  <h3 class="title"><a href="/customer/shop-single/{{this.slug}}">{{this.name}}</a></h3>
-                  <div class="price">
-                    <span>$ {{this.price}}</span>
+      <div class="col-md-9">
+        <div class="row">
+          {{#each products}}
+            <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
+              <div class="product-item">
+                <a href="/customer/shop-single/{{this.slug}}" class="product-img">
+                  <div class="label new top-right">
+                    <div class='content'>New</div>
                   </div>
+                  <img src="/images/products/{{this.image}}" alt="Image" class="img-fluid">
+                </a>
+                <h3 class="title">
+                  <a href="/customer/shop-single/{{this.slug}}">
+                    {{this.name}}
+                  </a>
+                </h3>
+                <div class="price">
+                  <span>$ {{this.price}}</span>
                 </div>
               </div>
-            {{/each}}
-            
-            {{!-- <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  From
-                </button> --}}
-          </div>
-          <ul class="pagination justify-content-center">
-            {{!-- <li class="page-item">
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li> --}}
-            {{!-- <a href="/customer/shop-single/all?limit=6&skip={{skip}}"></a> --}}
-            <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=1">1</a></li>
-            <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=2">2</a></li>
-            <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=2">3</a></li>
-            {{!-- <li class="page-item">
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li> --}}
-          </ul>
-
-          {{!-- <div class="row mt-5 pb-5">
-            <div class="col-lg-12">
-              <div class="custom-pagination">
-                <ul class="list-unstyled">
-                  <li>
-                    <a href="#">
-                      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/>
-                        <path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
-                      </svg>                      
-                    </a>
-                  </li>
-                  <li class="active"><span>1</span></li>
-                  <li><a href="#">2</a></li>
-                  <li><a href="#">3</a></li>
-                  <li><a href="#">4</a></li>
-                  <li><a href="#">5</a></li>
-                  <li>
-                    <a href="#">
-                      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L12.793 8l-2.647-2.646a.5.5 0 0 1 0-.708z"/>
-                        <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8z"/>
-                      </svg>
-                    </a>
-                  </li>
-                </ul>
-              </div>
             </div>
-          </div> --}}
-
-
+          {{/each}}
+          
+          {{!-- <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                From
+              </button> --}}
         </div>
+        <ul class="pagination justify-content-center">
+          {{!-- <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li> --}}
+          {{!-- <a href="/customer/shop-single/all?limit=6&skip={{skip}}"></a> --}}
+          <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=1">1</a></li>
+          <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=2">2</a></li>
+          <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=2">3</a></li>
+          {{!-- <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li> --}}
+        </ul>
       </div>
-    </div> <!-- /.untree_co-section -->
-{{!-- 
-    <div class="untree_co-section">
-      <div class="container">
-        <div class="row mb-5 align-items-center">
-          <div class="col-md-6">
-            <h2 class="h3">Popular Items</h2>        
-          </div>
-          <div class="col-sm-6 carousel-nav text-sm-right">
-            <a href="/customer/shop-single/item" class="prev js-custom-prev-v2">
-              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path fill-rule="evenodd" d="M8.354 11.354a.5.5 0 0 0 0-.708L5.707 8l2.647-2.646a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708 0z"/>
-                <path fill-rule="evenodd" d="M11.5 8a.5.5 0 0 0-.5-.5H6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 .5-.5z"/>
-              </svg>
-            </a>
-            <a href="#" class="next js-custom-next-v2">
-              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path fill-rule="evenodd" d="M7.646 11.354a.5.5 0 0 1 0-.708L10.293 8 7.646 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z"/>
-                <path fill-rule="evenodd" d="M4.5 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5z"/>
-              </svg>
-            </a>
-          </div>
-        </div> <!-- /.heading -->
-        <div class="owl-3-slider owl-carousel">
-          <div class="item">
-            <div class="product-item">
-              <a href="/customer/shop-single/the-murray" class="product-img">
-                <div class="label sale top-right">
-                  <div class='content'>Sale</div>
-                </div>
-                <img src="/images/products/the-murray.jpg" alt="Image" class="img-fluid">
-              </a>
-              <h3 class="title"><a href="/customer/shop-single/the-murray">The Murray</a></h3>
-              <div class="price">
-                <del>£99.00</del> &mdash; <span>£69.00</span>
-              </div>
-            </div>
-          </div> <!-- /.item -->
-
-
-          <div class="item">
-            <div class="product-item">
-              <a href="/customer/shop-single/dark-jacket" class="product-img">
-
-                <div class="label new top-right">
-                  <div class='content'>New</div>
-                </div>
-
-
-                <img src="/images/products/dark-jacket.jpg" alt="Image" class="img-fluid">
-              </a>
-              <h3 class="title"><a href="/customer/shop-single/dark-jacket">Dark Jacket</a></h3>
-              <div class="price">
-                <span>£69.00</span>
-              </div>
-            </div>
-          </div> <!-- /.item -->
-
-
-          <div class="item">
-            <div class="product-item">
-              <a href="/customer/shop-single/chino-bottoms" class="product-img">
-                <div class="label new top-right">
-                  <div class='content'>New</div>
-                </div>
-
-                <div class="label sale top-right second">
-                  <div class='content'>Sale</div>
-                </div>
-                <img src="/images/products/chino-bottoms.jpg" alt="Image" class="img-fluid">
-              </a>
-              <h3 class="title"><a href="/customer/shop-single/chino-bottoms">Chino Bottoms</a></h3>
-              <div class="price">
-                <del>£99.00</del> &mdash; <span>£69.00</span>
-              </div>
-            </div>
-          </div> <!-- /.item -->
-
-          <div class="item">
-            <div class="product-item">
-              <a href="/customer/shop-single/the-modern-sock" class="product-img">
-                <img src="/images/products/the-mordern-sock.jpg" alt="Image" class="img-fluid">
-              </a>
-              <h3 class="title"><a href="/customer/shop-single/the-modern-sock">The Modern Sock</a></h3>
-              <div class="price">
-                <span>£29.00</span>
-              </div>
-            </div>
-          </div> <!-- /.item -->
-
-        </div>
-      </div> <!-- /.container -->
-    </div> <!-- /.untree_co-section -->   --}}
-
-<script>
-  function getSkip(page){
-    return (page-1)*7;
-  }
-</script>
+    </div>
+  </div> 
+</div>
