@@ -264,7 +264,20 @@ class shopSingleController {
         // res.json({ products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
+  }
 
+  //[POST] /shop-single/review?product=
+  review(req, res) {
+    const formData = req.body;
+    const productReview = req.query.product;
+
+    formData.product = productReview;
+    const newReview = new Review(formData);
+    newReview.save()
+      .then(() => res.redirect('/customer'))
+      .catch(error => {
+
+      });
   }
 }
 

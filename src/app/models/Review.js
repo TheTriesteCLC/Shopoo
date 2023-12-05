@@ -7,7 +7,7 @@ const ObjectId = Schema.ObjectId;
 
 const Review = new Schema({
     product: { type: String, required: true },
-    user: { type: String, required: true },
+    username: { type: String, required: true },
     comment: { type: String, required: true },
 }, {
     timestamps: true,

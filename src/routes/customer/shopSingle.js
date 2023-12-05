@@ -4,6 +4,7 @@ const router = express.Router();
 const shopSingleController = require('../../app/customerControllers/shopSingleController');
 
 
+router.post('/review', shopSingleController.review);
 router.post('/search', shopSingleController.search);
 router.use('/outer', shopSingleController.outer);
 router.use('/top', shopSingleController.top);
