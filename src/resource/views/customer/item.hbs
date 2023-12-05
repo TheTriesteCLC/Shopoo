@@ -71,9 +71,14 @@
             </div>
         </div>
         
-        
+        <form method="POST" action="/customer/shop-single/review-product"></form>
         <div class="d-flex justify-content-center col-md-6 offset-md-3 pt-3 pb-2"> 
-            <input type="text" name="text" placeholder="+ Add a note" class="form-control addtxt">
+            <label for="userName" style="font-weight:bold">Reviewer name</label>
+            <input type="text" name="userName" id="userName" placeholder="Reviewer name" class="form-control addtxt" required>
+        </div>
+        <div class="d-flex justify-content-center col-md-6 offset-md-3 pt-3 pb-2"> 
+            <label for="reviewContent" style="font-weight:bold">Review content</label>
+            <textarea type="text" name="reviewContent" id="reviewContent" placeholder="Reviewer name" class="form-control addtxt" required></textarea>
         </div>
         {{!-- </div> --}}
                 {{!-- {{#each related}}

@@ -8,12 +8,12 @@ class shopSingleController {
     console.log(req.query);
     var page = 1;
 
-    if (req == {}){
+    if (req == {}) {
       page = 1;
     } else {
       page = req.query.page;
     }
-    var skip = (page - 1) *6;
+    var skip = (page - 1) * 6;
     const productPerPage = 6;
 
     const constriesChoice = await Product.distinct('from').lean();
@@ -237,7 +237,7 @@ class shopSingleController {
     // console.log(related);
 
     res.render('customer/item',
-      { layout: 'customer/main', title: 'Item', product, related});
+      { layout: 'customer/main', title: 'Item', product, related });
     // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
 
   }
