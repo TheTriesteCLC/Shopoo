@@ -5,11 +5,22 @@ class shopSingleController {
 
   //[GET] /shop-single/all
   async index(req, res, next) {
+    console.log(req.query);
+    var page = 1;
+
+    if (req == {}){
+      page = 1;
+    } else {
+      page = req.query.page;
+    }
+    var skip = (page - 1) *6;
+    const productPerPage = 6;
+
     const constriesChoice = await Product.distinct('from').lean();
 
     const datesChoice = await Product.distinct('date').lean();
 
-    Product.find({})
+    Product.find({}).limit(productPerPage).skip(skip)
       .then(products => {
         res.render('customer/shop-single',
           { layout: 'customer/main', title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
@@ -94,10 +105,6 @@ class shopSingleController {
       .catch(error => next(error));
   }
 
-
-
-
-
   //[GET] /shop-single/price-asc
   async priceAsc(req, res, next) {
     const constriesChoice = await Product.distinct('from').lean();
@@ -169,9 +176,6 @@ class shopSingleController {
       .catch(error => next(error));
   }
 
-
-
-
   //[GET] /shop-single/from
   async from(req, res, next) {
     const constriesChoice = await Product.distinct('from').lean();
@@ -208,7 +212,7 @@ class shopSingleController {
   async item(req, res, next) {
 
     // res.render('customer/item', { layout: 'customer/main' });
-    console.log(req.params);
+    // console.log(req.params);
     const product = await Product.findOne({ slug: req.params.slug }).lean();
     var related = [];
 
@@ -219,11 +223,21 @@ class shopSingleController {
         //console.log(`${propt} : ${product[propt]}`);  
       }
     }
+
+    // related = [... new Set(related)];
+
+    // remove duplicate objects
+    const jsonObject = related.map(JSON.stringify);
+    const uniqueSet = new Set(jsonObject);
+    related = Array.from(uniqueSet).map(JSON.parse);
+
+    // limit to 4 products
     while (related.length > 4) related.pop();
-    console.log(related);
+
+    // console.log(related);
 
     res.render('customer/item',
-      { layout: 'customer/main', title: 'Item', product, related });
+      { layout: 'customer/main', title: 'Item', product, related});
     // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
 
   }
