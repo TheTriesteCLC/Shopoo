@@ -39,7 +39,7 @@
 
         <div class="col-md-3">
           <ul class="list-unstyled categories">
-            <li><a href="/customer/shop-single/all">All <span></span></a></li>
+            <li><a href="/customer/shop-single/">All <span></span></a></li>
             <li><a href="/customer/shop-single/outer">Outerwear <span></span></a></li>
             <li><a href="/customer/shop-single/top">Top <span></span></a></li>
             <li><a href="/customer/shop-single/bottom">Bottom <span></span></a></li>
@@ -104,8 +104,9 @@
                 <span class="sr-only">Previous</span>
               </a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            {{!-- <a href="/customer/shop-single/all?limit=6&skip={{skip}}"></a> --}}
+            <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=1">1</a></li>
+            <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=2">2</a></li>
             <li class="page-item"><a class="page-link" href="#">3</a></li>
             <li class="page-item">
               <a class="page-link" href="#" aria-label="Next">
@@ -243,3 +244,9 @@
         </div>
       </div> <!-- /.container -->
     </div> <!-- /.untree_co-section -->   --}}
+
+<script>
+  function getSkip(page){
+    return (page-1)*7;
+  }
+</script>
