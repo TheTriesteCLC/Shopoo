@@ -1,11 +1,12 @@
 const { multipleMongooseToObject, singleMongooseToObject } = require('../../util/mongoose');
 const Product = require('../models/Product');
+const Review = require('../models/Review');
 
 class shopSingleController {
 
   //[GET] /shop-single/all
   async index(req, res, next) {
-    console.log(req.query);
+    // console.log(req.query);
     var page = 1;
 
     if (req == {}) {
@@ -203,42 +204,47 @@ class shopSingleController {
           { layout: 'customer/main', title: `Collection ${req.query.date}`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
         // res.json({ products: multipleMongooseToObject(products) });
       })
+
       .catch(error => next(error));
   }
 
 
 
   //[GET] /shop-single/:slug
-  async item(req, res, next) {
+  item(req, res, next) {
 
     // res.render('customer/item', { layout: 'customer/main' });
     // console.log(req.params);
-    const product = await Product.findOne({ slug: req.params.slug }).lean();
-    var related = [];
+    Product.findOne({ slug: req.params.slug }).lean()
+      .then(async thisProduct => {
+        var related = [];
 
+        // console.log(thisProduct);
+        // console.log(reviews);
 
-    for (var propt in product) {
-      if (product[propt] === true) {
-        related.push(... await Product.find({ [propt]: true, slug: { $ne: product.slug } }).lean());
-        //console.log(`${propt} : ${product[propt]}`);  
-      }
-    }
+        for (var propt in thisProduct) {
+          if (thisProduct[propt] === true) {
+            related.push(... await Product.find({ [propt]: true, slug: { $ne: thisProduct.slug } }).lean());
+            //console.log(`${propt} : ${product[propt]}`);  
+          }
+        }
 
-    // related = [... new Set(related)];
+        const reviews = await (Review.find({ product: thisProduct.name }).lean());
 
-    // remove duplicate objects
-    const jsonObject = related.map(JSON.stringify);
-    const uniqueSet = new Set(jsonObject);
-    related = Array.from(uniqueSet).map(JSON.parse);
+        // remove duplicate objects
+        const jsonObject = related.map(JSON.stringify);
+        const uniqueSet = new Set(jsonObject);
+        related = Array.from(uniqueSet).map(JSON.parse);
 
-    // limit to 4 products
-    while (related.length > 4) related.pop();
+        // limit to 4 products
+        while (related.length > 4) related.pop();
 
-    // console.log(related);
+        res.render('customer/item',
+          { layout: 'customer/main', title: 'Item', product: thisProduct, related: related, reviews: reviews });
+        // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
 
-    res.render('customer/item',
-      { layout: 'customer/main', title: 'Item', product, related });
-    // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
+      })
+      .catch(error => next(error));
 
   }
 
