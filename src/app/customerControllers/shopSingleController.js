@@ -1,11 +1,12 @@
 const { multipleMongooseToObject, singleMongooseToObject } = require('../../util/mongoose');
 const Product = require('../models/Product');
+const Review = require('../models/Review');
 
 class shopSingleController {
 
   //[GET] /shop-single/all
   async index(req, res, next) {
-    console.log(req.query);
+    // console.log(req.query);
     var page = 1;
 
     if (req == {}){
@@ -213,18 +214,21 @@ class shopSingleController {
 
     // res.render('customer/item', { layout: 'customer/main' });
     // console.log(req.params);
-    const product = await Product.findOne({ slug: req.params.slug }).lean();
+    const thisProduct = await (Product.findOne({slug: req.params.slug }).lean());
     var related = [];
+    console.log(thisProduct);
 
+    // console.log(thisProduct);
+    // console.log(reviews);
 
-    for (var propt in product) {
-      if (product[propt] === true) {
-        related.push(... await Product.find({ [propt]: true, slug: { $ne: product.slug } }).lean());
+    for (var propt in thisProduct) {
+      if (thisProduct[propt] === true) {
+        related.push(... await Product.find({ [propt]: true, slug: { $ne: thisProduct.slug } }).lean());
         //console.log(`${propt} : ${product[propt]}`);  
       }
-    }
+    }    
 
-    // related = [... new Set(related)];
+    const reviews = await (Review.find({product : thisProduct.name}).lean());
 
     // remove duplicate objects
     const jsonObject = related.map(JSON.stringify);
@@ -234,10 +238,8 @@ class shopSingleController {
     // limit to 4 products
     while (related.length > 4) related.pop();
 
-    // console.log(related);
-
     res.render('customer/item',
-      { layout: 'customer/main', title: 'Item', product, related});
+      { layout: 'customer/main', title: 'Item', product: thisProduct, related : related, reviews: reviews});
     // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
 
   }
