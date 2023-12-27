@@ -17,7 +17,7 @@ const User = new Schema({
     address: { type: String, required: true },
     sex: { type: String, required: true },
     slug: { type: String, slug: 'username', unique: true },
-    cart: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+    cart: [{ type: Schema.Types.ObjectId, ref: 'Product', quant: { type: Number } }],
 }, {
     timestamps: true,
 });

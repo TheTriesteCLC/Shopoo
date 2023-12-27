@@ -3,7 +3,9 @@ const router = express.Router();
 
 const siteController = require('../../app/customerControllers/siteController');
 
+router.post('/login-success', siteController.loginSuccess);
 router.post('/stored', siteController.stored);
+router.use('/login', siteController.login);
 router.use('/sign-up', siteController.signup);
 router.use('/thankyou', siteController.thankyou);
 router.use('/checkout', siteController.checkout);

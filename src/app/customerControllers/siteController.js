@@ -40,6 +40,11 @@ class siteController {
     res.render('customer/thankyou', { layout: 'customer/main' });
   }
 
+  //[GET] /login
+  login(req, res) {
+    res.render('customer/login', { layout: 'customer/main' });
+  }
+
   //[GET] /home
   signup(req, res) {
     res.render('customer/signup', { layout: 'customer/main' });
@@ -55,6 +60,16 @@ class siteController {
       .catch(error => {
 
       });
+  }
+
+  //[POST] /login-success
+  loginSuccess(req, res, next) {
+    User.findOne({ username: req.body.username, password: req.body.password }).lean()
+      .then(user => {
+        res.json(user);
+        // res.json({ products: singleMongooseToObject(products) });
+      })
+      .catch(error => next(error));
   }
 }
 
