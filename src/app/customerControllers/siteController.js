@@ -48,6 +48,7 @@ class siteController {
   //[POST] /stored
   stored(req, res) {
     const formData = req.body;
+
     const newUser = new User(formData);
     newUser.save()
       .then(() => res.redirect('/customer'))
