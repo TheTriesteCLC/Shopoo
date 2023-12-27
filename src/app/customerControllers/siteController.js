@@ -1,3 +1,4 @@
+const User = require('../models/User');
 class siteController {
   //[GET] /
   index(req, res) {
@@ -37,6 +38,22 @@ class siteController {
   //[GET] /thankyou
   thankyou(req, res) {
     res.render('customer/thankyou', { layout: 'customer/main' });
+  }
+
+  //[GET] /home
+  signup(req, res) {
+    res.render('customer/signup', { layout: 'customer/main' });
+  }
+
+  //[POST] /stored
+  stored(req, res) {
+    const formData = req.body;
+    const newUser = new User(formData);
+    newUser.save()
+      .then(() => res.redirect('/customer'))
+      .catch(error => {
+
+      });
   }
 }
 

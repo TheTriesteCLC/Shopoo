@@ -3,6 +3,8 @@ const router = express.Router();
 
 const siteController = require('../../app/customerControllers/siteController');
 
+router.post('/stored', siteController.stored);
+router.use('/sign-up', siteController.signup);
 router.use('/thankyou', siteController.thankyou);
 router.use('/checkout', siteController.checkout);
 router.use('/cart', siteController.cart);
