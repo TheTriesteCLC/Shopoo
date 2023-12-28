@@ -94,9 +94,9 @@ class siteController {
   }
 
   //[POST] /update-profile/:slug
-  update(req, res, next) {
+  async update(req, res, next) {
     const formData = req.body;
-    const huhu = User.findOneAndReplace({ slug: req.params.slug, username: formData.username, password: formData.password },
+    await User.findOneAndUpdate({ username: formData.username, password: formData.password },
       {
         fullname: formData.fullname,
         email: formData.email,

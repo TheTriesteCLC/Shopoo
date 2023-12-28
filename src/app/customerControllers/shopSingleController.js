@@ -294,6 +294,13 @@ class shopSingleController {
     await User.updateOne(
       { username: formData.username, password: formData.password },
       {
+        $pull: { 'cart': { 'prod': productAdded.prod } }
+      }
+    )
+
+    await User.updateOne(
+      { username: formData.username, password: formData.password },
+      {
         $push: {
           cart: {
             prod: req.query.prod,
