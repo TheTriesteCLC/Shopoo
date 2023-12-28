@@ -1,3 +1,4 @@
+const { singleMongooseToObject } = require('../../util/mongoose');
 const User = require('../models/User');
 class siteController {
   //[GET] /
@@ -66,10 +67,46 @@ class siteController {
   loginSuccess(req, res, next) {
     User.findOne({ username: req.body.username, password: req.body.password }).lean()
       .then(user => {
-        res.json(user);
+        res.redirect(`/customer/profile/${user.slug}`);
         // res.json({ products: singleMongooseToObject(products) });
       })
       .catch(error => next(error));
+  }
+
+  //[GET] /profile/:slug
+  profile(req, res, next) {
+    User.findOne({ slug: req.params.slug }).lean()
+      .then(user => {
+        res.render('customer/profile', { layout: 'customer/main', user: user });
+        // res.json({ products: singleMongooseToObject(products) });
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /update-profile/:slug
+  updateProfile(req, res, next) {
+    User.findOne({ slug: req.params.slug }).lean()
+      .then(user => {
+        res.render('customer/update-profile', { layout: 'customer/main', user: user });
+        // res.json({ products: singleMongooseToObject(products) });
+      })
+      .catch(error => next(error));
+  }
+
+  //[POST] /update-profile/:slug
+  update(req, res, next) {
+    const formData = req.body;
+    const huhu = User.findOneAndReplace({ slug: req.params.slug, username: formData.username, password: formData.password },
+      {
+        fullname: formData.fullname,
+        email: formData.email,
+        dob: formData.dob,
+        phone: formData.phone,
+        address: formData.address,
+        sex: formData.sex
+      });
+    // res.json({ huhu });
+    res.redirect('/customer/home');
   }
 }
 

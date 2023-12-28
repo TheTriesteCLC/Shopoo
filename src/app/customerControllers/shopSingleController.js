@@ -1,6 +1,7 @@
 const { multipleMongooseToObject, singleMongooseToObject } = require('../../util/mongoose');
 const Product = require('../models/Product');
 const Review = require('../models/Review');
+const User = require('../models/User');
 
 class shopSingleController {
 
@@ -278,6 +279,33 @@ class shopSingleController {
       .catch(error => {
 
       });
+  }
+
+  //[POST] /shop-single/adding?product=&price=
+  async adding(req, res) {
+    const formData = req.body;
+
+    const productAdded = {
+      prod: req.query.prod,
+      quant: parseInt(req.body.quant),
+      price: parseFloat(req.query.price),
+    };
+
+    await User.updateOne(
+      { username: formData.username, password: formData.password },
+      {
+        $push: {
+          cart: {
+            prod: req.query.prod,
+            quant: parseInt(req.body.quant),
+            price: parseFloat(req.query.price),
+          }
+        }
+      },
+      { upsert: true });
+
+    res.json(productAdded);
+
   }
 }
 
