@@ -25,7 +25,6 @@
                   <th class="product-price">Price</th>
                   <th class="product-quantity">Quantity</th>
                   <th class="product-total">Total</th>
-                  <th class="product-remove">Remove</th>
                 </tr>
               </thead>
               <tbody>
@@ -38,7 +37,7 @@
                       <h2 class="h5 text-black">{{this.prod}}</h2>
                     </td>
                     <td class="prod-price {{this.prod}}">${{this.price}}</td>
-                    <td class="prod-quant {{this.prod}}">
+                    <td class="d-flex justify-content-around prod-quant {{this.prod}}">
                       <div class="input-group mb-3" style="max-width: 120px;">
                         <div class="input-group-prepend">
                           <button class="btn btn-outline-black js-btn-minus" type="button" onclick="calcpriceProduct(\'' + {{this.prod}} + '\')">&minus;</button>
@@ -51,7 +50,6 @@
 
                     </td>
                     <td class="prod-total {{this.prod}}"></td>
-                    <td><a href="#" class="btn btn-black btn-sm">X</a></td>
                   </tr>
                 {{/each}}
               </tbody>

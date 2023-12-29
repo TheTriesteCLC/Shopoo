@@ -14,12 +14,13 @@ const User = new Schema({
     phone: { type: String, required: true },
     address: { type: String, required: true },
     sex: { type: String, required: true },
+    status: { type: String, required: true },
     slug: { type: String, slug: 'username', unique: true },
     cart: [{
         prod: { type: String },
         quant: { type: Number },
         price: { type: Number },
-    }],
+    }]
 }, {
     timestamps: true,
 });

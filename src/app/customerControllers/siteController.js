@@ -27,7 +27,7 @@ class siteController {
     res.render('customer/contact', { layout: 'customer/main' });
   }
 
-  //[GET] /cart
+  //[GET] /cart-login
   loginCart(req, res) {
     res.render('customer/loginCart', { layout: 'customer/main' });
   }
@@ -47,7 +47,7 @@ class siteController {
     res.render('customer/login', { layout: 'customer/main' });
   }
 
-  //[GET] /home
+  //[GET] /sign-up
   signup(req, res) {
     res.render('customer/signup', { layout: 'customer/main' });
   }
@@ -55,6 +55,7 @@ class siteController {
   //[POST] /stored
   stored(req, res) {
     const formData = req.body;
+    formData.status = 'active';
 
     const newUser = new User(formData);
     newUser.save()
@@ -66,7 +67,7 @@ class siteController {
 
   //[POST] /login-success
   loginSuccess(req, res, next) {
-    User.findOne({ username: req.body.username, password: req.body.password }).lean()
+    User.findOne({ username: req.body.username, password: req.body.password, status: 'active' }).lean()
       .then(user => {
         res.redirect(`/customer/profile/${user.slug}`);
         // res.json({ products: singleMongooseToObject(products) });
@@ -76,7 +77,7 @@ class siteController {
 
   //[GET] /profile/:slug
   profile(req, res, next) {
-    User.findOne({ slug: req.params.slug }).lean()
+    User.findOne({ slug: req.params.slug, status: 'active' }).lean()
       .then(user => {
         res.render('customer/profile', { layout: 'customer/main', user: user });
         // res.json({ products: singleMongooseToObject(products) });
@@ -86,7 +87,7 @@ class siteController {
 
   //[GET] /update-profile/:slug
   updateProfile(req, res, next) {
-    User.findOne({ slug: req.params.slug }).lean()
+    User.findOne({ slug: req.params.slug, status: 'active' }).lean()
       .then(user => {
         res.render('customer/update-profile', { layout: 'customer/main', user: user });
         // res.json({ products: singleMongooseToObject(products) });
@@ -94,7 +95,7 @@ class siteController {
       .catch(error => next(error));
   }
 
-  //[POST] /update-profile/:slug
+  //[POST] /update-profile/updated
   async update(req, res, next) {
     const formData = req.body;
     await User.findOneAndUpdate({ username: formData.username, password: formData.password },
@@ -110,10 +111,10 @@ class siteController {
     res.redirect('/customer/home');
   }
 
-  //[POST] /cart/login-success
+  //[POST] /cart-login-success
   loginCartSuccess(req, res, next) {
     const formData = req.body;
-    User.findOne({ username: formData.username, password: formData.password }).lean()
+    User.findOne({ username: formData.username, password: formData.password, status: 'active' }).lean()
       .then(user => {
         res.redirect(`/customer/cart/${user.slug}`);
       })
@@ -124,7 +125,7 @@ class siteController {
   async cart(req, res, next) {
     let haha = [];
 
-    await User.findOne({ slug: req.params.slug }).lean()
+    await User.findOne({ slug: req.params.slug, status: 'active' }).lean()
       .then(async user => {
         let cartProducts = user.cart;
 
@@ -145,7 +146,7 @@ class siteController {
       .catch(error => next(error));
   }
 
-  //[POST] /customer/cart/update-cart/:slug
+  //[POST] /update-cart/:slug
   async updateCart(req, res, next) {
     const formData = req.body;
     const allProducts = Object.keys(formData);

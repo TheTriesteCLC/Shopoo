@@ -3,6 +3,7 @@ const router = express.Router();
 
 const siteController = require('../../app/adminControllers/siteController');
 
+router.post('/stored', siteController.stored);
 
 router.use('/sign-up', siteController.signUp);
 router.use('/sign-in', siteController.signIn);

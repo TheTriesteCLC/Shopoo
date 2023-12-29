@@ -53,6 +53,20 @@ class siteController {
   signUp(req, res) {
     res.render('admin/sign-up', { layout: 'admin/customSignin' });
   }
+
+  //[POST] /stored
+  stored(req, res) {
+    const formData = req.body;
+    // if()
+
+    // const newAdmin = new Admin(formData);
+    // newUser.save()
+    //   .then(() => res.redirect('/customer'))
+    //   .catch(error => {
+
+    //   });
+    res.json(formData);
+  }
 }
 
 module.exports = new siteController;

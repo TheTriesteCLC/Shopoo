@@ -7,8 +7,8 @@ const siteController = require('../../app/customerControllers/siteController');
 router.use('/login', siteController.login);
 router.post('/login-success', siteController.loginSuccess);
 router.use('/profile/:slug', siteController.profile);
-router.use('/update-profile/:slug', siteController.updateProfile);
 router.post('/update-profile/updated', siteController.update);
+router.use('/update-profile/:slug', siteController.updateProfile);
 
 //Signup new profile
 router.use('/sign-up', siteController.signup);
