@@ -51,7 +51,8 @@ app.use(session({
     saveUninitialized: false,
     secret: "440457",
     cookie: {
-        maxAge: 1000 * 10 // 1s * 10
+        // maxAge: 1000 * 10 // 1s * 10
+        maxAge: null // 1s * 10
     },
     store
 }))
