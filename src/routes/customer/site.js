@@ -3,6 +3,7 @@ const router = express.Router();
 
 const siteController = require('../../app/customerControllers/siteController');
 
+router.post('/cart/login-success', siteController.loginCart);
 router.post('/update-profile/updated', siteController.update);
 router.post('/login-success', siteController.loginSuccess);
 router.post('/stored', siteController.stored);

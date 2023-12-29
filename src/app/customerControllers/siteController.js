@@ -1,5 +1,6 @@
 const { singleMongooseToObject } = require('../../util/mongoose');
 const User = require('../models/User');
+const Product = require('../models/Product');
 class siteController {
   //[GET] /
   index(req, res) {
@@ -28,7 +29,7 @@ class siteController {
 
   //[GET] /cart
   cart(req, res) {
-    res.render('customer/cart', { layout: 'customer/main' });
+    res.render('customer/loginCart', { layout: 'customer/main' });
   }
 
   //[GET] /checkout
@@ -107,6 +108,32 @@ class siteController {
       });
     // res.json({ huhu });
     res.redirect('/customer/home');
+  }
+
+  //[POST] /cart/login-success
+  async loginCart(req, res, next) {
+    const formData = req.body;
+    let haha = [];
+
+    await User.findOne({ username: formData.username, password: formData.password }).lean()
+      .then(async user => {
+        let cartProducts = user.cart;
+
+        let cartWithImg = [];
+        for (var i = 0; i < cartProducts.length; ++i) {
+          let ele = cartProducts[i];
+
+          await Product.findOne({ name: ele.prod }).lean()
+            .then(product => {
+              ele['image'] = product.image;
+            });
+          cartWithImg.push(ele);
+        }
+
+        res.render('customer/cart', { layout: 'customer/main', userFullname: user.fullname, cartWithImg: cartWithImg })
+        // res.json(haha);
+      })
+      .catch(error => next(error));
   }
 }
 
