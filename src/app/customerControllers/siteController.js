@@ -64,15 +64,13 @@ stored(req, res) {
     });
 }
 
-//[POST] /login
-loginPost(req, res, next) {
-  User.findOne({ username: req.body.username, password: req.body.password }).lean()
-    .then(user => {
-      res.redirect(`/customer/profile/${user.slug}`);
-      // res.json({ products: singleMongooseToObject(products) });
-    })
-    .catch(error => next(error));
+//[GET] /user/login
+login(req, res, next){
+  res.render('users/login');
 }
+
+// [POST] /user/login
+loginPost(req, res, next) {} 
 
 //[GET] /profile/:slug
 profile(req, res, next) {
