@@ -46,28 +46,23 @@ class siteController {
     res.render('customer/thankyou', { layout: 'customer/main' });
   }
 
-  //[GET] /login
-  login(req, res) {
-    res.render('customer/login', { layout: 'customer/main' });
-  }
-
   //[GET] /signup
   signup(req, res) {
     res.render('customer/signup', { layout: 'customer/main' });
   }
 
-  //[POST] /user/store
+  //[POST] /signup
   signupPost(req, res, next) {}
 
-  //[GET] /user/login
+  //[GET] /login
   login(req, res, next){
-    res.render('users/login', { layout: 'customer/main' });
+    res.render('customer/login', { layout: 'customer/main' });
   }
 
-  // [POST] /user/login
+  // [POST] /login
   loginPost(req, res, next) {} 
 
-  //[GET] /user/logout
+  //[GET] /logout
   logout(req, res, next){
     console.log("Loging out");
     req.logout(function(err) {
