@@ -42,4 +42,34 @@ module.exports = function(passport) {
         return done(null, user);
     }));
 
+    passport.use('local-signup', new LocalStrategy({
+        usernameField : 'username',
+        passwordField : 'password',
+        passReqToCallback : true // pass the request to the callback
+    }, async (req, username, password, done) => {
+        var user = await User.findOne({ 'username' :  username });
+
+        if (user) { // already existed
+            // return done(null, user);
+            return done(null, false);
+        } 
+
+        // create the user
+        var newUser = new User();
+
+        // set the user's local credentials
+        newUser.username = username;
+        console.log('Hashing');
+        const hashedPassword = await bcrypt.hash(password, 7);
+        console.log('Hashing done');
+        newUser.password = hashedPassword;
+        newUser.slug = 'user-' + username;
+
+        // save the user
+        newUser.save();
+
+        // User.create({username: username, password: password});
+        console.log('created');
+        return done(null, newUser);
+    }));
 }
