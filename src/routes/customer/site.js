@@ -28,6 +28,12 @@ function(req,res){
     res.redirect('./protected');
 }, siteController.signupPost);
 
+//Logout
+router.get('/logout', siteController.logout);
+
+//Test authentication
+router.get('/protected', isLoggedIn, siteController.protected);
+
 //Cart 
 router.get('/cart-login', siteController.loginCart);
 router.post('/cart-login-success', siteController.loginCartSuccess);
@@ -52,7 +58,7 @@ function isLoggedIn(req, res, next) {
     }
 
     // is not authenticated
-    res.redirect('/user/login');
+    res.redirect('/customer/login');
 }
 
 module.exports = router;
