@@ -20,4 +20,26 @@ module.exports = function(passport) {
         });
     });
 
+    passport.use('local-login', new LocalStrategy({
+        usernameField : 'username',
+        passwordField : 'password',
+        passReqToCallback : true // pass the request to the callback
+    }, async (req, username, password, done) => { // email and password from form
+        console.log('proccessing');
+        var user = await User.findOne({ 'username' :  username });
+        console.log('ok');
+        
+        if (!user) // not exists
+            return done(null, false); 
+
+        var checkPass = await user.comparePassword(password);
+        console.log('passed')
+
+        if (!checkPass)  // wrong password
+            return done(null, false); 
+
+        console.log('success');
+        return done(null, user);
+    }));
+
 }
