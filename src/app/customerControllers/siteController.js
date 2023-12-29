@@ -1,6 +1,10 @@
 const { singleMongooseToObject } = require('../../util/mongoose');
 const User = require('../models/User');
 const Product = require('../models/Product');
+const passport = require('passport');
+require('../../config/passport/passport')(passport);
+
+
 class siteController {
 //[GET] /
 index(req, res) {
