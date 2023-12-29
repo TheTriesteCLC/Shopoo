@@ -311,7 +311,7 @@ class shopSingleController {
       },
       { upsert: true });
 
-    res.json(productAdded);
+    res.redirect('/customer/shop-single');
 
   }
 }

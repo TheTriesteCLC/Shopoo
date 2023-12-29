@@ -14,7 +14,8 @@
     <div class="container">
       <h1 class="mb-4">{{userFullname}}'s cart</h1>
       <div class="row mb-5">
-        <form class="col-md-12" method="post">
+        <form class="col-md-12" method="POST" action="/customer/update-cart/{{userSlug}}">
+        {{!-- <form class="col-md-12" method="POST" action="/dasdasd"> --}}
           <div class="site-blocks-table">
             <table class="table table-bordered">
               <thead>
@@ -36,39 +37,42 @@
                     <td class="product-name">
                       <h2 class="h5 text-black">{{this.prod}}</h2>
                     </td>
-                    <td class="prod-quant">${{this.price}}</td>
-                    <td class="prod-quant">
+                    <td class="prod-price {{this.prod}}">${{this.price}}</td>
+                    <td class="prod-quant {{this.prod}}">
                       <div class="input-group mb-3" style="max-width: 120px;">
                         <div class="input-group-prepend">
-                          <button class="btn btn-outline-black js-btn-minus" type="button">&minus;</button>
+                          <button class="btn btn-outline-black js-btn-minus" type="button" onclick="calcpriceProduct(\'' + {{this.prod}} + '\')">&minus;</button>
                         </div>
-                        <input type="text" class="form-control text-center" value="{{this.quant}}" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                        <input type="text" class="form-control text-center" value="{{this.quant}}" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" pattern="[0-9]+" min="0" max="999" name="{{this.prod}}">
                         <div class="input-group-append">
-                          <button class="btn btn-outline-black js-btn-plus" type="button">&plus;</button>
+                          <button class="btn btn-outline-black js-btn-plus" type="button" onclick="calcpriceProduct(\'' + {{this.prod}} + '\')">&plus;</button>
                         </div>
                       </div>
 
                     </td>
-                    <td>$49.00</td>
+                    <td class="prod-total {{this.prod}}"></td>
                     <td><a href="#" class="btn btn-black btn-sm">X</a></td>
                   </tr>
                 {{/each}}
               </tbody>
             </table>
           </div>
+
+            <div class="row mb-5">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <button class="btn btn-black btn-sm btn-block" type="submit">Update Cart</button>
+              </div>
+              <div class="col-md-6">
+                <a href="/customer/shop-single">
+                  <button class="btn btn-outline-black btn-sm btn-block" type="button">Continue Shopping</button>
+                </a>
+              </div>
+            </div>
         </form>
       </div>
 
       <div class="row">
         <div class="col-md-6">
-          <div class="row mb-5">
-            <div class="col-md-6 mb-3 mb-md-0">
-              <button class="btn btn-black btn-sm btn-block">Update Cart</button>
-            </div>
-            <div class="col-md-6">
-              <button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button>
-            </div>
-          </div>
           <div class="row">
             <div class="col-md-12">
               <label class="text-black h4" for="coupon">Coupon</label>

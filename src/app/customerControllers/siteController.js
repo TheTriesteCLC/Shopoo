@@ -28,7 +28,7 @@ class siteController {
   }
 
   //[GET] /cart
-  cart(req, res) {
+  loginCart(req, res) {
     res.render('customer/loginCart', { layout: 'customer/main' });
   }
 
@@ -111,11 +111,20 @@ class siteController {
   }
 
   //[POST] /cart/login-success
-  async loginCart(req, res, next) {
+  loginCartSuccess(req, res, next) {
     const formData = req.body;
+    User.findOne({ username: formData.username, password: formData.password }).lean()
+      .then(user => {
+        res.redirect(`/customer/cart/${user.slug}`);
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /cart/:slug
+  async cart(req, res, next) {
     let haha = [];
 
-    await User.findOne({ username: formData.username, password: formData.password }).lean()
+    await User.findOne({ slug: req.params.slug }).lean()
       .then(async user => {
         let cartProducts = user.cart;
 
@@ -130,10 +139,41 @@ class siteController {
           cartWithImg.push(ele);
         }
 
-        res.render('customer/cart', { layout: 'customer/main', userFullname: user.fullname, cartWithImg: cartWithImg })
+        res.render('customer/cart', { layout: 'customer/main', userFullname: user.fullname, cartWithImg: cartWithImg, userSlug: user.slug })
         // res.json(haha);
       })
       .catch(error => next(error));
+  }
+
+  //[POST] /customer/cart/update-cart/:slug
+  async updateCart(req, res, next) {
+    const formData = req.body;
+    const allProducts = Object.keys(formData);
+    const allQuant = Object.values(formData).map(ele => parseFloat(ele));
+
+    if (allProducts.length != 0) {
+      for (var i = 0; i < allProducts.length; ++i) {
+        if (allQuant[i] > 0) {
+          await User.updateOne(
+            { slug: req.params.slug, "cart.prod": allProducts[i] },
+            {
+              $set: {
+                "cart.$.quant": allQuant[i]
+              }
+            }
+          );
+        } else {
+          await User.updateOne(
+            { slug: req.params.slug },
+            {
+              $pull: {
+                'cart': { 'prod': allProducts[i] }
+              }
+            });
+        }
+      }
+    }
+    res.redirect('/customer/home');
   }
 }
 
