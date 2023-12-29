@@ -73,6 +73,11 @@ class siteController {
   });
   }
 
+  //[GET] /protected
+  protected(req, res, next){
+    res.render('customer/protected', {layout: 'customer/main'})
+  }
+
   //[GET] /profile/:slug
   profile(req, res, next) {
     User.findOne({ slug: req.params.slug }).lean()
