@@ -40,6 +40,21 @@ app.set('views', path.join(__dirname, 'resource', 'views'));
 app.use(express.static(path.join(__dirname, '../publicCus')));
 app.use(express.static(path.join(__dirname, '../publicAdmin')));
 
+//Setup session
+const store = session.MemoryStore();
+app.use(session({
+    saveUninitialized: false,
+    secret: "440457",
+    cookie: {
+        maxAge: 1000 * 10 // 1s * 10
+    },
+    store
+}))
+
+//Passport init
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.get('/', (req, res) => {
   res.render('login', { layout: 'admin/login' })
 })
