@@ -51,26 +51,17 @@ login(req, res) {
   res.render('customer/login', { layout: 'customer/main' });
 }
 
-//[GET] /home
+//[GET] /signup
 signup(req, res) {
   res.render('customer/signup', { layout: 'customer/main' });
 }
 
-//[POST] /stored
-stored(req, res) {
-  const formData = req.body;
-
-  const newUser = new User(formData);
-  newUser.save()
-    .then(() => res.redirect('/customer'))
-    .catch(error => {
-
-    });
-}
+//[POST] /user/store
+signupPost(req, res, next) {}
 
 //[GET] /user/login
 login(req, res, next){
-  res.render('users/login');
+  res.render('users/login', { layout: 'customer/main' });
 }
 
 // [POST] /user/login
