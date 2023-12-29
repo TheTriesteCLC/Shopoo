@@ -7,6 +7,11 @@ const routeCustomer = require('./routes/customer');
 const routeAdmin = require('./routes/admin');
 const db = require('./config/db');
 
+const passport = require('passport');
+require('./config/passport/passport')(passport);
+const session = require('express-session');
+
+
 //Connect to DB
 const databaseUrl = 'mongodb+srv://vmtriet21:vmtriet21@ptudweb-ga02.dbulhp7.mongodb.net/PTUDWEB-GA03';
 db.connect(databaseUrl);
@@ -39,6 +44,22 @@ app.set('views', path.join(__dirname, 'resource', 'views'));
 //Setup CSS
 app.use(express.static(path.join(__dirname, '../publicCus')));
 app.use(express.static(path.join(__dirname, '../publicAdmin')));
+
+//Setup session
+const store = session.MemoryStore();
+app.use(session({
+    saveUninitialized: false,
+    secret: "440457",
+    cookie: {
+        // maxAge: 1000 * 10 // 1s * 10
+        maxAge: null // 1s * 10
+    },
+    store
+}))
+
+//Passport init
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', (req, res) => {
   res.render('login', { layout: 'admin/login' })
