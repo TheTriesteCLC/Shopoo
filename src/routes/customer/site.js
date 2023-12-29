@@ -5,14 +5,14 @@ const siteController = require('../../app/customerControllers/siteController');
 
 //Login and update profile
 router.use('/login', siteController.login);
-router.post('/login-success', siteController.loginSuccess);
+router.post('/login', siteController.loginPost);
 router.use('/profile/:slug', siteController.profile);
 router.use('/update-profile/:slug', siteController.updateProfile);
 router.post('/update-profile/updated', siteController.update);
 
 //Signup new profile
-router.use('/sign-up', siteController.signup);
-router.post('/stored', siteController.stored);
+router.use('/signup', siteController.signup);
+router.post('/signup', siteController.signupPost);
 
 //Cart 
 router.use('/cart-login', siteController.loginCart);
