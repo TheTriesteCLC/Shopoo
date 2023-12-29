@@ -6,7 +6,7 @@ require('../../config/passport/passport')(passport);
 const siteController = require('../../app/customerControllers/siteController');
 
 //Login
-router.use('/login', siteController.login);
+router.get('/login', siteController.login);
 router.post('/login',
 passport.authenticate('local-login', { failureRedirect : './login'}), 
 function(req,res){
@@ -15,12 +15,12 @@ function(req,res){
 }, siteController.loginPost);
 
 //Update profile
-router.use('/profile/:slug', siteController.profile);
-router.use('/update-profile/:slug', siteController.updateProfile);
+router.get('/profile/:slug', siteController.profile);
+router.get('/update-profile/:slug', siteController.updateProfile);
 router.post('/update-profile/updated', siteController.update);
 
 //Signup new profile
-router.use('/signup', siteController.signup);
+router.get('/signup', siteController.signup);
 router.post('/signup', 
 passport.authenticate('local-signup', { failureRedirect : './signup'}), 
 function(req,res){
@@ -29,19 +29,19 @@ function(req,res){
 }, siteController.signupPost);
 
 //Cart 
-router.use('/cart-login', siteController.loginCart);
+router.get('/cart-login', siteController.loginCart);
 router.post('/cart-login-success', siteController.loginCartSuccess);
-router.use('/cart/:slug', siteController.cart);
+router.get('/cart/:slug', siteController.cart);
 router.post('/update-cart/:slug', siteController.updateCart);
 
 //Trivial path
-router.use('/thankyou', siteController.thankyou);
-router.use('/checkout', siteController.checkout);
-router.use('/contact', siteController.contact);
-router.use('/elements', siteController.elements);
-router.use('/about', siteController.about);
-router.use('/home', siteController.home);
-router.use('/', siteController.index);
+router.get('/thankyou', siteController.thankyou);
+router.get('/checkout', siteController.checkout);
+router.get('/contact', siteController.contact);
+router.get('/elements', siteController.elements);
+router.get('/about', siteController.about);
+router.get('/home', siteController.home);
+router.get('/', siteController.index);
 
 //Route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
