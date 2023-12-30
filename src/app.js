@@ -36,6 +36,8 @@ app.engine('hbs', handleBars.engine({
   extname: '.hbs',
   helpers: {
     sum: (a, b) => a + b,
+    json: (content) => JSON.stringify(content),
+    prodClassFromName: (prodName) => prodName.replaceAll(' ', '-'),
   }
 }));
 app.set('view engine', 'hbs');
@@ -48,13 +50,13 @@ app.use(express.static(path.join(__dirname, '../publicAdmin')));
 //Setup session
 const store = session.MemoryStore();
 app.use(session({
-    saveUninitialized: false,
-    secret: "440457",
-    cookie: {
-        // maxAge: 1000 * 10 // 1s * 10
-        maxAge: null // 1s * 10
-    },
-    store
+  saveUninitialized: false,
+  secret: "440457",
+  cookie: {
+    // maxAge: 1000 * 10 // 1s * 10
+    maxAge: null // 1s * 10
+  },
+  store
 }))
 
 //Passport init

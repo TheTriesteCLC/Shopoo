@@ -1,0 +1,172 @@
+<section>
+  <div class="container mt-5 py-5">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Username</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{user.username}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Password</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{user.password}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Full Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{user.fullname}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{user.email}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Phone</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{user.phone}}</p>
+                    </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Sex</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{user.sex}}</p>
+                    </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Address</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{user.address}}</p>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+      <h1 class="mb-4">{{user.fullname}}'s cart</h1>
+      <div class="row mb-5">
+        <div class="site-blocks-table">
+            <table class="table table-bordered thead-dark table-striped">
+              <thead>
+                <tr>
+                  <th class="product-thumbnail">Image</th>
+                  <th class="product-name">Product</th>
+                  <th class="product-price">Price</th>
+                  <th class="product-quantity">Quantity</th>
+                  <th class="product-total">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each cartWithImg}}
+                  <tr>
+                    <td class="product-thumbnail">
+                      <img src="{{this.image}}" alt="Image" class="img-fluid">
+                    </td>
+                    <td class="product-name">
+                      <h2 class="h5 text-black">{{this.prod}}</h2>
+                    </td>
+                    <td class="prod-price {{prodClassFromName this.prod}}">${{this.price}}</td>
+                    <td class="d-flex justify-content-around prod-quant">
+                      <div class="input-group mb-3" style="max-width: 120px;">
+                        <p class="prod-quant {{prodClassFromName this.prod}}">{{this.quant}}</h3>
+                      </div>
+
+                    </td>
+                    <td class="prod-total {{prodClassFromName this.prod}}"></td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-7">
+              <div class="row">
+                <div class="col-md-12 text-right border-bottom mb-5">
+                  <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <span class="text-black">Subtotal</span>
+                </div>
+                <div class="col-md-6 text-right">
+                  {{#each cartWithImg}}
+                    <div class="mb-2"><strong class="text-black subtotal {{prodClassFromName this.prod}}"></strong></div>
+                  {{/each}}
+                </div>
+              </div>
+              <div class="row mb-5">
+                <div class="col-md-6">
+                  <span class="text-black">Total</span>
+                </div>
+                <div class="col-md-6 text-right">
+                  <strong class="text-black grandtotal" ></strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+    function calcProductPrice(quant, price, displayTag, subtotalTag) {
+        displayTag.innerHTML = `$${quant * price}`;
+        subtotalTag.innerHTML = `$${quant * price}`;
+    }
+    function calcGrandTotal(subtotalAll, grandTotalTag) {
+        const grandTotalNum = subtotalAll.reduce( (accum, ele) => {
+            return accum + ele;
+        },0);
+        
+        grandTotalTag.innerHTML = `$${grandTotalNum}`;
+    }
+
+
+    let cart = {{{json cartWithImg}}};
+    let subtotalAll = []
+    for(var i = 0; i < cart.length; ++i) {
+        const displayTag = document.querySelector(`.prod-total.${cart[i].prod.replaceAll(' ','-')}`);
+        const subtotalTag = document.querySelector(`.subtotal.${cart[i].prod.replaceAll(' ','-')}`);
+        calcProductPrice(cart[i].quant, cart[i].price, displayTag, subtotalTag);
+        subtotalAll.push(cart[i].quant * cart[i].price);
+    }
+
+    calcGrandTotal(subtotalAll, document.querySelector('.grandtotal'));
+</script>

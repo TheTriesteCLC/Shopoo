@@ -1,4 +1,7 @@
+const { multipleMongooseToObject, singleMongooseToObject } = require('../../util/mongoose');
 const Admin = require('../models/Admin');
+const User = require('../models/User');
+const Product = require('../models/Product');
 
 class siteController {
   //[GET] /
@@ -17,8 +20,13 @@ class siteController {
   }
 
   //[GET] /tables
-  tables(req, res) {
-    res.render('admin/tables', { layout: 'admin/main' });
+  async tables(req, res, next) {
+    await User.find({})
+      .then(users => {
+        res.render('admin/tables',
+          { layout: 'admin/main', users: multipleMongooseToObject(users) });
+      })
+      .catch(error => next(error));
   }
 
   //[GET] /billing
@@ -66,6 +74,31 @@ class siteController {
       .catch(error => {
 
       });
+    res.json(formData);
+  }
+
+  //[GET] /admin/tables/:slug
+  viewUserProfile(req, res, next) {
+
+    User.findOne({ slug: req.params.slug }).lean()
+      .then(async user => {
+        let cartProducts = user.cart;
+
+        let cartWithImg = [];
+        for (var i = 0; i < cartProducts.length; ++i) {
+          let ele = cartProducts[i];
+
+          await Product.findOne({ name: ele.prod }).lean()
+            .then(product => {
+              ele['image'] = product.image;
+            });
+          cartWithImg.push(ele);
+        }
+
+        res.render('admin/userProfile', { layout: 'admin/main', user: user, cartWithImg: cartWithImg });
+        // res.json({ user });
+      })
+      .catch(error => next(error));
   }
 }
 

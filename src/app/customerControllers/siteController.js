@@ -126,13 +126,12 @@ class siteController {
 
   //[GET] /cart/:slug
   async cart(req, res, next) {
-    let haha = [];
-
     await User.findOne({ slug: req.params.slug }).lean()
       .then(async user => {
         let cartProducts = user.cart;
 
         let cartWithImg = [];
+        let grandTotal = 0;
         for (var i = 0; i < cartProducts.length; ++i) {
           let ele = cartProducts[i];
 
@@ -140,10 +139,13 @@ class siteController {
             .then(product => {
               ele['image'] = product.image;
             });
+          ele['prodTotal'] = ele.quant * ele.price;
+          grandTotal += ele.quant * ele.price;
           cartWithImg.push(ele);
         }
 
-        res.render('customer/cart', { layout: 'customer/main', userFullname: user.fullname, cartWithImg: cartWithImg, userSlug: user.slug })
+
+        res.render('customer/cart', { layout: 'customer/main', userFullname: user.fullname, cartWithImg: cartWithImg, userSlug: user.slug, grandTotal: grandTotal })
         // res.json(haha);
       })
       .catch(error => next(error));

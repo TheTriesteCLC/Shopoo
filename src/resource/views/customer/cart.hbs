@@ -36,20 +36,20 @@
                     <td class="product-name">
                       <h2 class="h5 text-black">{{this.prod}}</h2>
                     </td>
-                    <td class="prod-price {{this.prod}}">${{this.price}}</td>
-                    <td class="d-flex justify-content-around prod-quant {{this.prod}}">
+                    <td class="prod-price {{prodClassFromName this.prod}}">${{this.price}}</td>
+                    <td class="d-flex justify-content-around">
                       <div class="input-group mb-3" style="max-width: 120px;">
                         <div class="input-group-prepend">
-                          <button class="btn btn-outline-black js-btn-minus" type="button" onclick="calcpriceProduct(\'' + {{this.prod}} + '\')">&minus;</button>
+                          <button class="btn btn-outline-black js-btn-minus btn-minus {{prodClassFromName this.prod}}" type="button">&minus;</button>
                         </div>
-                        <input type="text" class="form-control text-center" value="{{this.quant}}" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" pattern="[0-9]+" min="0" max="999" name="{{this.prod}}">
+                        <input type="text" class="form-control text-center prod-quant {{prodClassFromName this.prod}}" value="{{this.quant}}" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" pattern="[0-9]+" min="0" max="999" name="{{this.prod}}">
                         <div class="input-group-append">
-                          <button class="btn btn-outline-black js-btn-plus" type="button" onclick="calcpriceProduct(\'' + {{this.prod}} + '\')">&plus;</button>
+                          <button class="btn btn-outline-black js-btn-plus btn-plus {{prodClassFromName this.prod}}" type="button">&plus;</button>
                         </div>
                       </div>
 
                     </td>
-                    <td class="prod-total {{this.prod}}"></td>
+                    <td class="prod-total {{prodClassFromName this.prod}}">${{this.prodTotal}}</td>
                   </tr>
                 {{/each}}
               </tbody>
@@ -97,7 +97,9 @@
                   <span class="text-black">Subtotal</span>
                 </div>
                 <div class="col-md-6 text-right">
-                  <strong class="text-black">$230.00</strong>
+                  {{#each cartWithImg}}
+                    <div class="mb-2"><strong class="text-black subtotal {{prodClassFromName this.prod}}">${{this.prodTotal}}</strong></div>
+                  {{/each}}
                 </div>
               </div>
               <div class="row mb-5">
@@ -105,7 +107,7 @@
                   <span class="text-black">Total</span>
                 </div>
                 <div class="col-md-6 text-right">
-                  <strong class="text-black">$230.00</strong>
+                  <strong class="text-black grandtotal">${{grandTotal}}</strong>
                 </div>
               </div>
 
@@ -122,3 +124,49 @@
       </div>
     </div>
   </div>
+
+  <script>
+    function calcPriceDisplay(prodDisplay) {
+        const quant = parseFloat(prodDisplay.inputQuant.value);
+        console.log(quant);
+        prodDisplay.prodTotal.innerHTML = `$${quant * prodDisplay.price}`;
+        prodDisplay.subtotal.innerHTML = `$${quant * prodDisplay.price}`;
+    }
+
+    function calcGrandTotal(prodDisplayAll) {
+      document.querySelector('.grandtotal').innerHTML = `$${prodDisplayAll.reduce(function(accum, ele) {
+        const quant = parseFloat(ele.inputQuant.value);
+        return accum + (quant * ele.price);
+      }, 0)}`;
+      
+    }
+    setTimeout(() => {
+    let prodDisplayAll = {{{json cartWithImg}}}.map(function(ele) {
+      return {
+        inputQuant: document.querySelector(`.prod-quant.${ele.prod.replaceAll(' ','-')}`),
+        btnMinus: document.querySelector(`.btn-minus.${ele.prod.replaceAll(' ','-')}`),
+        btnPlus: document.querySelector(`.btn-plus.${ele.prod.replaceAll(' ','-')}`),
+        prodTotal: document.querySelector(`.prod-total.${ele.prod.replaceAll(' ','-')}`),
+        subtotal: document.querySelector(`.subtotal.${ele.prod.replaceAll(' ','-')}`),
+        price: ele.price
+      };
+    });
+    
+    for(let i = 0; i < prodDisplayAll.length; ++i) {
+      prodDisplayAll[i].btnMinus.addEventListener("click", function() {
+        setTimeout(() => {
+          calcPriceDisplay(prodDisplayAll[i]);
+          calcGrandTotal(prodDisplayAll);
+        },0);
+        });
+
+      prodDisplayAll[i].btnPlus.addEventListener("click", function() {
+        setTimeout(() => {
+          calcPriceDisplay(prodDisplayAll[i]);
+          calcGrandTotal(prodDisplayAll);
+        },0);
+        });
+    }
+
+    }, 0)
+    </script>
