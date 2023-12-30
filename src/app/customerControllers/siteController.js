@@ -54,7 +54,11 @@ class siteController {
           return accum + ele.subtotal;
         }, 0);
 
-        res.render('customer/checkout', { layout: 'customer/main', username: user.username, userSlug: req.params.slug, subtotalAll: subtotalAll, grandTotal: grandTotal });
+        if (subtotalAll.length > 0) {
+          res.render('customer/checkout', { layout: 'customer/main', username: user.username, userSlug: req.params.slug, subtotalAll: subtotalAll, grandTotal: grandTotal });
+        } else {
+          res.redirect('/customer/shop-single');
+        }
       })
   }
 
@@ -195,8 +199,11 @@ class siteController {
             });
         }
       }
+      res.redirect(`/customer/cart/${req.params.slug}`);
+    } else {
+      res.redirect('/customer/shop-single');
     }
-    res.redirect('/customer/home');
+
   }
 
   //[POST] /checkout-success/:slug
@@ -222,7 +229,7 @@ class siteController {
           {
             $set: { 'cart': [] }
           }
-        )
+        );
       })
       .catch(error => {
 
