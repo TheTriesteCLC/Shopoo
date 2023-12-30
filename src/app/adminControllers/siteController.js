@@ -1,3 +1,5 @@
+const Admin = require('../models/Admin');
+
 class siteController {
   //[GET] /
   index(req, res) {
@@ -57,15 +59,13 @@ class siteController {
   //[POST] /stored
   stored(req, res) {
     const formData = req.body;
-    // if()
 
-    // const newAdmin = new Admin(formData);
-    // newUser.save()
-    //   .then(() => res.redirect('/customer'))
-    //   .catch(error => {
+    const newAdmin = new Admin(formData);
+    newAdmin.save()
+      .then(() => res.redirect('/admin'))
+      .catch(error => {
 
-    //   });
-    res.json(formData);
+      });
   }
 }
 

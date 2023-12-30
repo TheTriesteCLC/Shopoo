@@ -18,11 +18,21 @@ router.post('/login',
 router.get('/profile/:slug', siteController.profile);
 router.get('/update-profile/:slug', siteController.updateProfile);
 router.post('/update-profile/updated', siteController.update);
-router.use('/update-profile/:slug', siteController.updateProfile);
 
 //Signup new profile
-router.use('/sign-up', siteController.signup);
-router.post('/stored', siteController.stored);
+router.get('/signup', siteController.signup);
+router.post('/signup',
+    passport.authenticate('local-signup', { failureRedirect: './signup' }),
+    function (req, res) {
+        console.log("redirecting");
+        res.redirect('./protected');
+    }, siteController.signupPost);
+
+//Logout
+router.get('/logout', siteController.logout);
+
+//Test authentication
+router.get('/protected', isLoggedIn, siteController.protected);
 
 //Cart 
 router.get('/cart-login', siteController.loginCart);
