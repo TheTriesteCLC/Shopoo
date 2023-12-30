@@ -14,8 +14,8 @@ const Admin = new Schema({
     phone: { type: String, required: true },
     address: { type: String, required: true },
     sex: { type: String, required: true },
-    canBan: { type: String, required: true },
-    canAdd: { type: String, required: true },
+    canBan: { type: String },
+    canAdd: { type: String },
     slug: { type: String, slug: 'adminname', unique: true }
 }, {
     timestamps: true,

@@ -39,10 +39,13 @@ router.get('/cart-login', siteController.loginCart);
 router.post('/cart-login-success', siteController.loginCartSuccess);
 router.get('/cart/:slug', siteController.cart);
 router.post('/update-cart/:slug', siteController.updateCart);
+//Checkout
+router.get('/checkout/:slug', siteController.checkout);
+router.post('/checkout-success/:slug', siteController.checkoutSuccess);
 
 //Trivial path
 router.get('/thankyou', siteController.thankyou);
-router.get('/checkout', siteController.checkout);
+router.get('/checkout/:slug', siteController.checkout);
 router.get('/contact', siteController.contact);
 router.get('/elements', siteController.elements);
 router.get('/about', siteController.about);

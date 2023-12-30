@@ -2,6 +2,8 @@ const { singleMongooseToObject } = require('../../util/mongoose');
 const User = require('../models/User');
 const Product = require('../models/Product');
 const passport = require('passport');
+const { raw } = require('express');
+const Order = require('../models/Order');
 require('../../config/passport/passport')(passport);
 
 
@@ -36,9 +38,24 @@ class siteController {
     res.render('customer/loginCart', { layout: 'customer/main' });
   }
 
-  //[GET] /checkout
-  checkout(req, res) {
-    res.render('customer/checkout', { layout: 'customer/main' });
+  //[GET] /checkout/:slug
+  async checkout(req, res, next) {
+    await User.findOne({ slug: req.params.slug }).lean()
+      .then(user => {
+        let subtotalAll = user.cart.map(ele => {
+          return {
+            name: ele.prod,
+            price: ele.price,
+            quant: ele.quant,
+            subtotal: ele.quant * ele.price
+          }
+        });
+        const grandTotal = subtotalAll.reduce((accum, ele) => {
+          return accum + ele.subtotal;
+        }, 0);
+
+        res.render('customer/checkout', { layout: 'customer/main', username: user.username, userSlug: req.params.slug, subtotalAll: subtotalAll, grandTotal: grandTotal });
+      })
   }
 
   //[GET] /thankyou
@@ -180,6 +197,38 @@ class siteController {
       }
     }
     res.redirect('/customer/home');
+  }
+
+  //[POST] /checkout-success/:slug
+  checkoutSuccess(req, res) {
+    const formData = req.body;
+    const rawCart = formData.cart;
+    let convertedCart = [];
+
+    for (let i = 0; i < rawCart[0].prod.length; ++i) {
+      convertedCart.push({
+        prod: rawCart[0].prod[i],
+        quant: parseFloat(rawCart[0].quant[i]),
+        price: parseFloat(rawCart[0].price[i])
+      });
+    }
+    formData.cart = convertedCart;
+
+    const newOrder = new Order(formData);
+    newOrder.save()
+      .then(async () => {
+        await User.updateOne(
+          { slug: req.params.slug },
+          {
+            $set: { 'cart': [] }
+          }
+        )
+      })
+      .catch(error => {
+
+      });
+
+    res.redirect('/customer/thankyou')
   }
 }
 
