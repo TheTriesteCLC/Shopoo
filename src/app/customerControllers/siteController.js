@@ -210,16 +210,19 @@ class siteController {
   checkoutSuccess(req, res) {
     const formData = req.body;
     const rawCart = formData.cart;
-    let convertedCart = [];
 
-    for (let i = 0; i < rawCart[0].prod.length; ++i) {
-      convertedCart.push({
-        prod: rawCart[0].prod[i],
-        quant: parseFloat(rawCart[0].quant[i]),
-        price: parseFloat(rawCart[0].price[i])
-      });
+    if (Array.isArray(rawCart[0].prod)) {
+      let convertedCart = [];
+      for (let i = 0; i < rawCart[0].prod.length; ++i) {
+        convertedCart.push({
+          prod: rawCart[0].prod[i],
+          quant: parseFloat(rawCart[0].quant[i]),
+          price: parseFloat(rawCart[0].price[i])
+        });
+      }
+      formData.cart = convertedCart;
     }
-    formData.cart = convertedCart;
+
 
     const newOrder = new Order(formData);
     newOrder.save()
@@ -235,7 +238,8 @@ class siteController {
 
       });
 
-    res.redirect('/customer/thankyou')
+    res.redirect('/customer/thankyou');
+    // res.json(formData)
   }
 }
 
