@@ -241,6 +241,34 @@ class siteController {
     res.redirect('/customer/thankyou');
     // res.json(formData)
   }
+
+  //[GET] /order-login
+  loginOrder(req, res) {
+    res.render('customer/loginOrder', { layout: 'customer/main' });
+  }
+
+  //[POST] /order-login-success
+  loginOrderSuccess(req, res) {
+    const formData = req.body;
+
+    User.findOne({ username: formData.username, password: formData.password }).lean()
+      .then(async user => {
+        Order.find({ username: user.username }).lean()
+          .then(orders => {
+            const ordersWithGrandTotal = orders.map((order) => {
+              order['grandTotal'] = order.cart.reduce((accum, ele) => {
+                return accum + (ele.quant * ele.price);
+              }, 0);
+              return order;
+            });
+            // res.json(ordersWithGrandTotal);
+            res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
+          })
+
+      })
+
+
+  }
 }
 
 module.exports = new siteController;

@@ -1,0 +1,58 @@
+<div class="container mt-5">
+    <div class="pt-5">
+        <table class="table align-items-center mb-0">
+                <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Address</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phone</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Create date</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Products</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each ordersWithGrandTotal}}
+                      <tr>
+                        <td>
+                          <div class="d-flex px-2 py-1">
+                            <div class="d-flex flex-column justify-content-center">
+                              <h6 class="mb-0 text-sm">{{this.firstName}} {{this.lastName}}</h6>
+                              <p class="text-xs text-secondary mb-0">Email: {{this.email}}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0">{{this.apartment}} {{this.street}}</p>
+                          <p class="text-xs text-secondary mb-0">{{this.city}}, {{this.country}}</p>
+                        </td>
+                        <td class="text-center text-sm">
+                          <span class="text-secondary text-xs font-weight-bold">{{this.phone}}</span>
+                        </td>
+                        <td class="text-center">
+                          <p class="text-xs text-secondary mb-0">{{this.createdAt}}</p>
+                          <span class="badge badge-sm bg-gradient-success"></span>
+                        </td>
+                        <td class="align-middle">
+                          {{#each this.cart}}
+                            <div class="pb-2">
+                                <p class="text-xs font-weight-bold mb-0">{{this.prod}}</p>
+                                <p class="text-xs text-secondary mb-0">${{this.price}} <span class="text-dark">x</span> {{this.quant}}</p>
+                            </div>
+                          {{/each}}
+                        </td>
+                        <td class="text-center">
+                          <span class="text-secondary text-xs font-weight-bold">${{this.grandTotal}}</span>
+                        </td>
+                        <td class="text-center">
+                          <span class="text-secondary text-xs font-weight-bold">{{this.Note}}</span>
+                        </td>
+                      </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+    </div>  
+</div>      
+        
+            

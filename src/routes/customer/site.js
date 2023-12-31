@@ -43,6 +43,10 @@ router.post('/update-cart/:slug', siteController.updateCart);
 router.get('/checkout/:slug', siteController.checkout);
 router.post('/checkout-success/:slug', siteController.checkoutSuccess);
 
+//View Order
+router.get('/order-login', siteController.loginOrder);
+router.post('/order-login-success', siteController.loginOrderSuccess);
+
 //Trivial path
 router.get('/thankyou', siteController.thankyou);
 router.get('/checkout/:slug', siteController.checkout);
