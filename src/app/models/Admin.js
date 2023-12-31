@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const slug = require('mongoose-slug-updater');
 mongoose.plugin(slug);
 
@@ -20,5 +21,18 @@ const Admin = new Schema({
 }, {
     timestamps: true,
 });
+
+Admin.statics = {
+    findByUsername(username) {
+      return this.findOne({ username: username });
+    }
+}
+  
+Admin.methods = {
+    comparePassword(password) {
+      return bcrypt.compare(password, this.password);
+      // return password === this.password;
+    }
+}
 
 module.exports = mongoose.model('Admin', Admin);
