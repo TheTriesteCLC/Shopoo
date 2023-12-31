@@ -20,4 +20,16 @@ router.use('/dashboard', siteController.dashboard);
 router.use('/home', siteController.home);
 router.use('/', siteController.index);
 
+//Route middleware to make sure an admin is logged in
+function isLoggedIn(req, res, next) {
+
+    console.log("Authenticate checking");
+    if (req.isAuthenticated()) { // is authenticated
+        return next();
+    }
+
+    // is not authenticated
+    res.redirect('/admin/sign-in');
+}
+
 module.exports = router;
