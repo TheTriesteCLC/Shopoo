@@ -46,6 +46,7 @@ router.post('/checkout-success/:slug', siteController.checkoutSuccess);
 //View Order
 router.get('/order-login', siteController.loginOrder);
 router.post('/order-login-success', siteController.loginOrderSuccess);
+router.get('/order/:slug', siteController.order);
 
 //Trivial path
 router.get('/thankyou', siteController.thankyou);

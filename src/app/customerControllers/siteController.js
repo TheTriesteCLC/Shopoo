@@ -252,7 +252,16 @@ class siteController {
     const formData = req.body;
 
     User.findOne({ username: formData.username, password: formData.password }).lean()
-      .then(async user => {
+      .then(user => {
+        res.redirect(`/customer/order/${user.slug}`);
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /order/:slug
+  order(req, res, next) {
+    User.findOne({ slug: req.params.slug }).lean()
+      .then(user => {
         Order.find({ username: user.username }).lean()
           .then(orders => {
             const ordersWithGrandTotal = orders.map((order) => {
@@ -266,9 +275,8 @@ class siteController {
           })
 
       })
-
-
   }
 }
+
 
 module.exports = new siteController;
