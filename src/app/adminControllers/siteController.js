@@ -68,14 +68,17 @@ class siteController {
   //[POST] /stored
   stored(req, res) {
     const formData = req.body;
+    if (formData.canAdd === 'adding') formData.canAdd = true;
+    else formData.canAdd = false;
+    if (formData.canBan === 'banning') formData.canBan = true;
+    else formData.canBan = false;
 
     const newAdmin = new Admin(formData);
     newAdmin.save()
-      .then(() => res.redirect('/admin'))
+      .then(() => res.redirect('/admin/home'))
       .catch(error => {
 
       });
-    res.json(formData);
   }
 
   //[GET] /admin/tables/:slug
