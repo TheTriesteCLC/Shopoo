@@ -23,8 +23,8 @@ const Admin = new Schema({
 });
 
 Admin.statics = {
-    findByUsername(username) {
-      return this.findOne({ username: username });
+    findByAdminname(adminname) {
+      return this.findOne({ adminname: adminname });
     }
 }
   
