@@ -276,6 +276,27 @@ class siteController {
 
       })
   }
+
+  //[GET] /forgot-password
+  forgot(req, res, next) {
+    res.render('customer/forgot', { layout: 'customer/main' });
+  }
+
+  //[POST] /forgot-success
+  async forgotSuccess(req, res, next) {
+    const formData = req.body;
+    if (formData.newPassword === formData.againPassword) {
+      await User.updateOne(
+        { username: formData.username, email: formData.email },
+        {
+          $set: { 'password': formData.newPassword }
+        }
+      );
+      res.redirect('/customer/login');
+    } else {
+      res.redirect('/customer/forgot-password');
+    }
+  }
 }
 
 

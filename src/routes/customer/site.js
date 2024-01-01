@@ -13,6 +13,9 @@ router.post('/login',
         console.log("redirecting");
         res.redirect('./protected');
     }, siteController.loginPost);
+//Forgot password
+router.get('/forgot-password', siteController.forgot);
+router.post('/forgot-success', siteController.forgotSuccess);
 
 //Update profile
 router.get('/profile/:slug', siteController.profile);
