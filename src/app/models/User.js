@@ -30,6 +30,12 @@ const User = new Schema({
 User.statics = {
   findByUsername(username) {
     return this.findOne({ username: username });
+  },
+
+  async hashPassword(password){
+    const hashedPassword = await bcrypt.hash(password, 7);
+    this.password = hashedPassword;
+    return hashedPassword;
   }
 }
 
