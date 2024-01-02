@@ -244,7 +244,16 @@ class siteController {
     const formData = req.body;
 
     User.findOne({ username: formData.username, password: formData.password }).lean()
-      .then(async user => {
+      .then(user => {
+        res.redirect(`/customer/order/${user.slug}`);
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /order/:slug
+  order(req, res, next) {
+    User.findOne({ slug: req.params.slug }).lean()
+      .then(user => {
         Order.find({ username: user.username }).lean()
           .then(orders => {
             const ordersWithGrandTotal = orders.map((order) => {
@@ -258,9 +267,29 @@ class siteController {
           })
 
       })
+  }
 
+  //[GET] /forgot-password
+  forgot(req, res, next) {
+    res.render('customer/forgot', { layout: 'customer/main' });
+  }
 
+  //[POST] /forgot-success
+  async forgotSuccess(req, res, next) {
+    const formData = req.body;
+    if (formData.newPassword === formData.againPassword) {
+      await User.updateOne(
+        { username: formData.username, email: formData.email },
+        {
+          $set: { 'password': formData.newPassword }
+        }
+      );
+      res.redirect('/customer/login');
+    } else {
+      res.redirect('/customer/forgot-password');
+    }
   }
 }
+
 
 module.exports = new siteController;

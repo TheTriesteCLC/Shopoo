@@ -2,6 +2,7 @@ const { multipleMongooseToObject, singleMongooseToObject } = require('../../util
 const Admin = require('../models/Admin');
 const User = require('../models/User');
 const Product = require('../models/Product');
+const Order = require('../models/Order');
 
 class siteController {
   //[GET] /
@@ -72,8 +73,7 @@ class siteController {
         return next(err);
       }
       res.redirect('./login');
-    });
-  }
+    })};
 
   //[GET] /admin/tables/:slug
   viewUserProfile(req, res, next) {
@@ -81,7 +81,6 @@ class siteController {
     User.findOne({ slug: req.params.slug }).lean()
       .then(async user => {
         let cartProducts = user.cart;
-
         let cartWithImg = [];
         for (var i = 0; i < cartProducts.length; ++i) {
           let ele = cartProducts[i];
@@ -93,10 +92,43 @@ class siteController {
           cartWithImg.push(ele);
         }
 
-        res.render('admin/userProfile', { layout: 'admin/main', user: user, cartWithImg: cartWithImg });
-        // res.json({ user });
+        let ordersWithGrandTotal = [];
+        await Order.find({ username: user.username }).lean()
+          .then(orders => {
+            ordersWithGrandTotal = orders.map((order) => {
+              order['grandTotal'] = order.cart.reduce((accum, ele) => {
+                return accum + (ele.quant * ele.price);
+              }, 0);
+              return order;
+            });
+            // res.json(ordersWithGrandTotal);
+            // res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
+          })
+
+        res.render('admin/userProfile', { layout: 'admin/main', user: user, cartWithImg: cartWithImg, ordersWithGrandTotal: ordersWithGrandTotal });
+
+        // res.json({ layout: 'admin/main', user: user, cartWithImg: cartWithImg, ordersWithGrandTotal: ordersWithGrandTotal });
       })
       .catch(error => next(error));
+  }
+
+  //[GET] /order/:slug
+  order(req, res, next) {
+    User.findOne({ slug: req.params.slug }).lean()
+      .then(user => {
+        Order.find({ username: user.username }).lean()
+          .then(orders => {
+            const ordersWithGrandTotal = orders.map((order) => {
+              order['grandTotal'] = order.cart.reduce((accum, ele) => {
+                return accum + (ele.quant * ele.price);
+              }, 0);
+              return order;
+            });
+            // res.json(ordersWithGrandTotal);
+            res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
+          })
+
+      })
   }
 }
 
