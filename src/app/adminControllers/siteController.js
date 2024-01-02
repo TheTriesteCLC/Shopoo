@@ -125,23 +125,23 @@ class siteController {
   }
 
   //[POST] /admin/table/user/update/:slug
-  updateUserStatus(req, res, next) {
-    User.findOne({ slug: req.params.slug }).lean()
+  async updateUserStatus(req, res, next) {
+    await User.findOne({ slug: req.params.slug }).lean()
       .then(async user => {
         if (user.status === 'Active') {
           await User.updateOne(
-            { slug: req.params.slug },
+            { slug: user.slug },
             {
               $set: {
-                "status": 'Banned'
+                "status": "Banned"
               }
             });
         } else if (user.status === 'Banned') {
           await User.updateOne(
-            { slug: req.params.slug },
+            { slug: user.slug },
             {
               $set: {
-                "status": 'Active'
+                "status": "Active"
               }
             });
         }

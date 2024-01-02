@@ -16,6 +16,8 @@ const User = new Schema({
   address: { type: String, required: true },
   sex: { type: String, required: true },
   slug: { type: String, slug: 'username', unique: true },
+
+  status: { type: String, required: true },
   cart: [{
     prod: { type: String },
     quant: { type: Number },
