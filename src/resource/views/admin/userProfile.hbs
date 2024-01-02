@@ -66,6 +66,14 @@
                     <div class="col-sm-9">
                         <p class="text-muted mb-0">{{user.address}}</p>
                     </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{user.status}}</p>
+                    </div>
+                    <div class="text-center mt-5">
+                          <a href="/admin/table/product/update/{{this.slug}}" class="text-white font-weight-bold text-xs badge badge-sm bg-gradient-success" data-toggle="tooltip">
+                            Ban/Unban this user
+                          </a>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -156,6 +164,7 @@
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 ">Total</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Note</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Promo Code</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 ">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -197,6 +206,9 @@
                         </td>
                         <td class="text-center">
                           <span class="text-secondary text-xs font-weight-bold">{{this.promo}}</span>
+                        </td>
+                        <td class="text-center">
+                          <span class="text-secondary text-xs font-weight-bold">{{this.status}}</span>
                         </td>
                       </tr>
                     {{/each}}

@@ -5,7 +5,8 @@ const siteController = require('../../app/adminControllers/siteController');
 
 router.post('/stored', siteController.stored);
 
-router.use('/tables/:slug', siteController.viewUserProfile);
+router.use('/tables/product/:slug', siteController.viewProductProfile);
+router.use('/tables/user/:slug', siteController.viewUserProfile);
 router.use('/sign-up', siteController.signUp);
 router.use('/sign-in', siteController.signIn);
 router.use('/profile', siteController.profile);

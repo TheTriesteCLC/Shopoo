@@ -22,10 +22,21 @@ class siteController {
 
   //[GET] /tables
   async tables(req, res, next) {
-    await User.find({})
-      .then(users => {
-        res.render('admin/tables',
-          { layout: 'admin/main', users: multipleMongooseToObject(users) });
+    await User.find({}).lean()
+      .then(async users => {
+        await Product.find({}).lean()
+          .then(products => {
+
+            products = products.map((ele) => {
+              return {
+                ...ele,
+                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+              }
+            });
+            // res.json(products);
+            res.render('admin/tables',
+              { layout: 'admin/main', users: users, products: products });
+          })
       })
       .catch(error => next(error));
   }
@@ -81,7 +92,7 @@ class siteController {
       });
   }
 
-  //[GET] /admin/tables/:slug
+  //[GET] /admin/tables/user/:slug
   viewUserProfile(req, res, next) {
 
     User.findOne({ slug: req.params.slug }).lean()
@@ -112,6 +123,46 @@ class siteController {
           })
 
         res.render('admin/userProfile', { layout: 'admin/main', user: user, cartWithImg: cartWithImg, ordersWithGrandTotal: ordersWithGrandTotal });
+
+        // res.json({ layout: 'admin/main', user: user, cartWithImg: cartWithImg, ordersWithGrandTotal: ordersWithGrandTotal });
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /admin/tables/product/:slug
+  viewProductProfile(req, res, next) {
+
+    Product.findOne({ slug: req.params.slug }).lean()
+      .then(async product => {
+        await Order.find({ "cart.prod": product.name }).lean()
+          .then(orders => {
+            let pendingCount = 0;
+            let shippingCount = 0;
+            let doneCount = 0;
+
+            for (let i = 0; i < orders.length; ++i) {
+              if (orders[i].status === 'Pending') {
+                pendingCount += orders[i].cart.filter((ele) => ele.prod === product.name)[0].quant;
+              } else if (orders[i].status === 'Shipping') {
+                shippingCount += orders[i].cart.filter((ele) => ele.prod === product.name)[0].quant;
+              } else if (orders[i].status === 'Done') {
+                doneCount += orders[i].cart.filter((ele) => ele.prod === product.name)[0].quant;
+              }
+
+              orders[i]['grandTotal'] = orders[i].cart.reduce((accum, ele) => {
+                return accum + (ele.quant * ele.price);
+              }, 0);
+            }
+
+            // res.json({ pendingCount, shippingCount, doneCount });
+            res.render('admin/productProfile', {
+              layout: 'admin/main', product: product, orders: orders,
+              pendingCount: pendingCount, shippingCount: shippingCount, doneCount: doneCount
+            });
+
+          })
+
+        // res.render('admin/productProfile', { layout: 'admin/main', product: product });
 
         // res.json({ layout: 'admin/main', user: user, cartWithImg: cartWithImg, ordersWithGrandTotal: ordersWithGrandTotal });
       })
