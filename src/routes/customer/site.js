@@ -20,9 +20,9 @@ router.get('/forgot-password', siteController.forgot);
 router.post('/forgot-success', siteController.forgotSuccess);
 
 //Update profile
-router.get('/profile/:slug', siteController.profile);
-router.get('/update-profile/:slug', siteController.updateProfile);
-router.post('/update-profile/updated', siteController.update);
+router.get('/profile/', isLoggedIn, siteController.profile);
+router.get('/update-profile/', isLoggedIn, siteController.updateProfile);
+router.post('/update-profile/updated', isLoggedIn, siteController.update);
 
 //Signup new profile
 router.get('/signup', siteController.signup);
