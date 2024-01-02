@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const Admin = new Schema({
-    adminname: { type: String, required: true },
+    username: { type: String, required: true },
     password: { type: String, required: true },
     fullname: { type: String, required: true },
     email: { type: String, required: true },
@@ -17,14 +17,14 @@ const Admin = new Schema({
     sex: { type: String, required: true },
     canBan: { type: String },
     canAdd: { type: String },
-    slug: { type: String, slug: 'adminname', unique: true }
+    slug: { type: String, slug: 'username', unique: true }
 }, {
     timestamps: true,
 });
 
 Admin.statics = {
-    findByAdminname(adminname) {
-      return this.findOne({ adminname: adminname });
+    findByUsername(username) {
+      return this.findOne({ adminname: username });
     }
 }
   
