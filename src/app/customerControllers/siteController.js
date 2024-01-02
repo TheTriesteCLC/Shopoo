@@ -1,10 +1,8 @@
 const { singleMongooseToObject } = require('../../util/mongoose');
 const User = require('../models/User');
 const Product = require('../models/Product');
-const passport = require('passport');
 const { raw } = require('express');
 const Order = require('../models/Order');
-require('../../config/passport/passport')(passport);
 
 
 class siteController {
@@ -72,16 +70,10 @@ class siteController {
     res.render('customer/signup', { layout: 'customer/main' });
   }
 
-  //[POST] /signup
-  signupPost(req, res, next) { }
-
   //[GET] /login
   login(req, res, next) {
     res.render('customer/login', { layout: 'customer/main' });
   }
-
-  // [POST] /login
-  loginPost(req, res, next) { }
 
   //[GET] /logout
   logout(req, res, next) {

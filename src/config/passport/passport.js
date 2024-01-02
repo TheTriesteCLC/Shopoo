@@ -1,45 +1,60 @@
 var LocalStrategy = require('passport-local').Strategy;
-var User = require('../../app/models/User');
 var bcrypt = require('bcrypt'); 
+var Account;
 
 module.exports = function(passport) {
     passport.serializeUser(function(user, done) {
         console.log("Serializing");
 
-        done(null, user.username);
+        done(null, user);
     });
 
-    passport.deserializeUser(function(username, done) {
-        User.findByUsername(username).then(function(user) {
-          console.log('deserializing user:',user);
-          done(null, user);
-        }).catch(function(err) {
-          if (err) {
-            throw err;
-          }
-        });
+    passport.deserializeUser(function (user, done) {
+        console.log("Deseriaize User");
+        console.log(user);
+        done(null, user);
     });
+
+    // passport.deserializeUser(function(username, done) {
+    //     Account.findByUsername(username).then(function(user) {
+    //       console.log('deserializing user:',user);
+    //       done(null, user); 
+    //     }).catch(function(err) {
+    //       if (err) {
+    //         throw err;
+    //       }
+    //     });
+    // });
 
     passport.use('local-login', new LocalStrategy({
         usernameField : 'username',
         passwordField : 'password',
         passReqToCallback : true // pass the request to the callback
     }, async (req, username, password, done) => { // email and password from form
-        console.log('proccessing');
-        var user = await User.findOne({ 'username' :  username });
+
+        if (req.headers.referer.includes('customer')){
+            console.log('This is a customer');
+            Account = require('../../app/models/User');
+        } else {
+            console.log('This is an admin');
+            Account = require('../../app/models/Admin');
+        }
+
+        console.log('processing');
+        var account = await Account.findOne({ 'username' :  username });
         console.log('ok');
         
-        if (!user) // not exists
+        if (!account) // not exists
             return done(null, false); 
 
-        var checkPass = await user.comparePassword(password);
+        var checkPass = await account.comparePassword(password);
         console.log('passed')
 
         if (!checkPass)  // wrong password
             return done(null, false); 
 
         console.log('success');
-        return done(null, user);
+        return done(null, account);
     }));
 
     passport.use('local-signup', new LocalStrategy({
@@ -47,23 +62,45 @@ module.exports = function(passport) {
         passwordField : 'password',
         passReqToCallback : true // pass the request to the callback
     }, async (req, username, password, done) => {
-        var user = await User.findOne({ 'username' :  username });
+        var newUser;
 
-        if (user) { // already existed
+        console.log('processing');
+        console.log(req);
+        
+
+        if (req.headers.referer.includes('customer')){
+            console.log('This is a customer');
+            Account = require('../../app/models/User');
+            
+            // set the user's local credentials
+            newUser = new Account(req.body);            
+            newUser.slug = 'user-' + username;
+        } else {
+            console.log('This is an admin');
+            Account = require('../../app/models/Admin');
+            
+            // set the user's local credentials                    
+            if (req.body.canAdd === 'adding') req.body.canAdd = true;
+            else req.body.canAdd = false;
+            if (req.body.canBan === 'banning') req.body.canBan = true;
+            else req.body.canBan = false;
+            
+            newUser = new Account(req.body);
+            newUser.slug = 'admin-' + username;  
+        }
+
+        newUser.username = username;
+        const hashedPassword = await bcrypt.hash(password, 7);
+        newUser.password = hashedPassword;
+
+        var account = await Account.findOne({ 'username' :  username });
+
+        if (account) { // already existed
             // return done(null, user);
+            console.log('Existed');
             return done(null, false);
         } 
-
-        // create the user
-        var newUser = new User(req.body);
-
-        // set the user's local credentials
-        newUser.username = username;
-        console.log('Hashing');
-        const hashedPassword = await bcrypt.hash(password, 7);
-        console.log('Hashing done');
-        newUser.password = hashedPassword;
-        newUser.slug = 'user-' + username;
+        // return done(null, false);
 
         // save the user
         newUser.save();

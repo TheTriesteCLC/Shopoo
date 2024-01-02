@@ -12,7 +12,8 @@ router.post('/login',
     function (req, res) {
         console.log("redirecting");
         res.redirect('./protected');
-    }, siteController.loginPost);
+    }
+);
 //Forgot password
 router.get('/forgot-password', siteController.forgot);
 router.post('/forgot-success', siteController.forgotSuccess);
@@ -29,7 +30,8 @@ router.post('/signup',
     function (req, res) {
         console.log("redirecting");
         res.redirect('./protected');
-    }, siteController.signupPost);
+    }
+);
 
 //Logout
 router.get('/logout', siteController.logout);

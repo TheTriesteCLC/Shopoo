@@ -66,31 +66,25 @@ class siteController {
     res.render('admin/profile', { layout: 'admin/main' });
   }
 
-  //[GET] /sign-in
-  signIn(req, res) {
-    res.render('admin/sign-in', { layout: 'admin/customSignin' });
+  //[GET] /login
+  login(req, res, next) {
+    res.render('admin/login', { layout: 'admin/customSignin' });
   }
 
-  //[GET] /sign-up
-  signUp(req, res) {
-    res.render('admin/sign-up', { layout: 'admin/customSignin' });
+  //[GET] /signup
+  signup(req, res, next) {
+    res.render('admin/signup', { layout: 'admin/customSignin' });
   }
 
-  //[POST] /stored
-  stored(req, res) {
-    const formData = req.body;
-    if (formData.canAdd === 'adding') formData.canAdd = true;
-    else formData.canAdd = false;
-    if (formData.canBan === 'banning') formData.canBan = true;
-    else formData.canBan = false;
-
-    const newAdmin = new Admin(formData);
-    newAdmin.save()
-      .then(() => res.redirect('/admin/home'))
-      .catch(error => {
-
-      });
-  }
+  //[GET] /logout
+  logout(req, res, next) {
+    console.log("Loging out");
+    req.logout(function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('./login');
+    })};
 
   //[GET] /admin/tables/user/:slug
   viewUserProfile(req, res, next) {
