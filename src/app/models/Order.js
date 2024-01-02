@@ -19,6 +19,7 @@ const Order = new Schema({
     note: { type: String },
     promo: { type: String },
 
+    status: { type: String, required: true },
     username: { type: String, required: true },
     cart: [{
         prod: { type: String },
