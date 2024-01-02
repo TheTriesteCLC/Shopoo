@@ -91,30 +91,22 @@ class siteController {
     res.render('customer/protected', { layout: 'customer/main', user: req.user })
   }
 
-  //[GET] /profile/:slug
+  //[GET] /profile/
   profile(req, res, next) {
-    User.findOne({ slug: req.params.slug }).lean()
-      .then(user => {
-        res.render('customer/profile', { layout: 'customer/main', user: user });
-        // res.json({ products: singleMongooseToObject(products) });
-      })
-      .catch(error => next(error));
+    res.render('customer/profile', { layout: 'customer/main', user: req.user });
+    // res.json({ products: singleMongooseToObject(products) });
   }
 
-  //[GET] /update-profile/:slug
+  //[GET] /update-profile/
   updateProfile(req, res, next) {
-    User.findOne({ slug: req.params.slug }).lean()
-      .then(user => {
-        res.render('customer/update-profile', { layout: 'customer/main', user: user });
-        // res.json({ products: singleMongooseToObject(products) });
-      })
-      .catch(error => next(error));
+    res.render('customer/update-profile', { layout: 'customer/main', user: req.$setuser });
+    // res.json({ products: singleMongooseToObject(products) });
   }
 
   //[POST] /update-profile/:slug // password has not hashed
   async update(req, res, next) {
     const formData = req.body;
-    await User.findOneAndUpdate({ username: formData.username, password: formData.password },
+    await User.findOneAndUpdate({ username: formData.username, password: User.hashPassword(formData.password) },
       {
         fullname: formData.fullname,
         email: formData.email,
