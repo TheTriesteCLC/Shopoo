@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Product = require('../models/Product');
 const { raw } = require('express');
 const Order = require('../models/Order');
+const { use } = require('passport');
 
 
 class siteController {
@@ -99,24 +100,46 @@ class siteController {
 
   //[GET] /update-profile/
   updateProfile(req, res, next) {
-    res.render('customer/update-profile', { layout: 'customer/main', user: req.$setuser });
+    res.render('customer/update-profile', { layout: 'customer/main', user: req.user });
     // res.json({ products: singleMongooseToObject(products) });
   }
 
-  //[POST] /update-profile/:slug // password has not hashed
+  //[POST] /update-profile/
   async update(req, res, next) {
     const formData = req.body;
-    await User.findOneAndUpdate({ username: formData.username, password: User.hashPassword(formData.password) },
-      {
-        fullname: formData.fullname,
-        email: formData.email,
-        dob: formData.dob,
-        phone: formData.phone,
-        address: formData.address,
-        sex: formData.sex
-      });
+    
+    // get current user session
+    var user = await User.findOne({username: req.user.username});
+
+    // check two passwords
+    var checkPass = await user.comparePassword(formData.password);
+
+    if (checkPass){
+      user = await User.findOneAndUpdate({username: formData.username},
+        {
+          fullname: formData.fullname,
+          email: formData.email,
+          dob: formData.dob,
+          phone: formData.phone,
+          address: formData.address,
+          sex: formData.sex
+        },
+        {
+          new: true
+        }
+      );      
+  
+      console.log('Updated');
+  
+      if (user === null) {
+        res.redirect('/customer/update-profile');
+      } else {
+        // update session user
+        req.session.passport.user = user;
+        res.redirect('/customer/profile');
+      }    
+    }
     // res.json({ huhu });
-    res.redirect('/customer/home');
   }
 
   //[GET] /cart
