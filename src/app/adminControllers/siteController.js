@@ -4,6 +4,9 @@ const User = require('../models/User');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
 
+const moment = require('moment')
+const today = moment().startOf('day')
+
 class siteController {
   //[GET] /
   index(req, res) {
@@ -51,7 +54,16 @@ class siteController {
 
   //[GET] /dashboard
   dashboard(req, res) {
-    res.render('admin/dashboard', { layout: 'admin/main' });
+    Order.find({
+      createdAt: {
+        $gte: today.toDate(),
+        $lte: moment(today).endOf('day').toDate()
+      }
+    }).lean()
+      .then(orders => {
+        res.json(orders);
+      })
+    // res.render('admin/dashboard', { layout: 'admin/main' });
   }
 
   //[GET] /tables
