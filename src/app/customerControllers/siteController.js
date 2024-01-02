@@ -8,66 +8,78 @@ const Order = require('../models/Order');
 class siteController {
   //[GET] /
   index(req, res) {
-    res.render('customer/home', { layout: 'customer/main' });
+    const currUser = req.user;
+    res.render('customer/home', { layout: 'customer/main', currUser });
   }
 
   //[GET] /home
   home(req, res) {
-    res.render('customer/home', { layout: 'customer/main' });
+    const currUser = req.user;
+    res.render('customer/home', { layout: 'customer/main', currUser });
   }
 
   //[GET] /about
   about(req, res) {
-    res.render('customer/about', { layout: 'customer/main' });
+    const currUser = req.user;
+    res.render('customer/about', { layout: 'customer/main', currUser });
   }
 
   //[GET] /elements
   elements(req, res) {
-    res.render('customer/elements', { layout: 'customer/main' });
+    const currUser = req.user;
+    res.render('customer/elements', { layout: 'customer/main', currUser });
   }
 
   //[GET] /contact
   contact(req, res) {
-    res.render('customer/contact', { layout: 'customer/main' });
-  }
-
-  //[GET] /cart
-  loginCart(req, res) {
-    res.render('customer/loginCart', { layout: 'customer/main' });
+    const currUser = req.user;
+    res.render('customer/contact', { layout: 'customer/main', currUser });
   }
 
   //[GET] /checkout/:slug
   async checkout(req, res, next) {
-    await User.findOne({ slug: req.params.slug }).lean()
-      .then(user => {
-        let subtotalAll = user.cart.map(ele => {
-          return {
-            name: ele.prod,
-            price: ele.price,
-            quant: ele.quant,
-            subtotal: ele.quant * ele.price
-          }
-        });
-        const grandTotal = subtotalAll.reduce((accum, ele) => {
-          return accum + ele.subtotal;
-        }, 0);
+    const currUser = req.user;
+    if (!currUser) {
+      res.redirect('/customer/login');
+    } else {
+      await User.findOne({ slug: req.params.slug }).lean()
+        .then(user => {
+          let subtotalAll = user.cart.map(ele => {
+            return {
+              name: ele.prod,
+              price: ele.price,
+              quant: ele.quant,
+              subtotal: ele.quant * ele.price
+            }
+          });
+          const grandTotal = subtotalAll.reduce((accum, ele) => {
+            return accum + ele.subtotal;
+          }, 0);
 
-        if (subtotalAll.length > 0) {
-          res.render('customer/checkout', { layout: 'customer/main', username: user.username, userSlug: req.params.slug, subtotalAll: subtotalAll, grandTotal: grandTotal });
-        } else {
-          res.redirect('/customer/shop-single');
-        }
-      })
+          if (subtotalAll.length > 0) {
+            res.render('customer/checkout', { layout: 'customer/main', username: user.username, userSlug: req.params.slug, subtotalAll: subtotalAll, grandTotal: grandTotal });
+          } else {
+            res.redirect('/customer/shop-single');
+          }
+        })
+    }
   }
 
   //[GET] /thankyou
   thankyou(req, res) {
-    res.render('customer/thankyou', { layout: 'customer/main' });
+    const currUser = req.user;
+    res.render('customer/thankyou', { layout: 'customer/main', currUser });
   }
 
   //[GET] /customer/signup
   signup(req, res) {
-    res.render('customer/signup', { layout: 'customer/main' });
+    const currUser = req.user;
+    if (!currUser) {
+      res.render('customer/signup', { layout: 'customer/main' });
+    }
+    else {
+      res.redirect('/customer/home');
+    }
   }
 
   //[GET] /customer/login
@@ -82,7 +94,7 @@ class siteController {
 
   //[GET] /customer/logout
   logout(req, res, next) {
-    console.log("Loging out");
+    // console.log("Loging out");
     const user = req.user;
     if (!user) {
       res.redirect('/customer/login');
@@ -101,23 +113,23 @@ class siteController {
   //   res.render('customer/protected', { layout: 'customer/main', user: req.user })
   // }
 
-  //[GET] /customer/profile/:slug
+  //[GET] /customer/profile/
   profile(req, res, next) {
     const currUser = req.user;
-    if (currUser) {
-      res.render('customer/profile', { layout: 'customer/main', user: currUser });
-    } else {
+    if (!currUser) {
       res.redirect('/customer/login');
+    } else {
+      res.render('customer/profile', { layout: 'customer/main', currUser, user: currUser });
     }
   }
 
   //[GET] /update-profile
   updateProfile(req, res, next) {
     const currUser = req.user;
-    if (currUser) {
-      res.render('customer/update-profile', { layout: 'customer/main', user: currUser });
-    } else {
+    if (!currUser) {
       res.redirect('/customer/login');
+    } else {
+      res.render('customer/update-profile', { layout: 'customer/main', currUser, user: currUser });
     }
   }
 
@@ -136,13 +148,13 @@ class siteController {
     res.redirect('/customer/home');
   }
 
-  //[GET] /cart/
+  //[GET] /cart
   async cart(req, res, next) {
-    const user = req.user;
-    if (!user) {
+    const currUser = req.user;
+    if (!currUser) {
       res.redirect('/customer/login');
     } else {
-      const cartProducts = user.cart;
+      const cartProducts = currUser.cart;
       let cartWithImg = [];
       let grandTotal = 0;
 
@@ -158,118 +170,133 @@ class siteController {
         grandTotal += element.quant * element.price;
         cartWithImg.push(element);
       }
-      res.render('customer/cart', { layout: 'customer/main', user: user, cartWithImg: cartWithImg, grandTotal: grandTotal })
+      res.render('customer/cart', { layout: 'customer/main', currUser, user: currUser, cartWithImg: cartWithImg, grandTotal: grandTotal })
     }
   }
 
-  //[POST] /customer/cart/update-cart/:slug
+  //[POST] /customer/cart/update-cart
   async updateCart(req, res, next) {
-    const formData = req.body;
-    const allProducts = Object.keys(formData);
-    const allQuant = Object.values(formData).map(element => parseFloat(element));
+    const currUser = req.user;
+    if (!currUser) {
+      res.redirect('/customer/login');
+    } else {
+      const formData = req.body;
+      const allProducts = Object.keys(formData);
+      const allQuant = Object.values(formData).map(element => parseFloat(element));
 
-    if (allProducts.length != 0) {
-      for (var i = 0; i < allProducts.length; ++i) {
-        if (allQuant[i] > 0) {
-          await User.updateOne(
-            { slug: req.params.slug, "cart.prod": allProducts[i] },
-            {
-              $set: {
-                "cart.$.quant": allQuant[i]
+
+      if (allProducts.length != 0) {
+        for (var i = 0; i < allProducts.length; ++i) {
+          if (allQuant[i] > 0) {
+            await User.updateOne(
+              { slug: req.params.slug, "cart.prod": allProducts[i] },
+              {
+                $set: {
+                  "cart.$.quant": allQuant[i]
+                }
               }
+            );
+          } else {
+            await User.updateOne(
+              { slug: req.user.slug },
+              {
+                $pull: {
+                  'cart': { 'prod': allProducts[i] }
+                }
+              });
+          }
+        }
+        res.redirect(`/customer/cart/`);
+      } else {
+        res.redirect('/customer/shop-single');
+      }
+    }
+  }
+
+  //[POST] /checkout-success/
+  checkoutSuccess(req, res) {
+    const currUser = req.user;
+    if (!currUser) {
+      res.redirect('/customer/login');
+    } else {
+      const formData = req.body;
+      const rawCart = formData.cart;
+
+      if (Array.isArray(rawCart[0].prod)) {
+        let convertedCart = [];
+        for (let i = 0; i < rawCart[0].prod.length; ++i) {
+          convertedCart.push({
+            prod: rawCart[0].prod[i],
+            quant: parseFloat(rawCart[0].quant[i]),
+            price: parseFloat(rawCart[0].price[i])
+          });
+        }
+        formData.cart = convertedCart;
+      }
+
+
+      const newOrder = new Order(formData);
+      newOrder.save()
+        .then(async () => {
+          await User.updateOne(
+            { slug: req.params.slug },
+            {
+              $set: { 'cart': [] }
             }
           );
-        } else {
-          await User.updateOne(
-            { slug: req.user.slug },
-            {
-              $pull: {
-                'cart': { 'prod': allProducts[i] }
-              }
-            });
-        }
-      }
-      res.redirect(`/customer/cart/`);
-    } else {
-      res.redirect('/customer/shop-single');
-    }
+        })
+        .catch(error => {
 
-  }
-
-  //[POST] /checkout-success/:slug
-  checkoutSuccess(req, res) {
-    const formData = req.body;
-    const rawCart = formData.cart;
-
-    if (Array.isArray(rawCart[0].prod)) {
-      let convertedCart = [];
-      for (let i = 0; i < rawCart[0].prod.length; ++i) {
-        convertedCart.push({
-          prod: rawCart[0].prod[i],
-          quant: parseFloat(rawCart[0].quant[i]),
-          price: parseFloat(rawCart[0].price[i])
         });
-      }
-      formData.cart = convertedCart;
+
+      res.redirect('/customer/thankyou');
     }
-
-
-    const newOrder = new Order(formData);
-    newOrder.save()
-      .then(async () => {
-        await User.updateOne(
-          { slug: req.params.slug },
-          {
-            $set: { 'cart': [] }
-          }
-        );
-      })
-      .catch(error => {
-
-      });
-
-    res.redirect('/customer/thankyou');
-    // res.json(formData)
   }
 
-  //[GET] /order-login
-  loginOrder(req, res) {
-    res.render('customer/loginOrder', { layout: 'customer/main' });
-  }
+  // //[GET] /order-login
+  // loginOrder(req, res) {
+  //   res.render('customer/loginOrder', { layout: 'customer/main' });
+  // }
 
-  //[POST] /order-login-success
-  loginOrderSuccess(req, res) {
-    const formData = req.body;
+  // //[POST] /order-login-success
+  // loginOrderSuccess(req, res) {
+  //   const formData = req.body;
 
-    User.findOne({ username: formData.username, password: formData.password }).lean()
-      .then(user => {
-        res.redirect(`/customer/order/${user.slug}`);
-      })
-      .catch(error => next(error));
-  }
+  //   User.findOne({ username: formData.username, password: formData.password }).lean()
+  //     .then(user => {
+  //       res.redirect(`/customer/order/${user.slug}`);
+  //     })
+  //     .catch(error => next(error));
+  // }
 
-  //[GET] /order/:slug
+  //[GET] /order
   order(req, res, next) {
-    User.findOne({ slug: req.params.slug }).lean()
-      .then(user => {
-        Order.find({ username: user.username }).lean()
-          .then(orders => {
-            const ordersWithGrandTotal = orders.map((order) => {
-              order['grandTotal'] = order.cart.reduce((accum, ele) => {
-                return accum + (ele.quant * ele.price);
-              }, 0);
-              return order;
-            });
-            // res.json(ordersWithGrandTotal);
-            res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
-          })
-
-      })
+    const currUser = req.user;
+    if (!currUser) {
+      res.redirect('/customer/login');
+    } else {
+      Order.find({ username: currUser.username }).lean()
+        .then(orders => {
+          const ordersWithGrandTotal = orders.map((order) => {
+            order['grandTotal'] = order.cart.reduce((accum, ele) => {
+              return accum + (ele.quant * ele.price);
+            }, 0);
+            return order;
+          });
+          // res.json(ordersWithGrandTotal);
+          res.render('customer/order', { layout: 'customer/main', currUser, ordersWithGrandTotal: ordersWithGrandTotal, username: currUser.username });
+        })
+    }
   }
 
   //[GET] /forgot-password
   forgot(req, res, next) {
-    res.render('customer/forgot', { layout: 'customer/main' });
+    const currUser = req.user;
+    if (!currUser) {
+      res.render('customer/forgot', { layout: 'customer/main' });
+    } else {
+      res.redirect('/customer/home');
+    }
   }
 
   //[POST] /forgot-success
