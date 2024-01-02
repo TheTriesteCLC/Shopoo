@@ -65,7 +65,7 @@ module.exports = function(passport) {
         var newUser;
 
         console.log('processing');
-        console.log(req);
+        // console.log(req);
         
 
         if (req.headers.referer.includes('customer')){
