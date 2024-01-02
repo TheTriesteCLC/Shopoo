@@ -14,6 +14,9 @@ router.post('/login',
         res.redirect('./protected');
     }
 );
+//Forgot password
+router.get('/forgot-password', siteController.forgot);
+router.post('/forgot-success', siteController.forgotSuccess);
 
 //Update profile
 router.get('/profile/:slug', siteController.profile);
@@ -48,6 +51,7 @@ router.post('/checkout-success/:slug', siteController.checkoutSuccess);
 //View Order
 router.get('/order-login', siteController.loginOrder);
 router.post('/order-login-success', siteController.loginOrderSuccess);
+router.get('/order/:slug', siteController.order);
 
 //Trivial path
 router.get('/thankyou', siteController.thankyou);
