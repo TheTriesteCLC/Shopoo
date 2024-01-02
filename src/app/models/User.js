@@ -37,6 +37,11 @@ User.methods = {
   comparePassword(password) {
     return bcrypt.compare(password, this.password);
     // return password === this.password;
+  },
+  
+  async setPassword(password){
+    const hashedPassword = await bcrypt.hash(password, 7);
+    this.password = hashedPassword;
   }
 }
 
