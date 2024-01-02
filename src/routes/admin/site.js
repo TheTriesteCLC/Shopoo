@@ -28,7 +28,12 @@ router.post('/signup',
 //Logout
 router.get('/logout', siteController.logout);
 
-router.get('/tables/:slug', isLoggedIn, siteController.viewUserProfile);
+//Ban or unban user
+router.post('/tables/user/update/:slug', siteController.updateUserStatus);
+
+
+router.get('/tables/user/:slug', isLoggedIn, siteController.viewUserProfile);
+router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);
 router.get('/profile', isLoggedIn, siteController.profile);
 router.get('/notifications', isLoggedIn, siteController.notifications);
 router.get('/rtl', isLoggedIn, siteController.rtl);

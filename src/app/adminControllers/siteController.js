@@ -84,7 +84,8 @@ class siteController {
         return next(err);
       }
       res.redirect('./login');
-    })};
+    })
+  };
 
   //[GET] /admin/tables/user/:slug
   viewUserProfile(req, res, next) {
@@ -121,6 +122,32 @@ class siteController {
         // res.json({ layout: 'admin/main', user: user, cartWithImg: cartWithImg, ordersWithGrandTotal: ordersWithGrandTotal });
       })
       .catch(error => next(error));
+  }
+
+  //[POST] /admin/table/user/update/:slug
+  updateUserStatus(req, res, next) {
+    User.findOne({ slug: req.params.slug }).lean()
+      .then(async user => {
+        if (user.status === 'Active') {
+          await User.updateOne(
+            { slug: req.params.slug },
+            {
+              $set: {
+                "status": 'Banned'
+              }
+            });
+        } else if (user.status === 'Banned') {
+          await User.updateOne(
+            { slug: req.params.slug },
+            {
+              $set: {
+                "status": 'Active'
+              }
+            });
+        }
+        res.redirect('/admin/tables');
+      })
+      .catch(error => next(error))
   }
 
   //[GET] /admin/tables/product/:slug
