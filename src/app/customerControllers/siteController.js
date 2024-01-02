@@ -65,50 +65,60 @@ class siteController {
     res.render('customer/thankyou', { layout: 'customer/main' });
   }
 
-  //[GET] /signup
+  //[GET] /customer/signup
   signup(req, res) {
     res.render('customer/signup', { layout: 'customer/main' });
   }
 
-  //[GET] /login
+  //[GET] /customer/login
   login(req, res, next) {
-    res.render('customer/login', { layout: 'customer/main' });
+    const user = req.user;
+    if (!user) {
+      res.render('customer/login', { layout: 'customer/main' });
+    } else {
+      res.redirect('/customer/profile');
+    }
   }
 
-  //[GET] /logout
+  //[GET] /customer/logout
   logout(req, res, next) {
     console.log("Loging out");
-    req.logout(function (err) {
-      if (err) {
-        return next(err);
-      }
-      res.redirect('./login');
-    });
+    const user = req.user;
+    if (!user) {
+      res.redirect('/customer/login');
+    } else {
+      req.logout(function (err) {
+        if (err) {
+          return next(err);
+        }
+        res.redirect('./home');
+      });
+    }
   }
 
   //[GET] /protected
-  protected(req, res, next) {
-    res.render('customer/protected', { layout: 'customer/main', user: req.user })
-  }
+  // protected(req, res, next) {
+  //   res.render('customer/protected', { layout: 'customer/main', user: req.user })
+  // }
 
-  //[GET] /profile/:slug
+  //[GET] /customer/profile/:slug
   profile(req, res, next) {
-    User.findOne({ slug: req.params.slug }).lean()
-      .then(user => {
-        res.render('customer/profile', { layout: 'customer/main', user: user });
-        // res.json({ products: singleMongooseToObject(products) });
-      })
-      .catch(error => next(error));
+    const currUser = req.user;
+    if (currUser) {
+      res.render('customer/profile', { layout: 'customer/main', user: currUser });
+    } else {
+      res.redirect('/customer/login');
+    }
   }
 
-  //[GET] /update-profile/:slug
+  //[GET] /update-profile
   updateProfile(req, res, next) {
-    User.findOne({ slug: req.params.slug }).lean()
-      .then(user => {
-        res.render('customer/update-profile', { layout: 'customer/main', user: user });
-        // res.json({ products: singleMongooseToObject(products) });
-      })
-      .catch(error => next(error));
+    const currUser = req.user;
+    if (currUser) {
+      res.render('customer/update-profile', { layout: 'customer/main', user: currUser });
+    } else {
+      res.redirect('/customer/login');
+    }
   }
 
   //[POST] /update-profile/:slug // password has not hashed
@@ -123,30 +133,33 @@ class siteController {
         address: formData.address,
         sex: formData.sex
       });
-    // res.json({ huhu });
     res.redirect('/customer/home');
   }
 
   //[GET] /cart/
-  async cart(req, res, next){
+  async cart(req, res, next) {
     const user = req.user;
-    const cartProducts = user.cart;
-    let cartWithImg = [];
-    let grandTotal = 0;
+    if (!user) {
+      res.redirect('/customer/login');
+    } else {
+      const cartProducts = user.cart;
+      let cartWithImg = [];
+      let grandTotal = 0;
 
-    for (var i = 0; i < cartProducts.length; ++i) {
-      let element = cartProducts[i];
+      for (var i = 0; i < cartProducts.length; ++i) {
+        let element = cartProducts[i];
 
-      // get cart's products
-      await Product.findOne({ name: ele.prod }).lean()
-        .then(product => {
-          element['image'] = product.image;
-        });
+        // get cart's products
+        await Product.findOne({ name: ele.prod }).lean()
+          .then(product => {
+            element['image'] = product.image;
+          });
         element['prodTotal'] = element.quant * element.price;
-      grandTotal += element.quant * element.price;
-      cartWithImg.push(element);
+        grandTotal += element.quant * element.price;
+        cartWithImg.push(element);
+      }
+      res.render('customer/cart', { layout: 'customer/main', user: user, cartWithImg: cartWithImg, grandTotal: grandTotal })
     }
-    res.render('customer/cart', { layout: 'customer/main', user: user, cartWithImg: cartWithImg, grandTotal: grandTotal })
   }
 
   //[POST] /customer/cart/update-cart/:slug

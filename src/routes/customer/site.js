@@ -11,7 +11,7 @@ router.post('/login',
     passport.authenticate('local-login', { failureRedirect: './login' }),
     function (req, res) {
         console.log("redirecting");
-        res.redirect('./protected');
+        res.redirect('/customer/home');
     }
 );
 
@@ -20,8 +20,8 @@ router.get('/forgot-password', siteController.forgot);
 router.post('/forgot-success', siteController.forgotSuccess);
 
 //Update profile
-router.get('/profile/:slug', siteController.profile);
-router.get('/update-profile/:slug', siteController.updateProfile);
+router.get('/profile', siteController.profile);
+router.get('/update-profile', siteController.updateProfile);
 router.post('/update-profile/updated', siteController.update);
 
 //Signup new profile
@@ -30,7 +30,7 @@ router.post('/signup',
     passport.authenticate('local-signup', { failureRedirect: './signup' }),
     function (req, res) {
         console.log("redirecting");
-        res.redirect('./protected');
+        res.redirect('/customer/login');
     }
 );
 
@@ -38,7 +38,7 @@ router.post('/signup',
 router.get('/logout', siteController.logout);
 
 //Test authentication
-router.get('/protected', isLoggedIn, siteController.protected);
+// router.get('/protected', isLoggedIn, siteController.protected);
 
 //Cart 
 router.get('/cart', siteController.cart);
