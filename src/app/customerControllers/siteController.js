@@ -88,7 +88,7 @@ class siteController {
 
   //[GET] /protected
   protected(req, res, next) {
-    res.render('customer/protected', { layout: 'customer/main' })
+    res.render('customer/protected', { layout: 'customer/main', user: req.user })
   }
 
   //[GET] /profile/:slug
@@ -111,7 +111,7 @@ class siteController {
       .catch(error => next(error));
   }
 
-  //[POST] /update-profile/:slug
+  //[POST] /update-profile/:slug // password has not hashed
   async update(req, res, next) {
     const formData = req.body;
     await User.findOneAndUpdate({ username: formData.username, password: formData.password },
@@ -127,48 +127,33 @@ class siteController {
     res.redirect('/customer/home');
   }
 
-  //[POST] /cart/login-success
-  loginCartSuccess(req, res, next) {
-    const formData = req.body;
-    User.findOne({ username: formData.username, password: formData.password }).lean()
-      .then(user => {
-        res.redirect(`/customer/cart/${user.slug}`);
-      })
-      .catch(error => next(error));
-  }
+  //[GET] /cart/
+  async cart(req, res, next){
+    const user = req.user;
+    const cartProducts = user.cart;
+    let cartWithImg = [];
+    let grandTotal = 0;
 
-  //[GET] /cart/:slug
-  async cart(req, res, next) {
-    await User.findOne({ slug: req.params.slug }).lean()
-      .then(async user => {
-        let cartProducts = user.cart;
+    for (var i = 0; i < cartProducts.length; ++i) {
+      let element = cartProducts[i];
 
-        let cartWithImg = [];
-        let grandTotal = 0;
-        for (var i = 0; i < cartProducts.length; ++i) {
-          let ele = cartProducts[i];
-
-          await Product.findOne({ name: ele.prod }).lean()
-            .then(product => {
-              ele['image'] = product.image;
-            });
-          ele['prodTotal'] = ele.quant * ele.price;
-          grandTotal += ele.quant * ele.price;
-          cartWithImg.push(ele);
-        }
-
-
-        res.render('customer/cart', { layout: 'customer/main', userFullname: user.fullname, cartWithImg: cartWithImg, userSlug: user.slug, grandTotal: grandTotal })
-        // res.json(haha);
-      })
-      .catch(error => next(error));
+      // get cart's products
+      await Product.findOne({ name: ele.prod }).lean()
+        .then(product => {
+          element['image'] = product.image;
+        });
+        element['prodTotal'] = element.quant * element.price;
+      grandTotal += element.quant * element.price;
+      cartWithImg.push(element);
+    }
+    res.render('customer/cart', { layout: 'customer/main', user: user, cartWithImg: cartWithImg, grandTotal: grandTotal })
   }
 
   //[POST] /customer/cart/update-cart/:slug
   async updateCart(req, res, next) {
     const formData = req.body;
     const allProducts = Object.keys(formData);
-    const allQuant = Object.values(formData).map(ele => parseFloat(ele));
+    const allQuant = Object.values(formData).map(element => parseFloat(element));
 
     if (allProducts.length != 0) {
       for (var i = 0; i < allProducts.length; ++i) {
@@ -183,7 +168,7 @@ class siteController {
           );
         } else {
           await User.updateOne(
-            { slug: req.params.slug },
+            { slug: req.user.slug },
             {
               $pull: {
                 'cart': { 'prod': allProducts[i] }
@@ -191,7 +176,7 @@ class siteController {
             });
         }
       }
-      res.redirect(`/customer/cart/${req.params.slug}`);
+      res.redirect(`/customer/cart/`);
     } else {
       res.redirect('/customer/shop-single');
     }
