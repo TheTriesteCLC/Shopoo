@@ -127,7 +127,7 @@ class siteController {
     res.redirect('/customer/home');
   }
 
-  //[GET] /cart/
+  //[GET] /cart
   async cart(req, res, next){
     const user = req.user;
     const cartProducts = user.cart;
@@ -149,7 +149,7 @@ class siteController {
     res.render('customer/cart', { layout: 'customer/main', user: user, cartWithImg: cartWithImg, grandTotal: grandTotal })
   }
 
-  //[POST] /customer/cart/update-cart/:slug
+  //[POST] /customer/cart/update-cart
   async updateCart(req, res, next) {
     const formData = req.body;
     const allProducts = Object.keys(formData);
@@ -176,7 +176,7 @@ class siteController {
             });
         }
       }
-      res.redirect(`/customer/cart/`);
+      res.redirect(`/customer/cart`);
     } else {
       res.redirect('/customer/shop-single');
     }
@@ -245,13 +245,9 @@ class siteController {
   //[POST] /forgot-success
   async forgotSuccess(req, res, next) {
     const formData = req.body;
-    if (formData.newPassword === formData.againPassword) {
-      await User.updateOne(
-        { username: formData.username, email: formData.email },
-        {
-          $set: { 'password': formData.newPassword }
-        }
-      );
+    if (formData.newPassword === formData.againPassword) { 
+      const user = await User.findByUsername(formData.username);
+      user.setPassword(formData.newPassword);     
       res.redirect('/customer/login');
     } else {
       res.redirect('/customer/forgot-password');
