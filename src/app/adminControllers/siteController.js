@@ -11,8 +11,42 @@ class siteController {
   }
 
   //[GET] /home
-  home(req, res) {
-    res.render('admin/home', { layout: 'admin/main' });
+  async home(req, res) {
+    let ordersWithGrandTotal = [];
+    let totalOrder = 0;
+    let totalRevenue = 0;
+    let totalUser = 0;
+    let totalProduct = 0;
+
+    await User.find({}).lean()
+      .then(users => {
+        totalUser = users.length;
+      })
+
+    await Product.find({}).lean()
+      .then(products => {
+        totalProduct = products.length;
+      })
+
+    await Order.find({}).lean()
+      .then(orders => {
+        ordersWithGrandTotal = orders.map((order) => {
+          order['grandTotal'] = order.cart.reduce((accum, ele) => {
+            return accum + (ele.quant * ele.price);
+          }, 0);
+          return order;
+        });
+        totalOrder = ordersWithGrandTotal.length;
+        totalRevenue = ordersWithGrandTotal.reduce((accum, ele) => {
+          return accum + ele.grandTotal;
+        }, 0);
+
+        // res.json(ordersWithGrandTotal);
+        // res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
+        res.render('admin/home', { layout: 'admin/main', totalOrder, totalRevenue, totalUser, totalProduct });
+      })
+
+
   }
 
   //[GET] /dashboard
@@ -175,7 +209,9 @@ class siteController {
               }, 0);
             }
 
-            // res.json({ pendingCount, shippingCount, doneCount });
+            product['category'] = Object.keys(product).filter((k) => product[k] === true);
+
+            // res.json({ product });
             res.render('admin/productProfile', {
               layout: 'admin/main', product: product, orders: orders,
               pendingCount: pendingCount, shippingCount: shippingCount, doneCount: doneCount
