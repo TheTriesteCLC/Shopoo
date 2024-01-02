@@ -143,7 +143,7 @@ class siteController {
   }
 
   //[GET] /cart
-  async cart(req, res, next){
+  async cart(req, res, next) {
     const user = req.user;
     const cartProducts = user.cart;
     let cartWithImg = [];
@@ -157,7 +157,7 @@ class siteController {
         .then(product => {
           element['image'] = product.image;
         });
-        element['prodTotal'] = element.quant * element.price;
+      element['prodTotal'] = element.quant * element.price;
       grandTotal += element.quant * element.price;
       cartWithImg.push(element);
     }
@@ -260,9 +260,9 @@ class siteController {
   //[POST] /forgot-success
   async forgotSuccess(req, res, next) {
     const formData = req.body;
-    if (formData.newPassword === formData.againPassword) { 
+    if (formData.newPassword === formData.againPassword) {
       const user = await User.findByUsername(formData.username);
-      user.setPassword(formData.newPassword);     
+      user.setPassword(formData.newPassword);
       res.redirect('/customer/login');
     } else {
       res.redirect('/customer/forgot-password');
