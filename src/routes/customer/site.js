@@ -14,6 +14,7 @@ router.post('/login',
         res.redirect('./protected');
     }
 );
+
 //Forgot password
 router.get('/forgot-password', siteController.forgot);
 router.post('/forgot-success', siteController.forgotSuccess);
@@ -40,10 +41,9 @@ router.get('/logout', siteController.logout);
 router.get('/protected', isLoggedIn, siteController.protected);
 
 //Cart 
-router.get('/cart-login', siteController.loginCart);
-router.post('/cart-login-success', siteController.loginCartSuccess);
-router.get('/cart/:slug', siteController.cart);
-router.post('/update-cart/:slug', siteController.updateCart);
+router.get('/cart', siteController.cart);
+router.post('/update-cart/', siteController.updateCart);
+
 //Checkout
 router.get('/checkout/:slug', siteController.checkout);
 router.post('/checkout-success/:slug', siteController.checkoutSuccess);
