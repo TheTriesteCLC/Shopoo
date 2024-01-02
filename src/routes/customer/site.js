@@ -12,7 +12,8 @@ router.post('/login',
     function (req, res) {
         console.log("redirecting");
         res.redirect('./protected');
-    }, siteController.loginPost);
+    }
+);
 
 //Update profile
 router.get('/profile/:slug', siteController.profile);
@@ -26,7 +27,8 @@ router.post('/signup',
     function (req, res) {
         console.log("redirecting");
         res.redirect('./protected');
-    }, siteController.signupPost);
+    }
+);
 
 //Logout
 router.get('/logout', siteController.logout);
