@@ -34,7 +34,6 @@ User.statics = {
 
   async hashPassword(password){
     const hashedPassword = await bcrypt.hash(password, 7);
-    this.password = hashedPassword;
     return hashedPassword;
   }
 }
