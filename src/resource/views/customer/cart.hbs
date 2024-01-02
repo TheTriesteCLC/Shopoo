@@ -12,9 +12,10 @@
 
   <div class="untree_co-section">
     <div class="container">
-      <h1 class="mb-4">{{userFullname}}'s cart</h1>
+      <h1 class="mb-4">{{user.fullname}}'s cart</h1>
       <div class="row mb-5">
-        <form class="col-md-12" method="POST" action="/customer/update-cart/{{userSlug}}">
+        {{!-- <form class="col-md-12" method="POST" action="/customer/update-cart/{{user.slug}}"> --}}
+        <form class="col-md-12" method="POST" action="/customer/update-cart">
         {{!-- <form class="col-md-12" method="POST" action="/dasdasd"> --}}
           <div class="site-blocks-table">
             <table class="table table-bordered">
@@ -113,7 +114,8 @@
 
               <div class="row">
                 <div class="col-md-12">
-                  <a href="/customer/checkout/{{userSlug}}">
+                  {{!-- <a href="/customer/checkout/{{user.slug}}"> --}}
+                  <a href="/customer/checkout/">
                     <button class="btn btn-black btn-lg py-3 btn-block">Proceed To Checkout</button>
                   </a>
                   <p class="text-black mt-2">Please update cart before checkout</p>
