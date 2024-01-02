@@ -219,39 +219,22 @@ class siteController {
     // res.json(formData)
   }
 
-  //[GET] /order-login
-  loginOrder(req, res) {
-    res.render('customer/loginOrder', { layout: 'customer/main' });
-  }
-
-  //[POST] /order-login-success
-  loginOrderSuccess(req, res) {
-    const formData = req.body;
-
-    User.findOne({ username: formData.username, password: formData.password }).lean()
-      .then(user => {
-        res.redirect(`/customer/order/${user.slug}`);
-      })
-      .catch(error => next(error));
-  }
-
-  //[GET] /order/:slug
+  //[GET] /order/
   order(req, res, next) {
-    User.findOne({ slug: req.params.slug }).lean()
-      .then(user => {
-        Order.find({ username: user.username }).lean()
-          .then(orders => {
-            const ordersWithGrandTotal = orders.map((order) => {
-              order['grandTotal'] = order.cart.reduce((accum, ele) => {
-                return accum + (ele.quant * ele.price);
-              }, 0);
-              return order;
-            });
-            // res.json(ordersWithGrandTotal);
-            res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
-          })
+    const user = req.user;
 
+    Order.find({ username: user.username }).lean()
+      .then(orders => {
+        const ordersWithGrandTotal = orders.map((order) => {
+          order['grandTotal'] = order.cart.reduce((accum, element) => {
+            return accum + (element.quant * element.price);
+          }, 0);
+          return order;
+        });
+        // res.json(ordersWithGrandTotal);
+        res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
       })
+
   }
 
   //[GET] /forgot-password
