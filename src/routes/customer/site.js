@@ -22,7 +22,7 @@ router.post('/forgot-success', siteController.forgotSuccess);
 //Update profile
 router.get('/profile/', isLoggedIn, siteController.profile);
 router.get('/update-profile/', isLoggedIn, siteController.updateProfile);
-router.post('/update-profile/updated', isLoggedIn, siteController.update);
+router.post('/update-profile/updated/', siteController.update);
 
 //Signup new profile
 router.get('/signup', siteController.signup);
