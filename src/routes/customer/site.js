@@ -11,7 +11,7 @@ router.post('/login',
     passport.authenticate('local-login', { failureRedirect: './login' }),
     function (req, res) {
         console.log("redirecting");
-        res.redirect('/customer/home');
+        res.redirect('./protected');
     }
 );
 
@@ -20,9 +20,9 @@ router.get('/forgot-password', siteController.forgot);
 router.post('/forgot-success', siteController.forgotSuccess);
 
 //Update profile
-router.get('/profile', siteController.profile);
-router.get('/update-profile', siteController.updateProfile);
-router.post('/update-profile/updated', siteController.update);
+router.get('/profile/', isLoggedIn, siteController.profile);
+router.get('/update-profile/', isLoggedIn, siteController.updateProfile);
+router.post('/update-profile/updated', isLoggedIn, siteController.update);
 
 //Signup new profile
 router.get('/signup', siteController.signup);
@@ -30,7 +30,7 @@ router.post('/signup',
     passport.authenticate('local-signup', { failureRedirect: './signup' }),
     function (req, res) {
         console.log("redirecting");
-        res.redirect('/customer/login');
+        res.redirect('./protected');
     }
 );
 
@@ -38,20 +38,18 @@ router.post('/signup',
 router.get('/logout', siteController.logout);
 
 //Test authentication
-// router.get('/protected', isLoggedIn, siteController.protected);
+router.get('/protected', isLoggedIn, siteController.protected);
 
 //Cart 
-router.get('/cart', siteController.cart);
-router.post('/update-cart/', siteController.updateCart);
+router.get('/cart', isLoggedIn, siteController.cart);
+router.post('/update-cart/', isLoggedIn, siteController.updateCart);
 
 //Checkout
 router.get('/checkout/:slug', siteController.checkout);
 router.post('/checkout-success/:slug', siteController.checkoutSuccess);
 
 //View Order
-// router.get('/order-login', siteController.loginOrder);
-// router.post('/order-login-success', siteController.loginOrderSuccess);
-router.get('/order', siteController.order);
+router.get('/order/', isLoggedIn, siteController.order);
 
 //Trivial path
 router.get('/thankyou', siteController.thankyou);
