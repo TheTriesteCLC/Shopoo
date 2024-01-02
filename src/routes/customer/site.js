@@ -41,15 +41,15 @@ router.get('/logout', siteController.logout);
 router.get('/protected', isLoggedIn, siteController.protected);
 
 //Cart 
-router.get('/cart', siteController.cart);
-router.post('/update-cart/', siteController.updateCart);
+router.get('/cart', isLoggedIn, siteController.cart);
+router.post('/update-cart/', isLoggedIn, siteController.updateCart);
 
 //Checkout
 router.get('/checkout/:slug', siteController.checkout);
 router.post('/checkout-success/:slug', siteController.checkoutSuccess);
 
 //View Order
-router.get('/order/', siteController.order);
+router.get('/order/', isLoggedIn, siteController.order);
 
 //Trivial path
 router.get('/thankyou', siteController.thankyou);
