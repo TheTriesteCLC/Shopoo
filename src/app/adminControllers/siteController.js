@@ -54,27 +54,25 @@ class siteController {
     res.render('admin/profile', { layout: 'admin/main' });
   }
 
-  //[GET] /sign-in
-  signIn(req, res) {
-    res.render('admin/sign-in', { layout: 'admin/customSignin' });
+  //[GET] /login
+  login(req, res, next) {
+    res.render('admin/login', { layout: 'admin/customSignin' });
   }
 
-  //[GET] /sign-up
-  signUp(req, res) {
-    res.render('admin/sign-up', { layout: 'admin/customSignin' });
+  //[GET] /signup
+  signup(req, res, next) {
+    res.render('admin/signup', { layout: 'admin/customSignin' });
   }
 
-  //[POST] /stored
-  stored(req, res) {
-    const formData = req.body;
-
-    const newAdmin = new Admin(formData);
-    newAdmin.save()
-      .then(() => res.redirect('/admin'))
-      .catch(error => {
-
-      });
-    res.json(formData);
+  //[GET] /logout
+  logout(req, res, next) {
+    console.log("Loging out");
+    req.logout(function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('./login');
+    });
   }
 
   //[GET] /admin/tables/:slug
