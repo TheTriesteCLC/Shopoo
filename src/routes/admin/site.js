@@ -5,20 +5,39 @@ require('../../config/passport/passport')(passport);
 
 const siteController = require('../../app/adminControllers/siteController');
 
-router.post('/stored', siteController.stored);
+//Login
+router.get('/login', siteController.login);
+router.post('/login',
+    passport.authenticate('local-login', { failureRedirect: './login' }),
+    function (req, res) {
+        console.log("redirecting");
+        res.redirect('./home');
+    }
+);
 
-router.use('/tables/:slug', siteController.viewUserProfile);
-router.use('/sign-up', siteController.signUp);
-router.use('/sign-in', siteController.signIn);
-router.use('/profile', siteController.profile);
-router.use('/notifications', siteController.notifications);
-router.use('/rtl', siteController.rtl);
-router.use('/virtual-reality', siteController.virtualReality);
-router.use('/billing', siteController.billing);
-router.use('/tables', siteController.tables);
-router.use('/dashboard', siteController.dashboard);
-router.use('/home', siteController.home);
-router.use('/', siteController.index);
+//Signup new profile
+router.get('/signup', siteController.signup);
+router.post('/signup',
+    passport.authenticate('local-signup', { failureRedirect: './signup' }),
+    function (req, res) {
+        console.log("redirecting");
+        res.redirect('./home');
+    }
+);
+
+//Logout
+router.get('/logout', siteController.logout);
+
+router.get('/tables/:slug', isLoggedIn, siteController.viewUserProfile);
+router.get('/profile', isLoggedIn, siteController.profile);
+router.get('/notifications', isLoggedIn, siteController.notifications);
+router.get('/rtl', isLoggedIn, siteController.rtl);
+router.get('/virtual-reality', isLoggedIn, siteController.virtualReality);
+router.get('/billing', isLoggedIn, siteController.billing);
+router.get('/tables', isLoggedIn, siteController.tables);
+router.get('/dashboard', isLoggedIn, siteController.dashboard);
+router.get('/home', isLoggedIn, siteController.home);
+router.get('/', isLoggedIn, siteController.index);
 
 //Route middleware to make sure an admin is logged in
 function isLoggedIn(req, res, next) {
@@ -29,7 +48,7 @@ function isLoggedIn(req, res, next) {
     }
 
     // is not authenticated
-    res.redirect('/admin/sign-in');
+    res.redirect('/admin/login');
 }
 
 module.exports = router;
