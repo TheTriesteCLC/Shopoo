@@ -125,7 +125,7 @@ class siteController {
   }
 
   //[POST] /admin/table/user/update/:slug
-  async updateUserStatus(req, res, next) {
+  async updateUserSuccess(req, res, next) {
     await User.findOne({ slug: req.params.slug }).lean()
       .then(async user => {
         if (user.status === 'Active') {
@@ -190,23 +190,31 @@ class siteController {
       .catch(error => next(error));
   }
 
-  //[GET] /order/:slug
-  order(req, res, next) {
-    User.findOne({ slug: req.params.slug }).lean()
-      .then(user => {
-        Order.find({ username: user.username }).lean()
-          .then(orders => {
-            const ordersWithGrandTotal = orders.map((order) => {
-              order['grandTotal'] = order.cart.reduce((accum, ele) => {
-                return accum + (ele.quant * ele.price);
-              }, 0);
-              return order;
-            });
-            // res.json(ordersWithGrandTotal);
-            res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
-          })
-
-      })
+  //[POST] /admin/tables/product/order/update/:slug
+  async updateOrderSuccess(req, res, next) {
+    const formData = req.body;
+    await Order.updateOne(
+      { slug: req.params.slug },
+      {
+        $set: {
+          'status': formData.status
+        }
+      }
+    );
+    res.redirect('/admin/tables')
+  }
+  //[POST] /admin/tables/product/update/:slug
+  async updateProductSuccess(req, res, next) {
+    const formData = req.body;
+    await Product.updateOne(
+      { slug: req.params.slug },
+      {
+        $set: {
+          'status': formData.status
+        }
+      }
+    );
+    res.redirect('/admin/tables')
   }
 }
 

@@ -34,7 +34,9 @@
                             <p class="mb-0">Category</p>
                         </div>
                         <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{product.category}}</p>
+                            {{#each product.category}}
+                              <p class="text-muted mb-0">{{product.category}}</p>
+                            {{/each}}
                         </div>
                     </div>
                     <hr>
@@ -56,6 +58,40 @@
                     </div>
                     </div>
                     <hr>
+                    <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Stock</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0 fw-bold">{{product.stock}}</p>
+                    </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Status</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0 fw-bold">{{product.status}}</p>
+                    </div>
+                    </div>
+                    <div class="text-center mt-5">
+                        <form method="POST" action="/admin/tables/product/update/{{product.slug}}">
+                          <div class="row">
+                            <div class="col-md-12 mb-4">
+
+                              <div class="form-outline">
+                                <input type="text" id="status" class="form-control form-control-lg bg-light" name="status" value="{{order.status}}" required/>
+                                <label class="form-label" for="status">Status</label>
+                              </div>
+
+                            </div>
+                          </div>
+                          <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Update status</button>
+                          </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -124,9 +160,18 @@
                           <span class="text-secondary text-xs font-weight-bold">{{this.status}}</span>
                         </td>
                         <td class="text-center">
-                          <a href="/admin/tables/product/update/{{this.slug}}" class="text-white font-weight-bold text-xs badge badge-sm bg-gradient-success" data-toggle="tooltip">
-                            Update order
-                          </a>
+                          <form method="POST" action="/admin/tables/product/order/update/{{this.slug}}">
+                            <div class="form-group mb-3">
+                              <select id="status" class="form-select" name="status" required>
+                                <option value="Pending">Pending</option> 
+                                <option value="Shipping">Shipping</option>  
+                                <option value="Done">Done</option>    
+                              </select>
+                            </div>
+                            <button class="btn btn-black btn-sm bg-gradient-success" type="submit">
+                              Update status
+                            </button>
+                          </form>
                         </td>
                       </tr>
                     {{/each}}
