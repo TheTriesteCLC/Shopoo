@@ -79,9 +79,14 @@ module.exports = function(passport) {
             console.log('This is an admin');
             Account = require('../../app/models/Admin');
             
-            // set the user's local credentials
+            // set the user's local credentials                    
+            if (req.body.canAdd === 'adding') req.body.canAdd = true;
+            else req.body.canAdd = false;
+            if (req.body.canBan === 'banning') req.body.canBan = true;
+            else req.body.canBan = false;
+            
             newUser = new Account(req.body);
-            newUser.slug = 'admin-' + username;
+            newUser.slug = 'admin-' + username;  
         }
 
         newUser.username = username;
