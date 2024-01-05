@@ -1,0 +1,112 @@
+<div class="container mt-5">
+    <div class="pt-5">
+        <form method="POST" action="/admin/table/product/update-info/updated">
+              <div class="row">
+                <div class="col-md-6 mb-4">
+
+                  <div class="form-outline">
+                    <input type="text" id="name" class="form-control form-control-lg bg-light" name="name" value="{{product.name}}" required/>
+                    <label class="form-label" for="name">Name</label>
+                  </div>
+
+                </div>
+                <div class="col-md-6 mb-4">
+
+                  <div class="form-outline">
+                    <input type="number" id="price" class="form-control form-control-lg bg-light" name="price" value="{{user.price}}" required/>
+                    <label class="form-label" for="price">Price</label>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 mb-4 d-flex align-items-center">
+
+                  <div class="form-outline datepicker w-100">
+                    <textarea class="form-control bg-light" id="description" rows="3" name="description" required>{{product.description}}</textarea>
+                    <label for="description" class="form-label">Description</label>
+                  </div>
+
+                </div>
+                <div class="col-md-12 mb-4">
+
+                  <h6 class="mb-2 pb-1">Category: </h6>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input bg-light" type="checkbox" name="top" id="top"
+                      value="true" checked />
+                    <label class="form-check-label" for="top">Top</label>
+                  </div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input bg-light" type="checkbox" name="bottom" id="bottom"
+                      value="true"/>
+                    <label class="form-check-label" for="bottom">Bottom</label>
+                  </div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input bg-light" type="checkbox" name="accessories" id="accessories"
+                      value="true"/>
+                    <label class="form-check-label" for="accessories">Accessories</label>
+                  </div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input bg-light" type="checkbox" name="outer" id="outer"
+                      value="true"/>
+                    <label class="form-check-label" for="outer">Outer</label>
+                  </div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input bg-light" type="checkbox" name="shoes" id="shoes"
+                      value="true"/>
+                    <label class="form-check-label" for="shoes">Shoes</label>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-4 pb-2">
+
+                  <div class="form-outline">
+                    <input type="number" min="0" id="buyers" class="form-control form-control-lg bg-light" name="buyers" value="{{product.buyers}}" required/>
+                    <label class="form-label" for="buyers">Buyers</label>
+                  </div>
+
+                </div>
+                <div class="col-md-6 mb-4 pb-2">
+
+                  <div class="form-outline">
+                    <input type="text" id="from" class="form-control form-control-lg bg-light" name="from" value="{{product.from}}" required/>
+                    <label class="form-label" for="from">From</label>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-4 pb-2">
+
+                  <div class="form-outline">
+                    <input type="number" min="2005" max="2024" id="year" class="form-control form-control-lg bg-light" name="year" required/>
+                    <label class="form-label" for="year">Year of collection</label>
+                  </div>
+
+                </div>
+                <div class="col-md-6 mb-4 pb-2">
+
+                  <div class="form-outline">
+                    <input type="number" id="stock" min="0" class="form-control form-control-lg bg-light" name="stock" required/>
+                    <label class="form-label" for="stock">Stock</label>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="text-center mb-5">
+                <button type="submit" class="btn btn-primary">Accept change</button>
+              </div>
+    </form>
+    </div>
+</div>

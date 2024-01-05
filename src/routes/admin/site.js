@@ -31,12 +31,16 @@ router.get('/logout', siteController.logout);
 //Ban or unban user
 router.post('/tables/user/update/:slug', siteController.updateUserSuccess);
 
-//Update product info
+//Update product status
 router.post('/tables/product/order/update/:slug', siteController.updateOrderSuccess);
 router.post('/tables/product/update/:slug', siteController.updateProductSuccess);
 // router.get('/update-profile/:slug', siteController.updateProfile);
 // router.post('/update-profile/updated', siteController.update);
 
+
+//Update product info
+router.get('/tables/product/update-info', siteController.updateProductProfile);
+router.post('/table/product/update-info/updated', siteController.updateProductProfileSuccess);
 
 router.get('/tables/user/:slug', isLoggedIn, siteController.viewUserProfile);
 router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);
