@@ -1,3 +1,6 @@
+{{!-- JQUERY --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <div class="page-heading bg-light">
   <div class="container">
     <div class="row align-items-end text-center">
@@ -71,51 +74,91 @@
         </ul>
       </div>
       <div class="col-md-9">
-        <div class="row">
-          {{#each products}}
-            <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
-              <div class="product-item">
-                <a href="/customer/shop-single/product/{{this.slug}}" class="product-img">
-                  <div class="label new top-right">
-                    <div class='content'>New</div>
-                  </div>
-                  <img src="/images/products/{{this.image}}" alt="Image" class="img-fluid">
-                </a>
-                <h3 class="title">
-                  <a href="/customer/shop-single/product/{{this.slug}}">
-                    {{this.name}}
-                  </a>
-                </h3>
-                <div class="price">
-                  <span>$ {{this.price}}</span>
-                </div>
-              </div>
-            </div>
-          {{/each}}
+        <div class ="template-test"></div>
+        <div class="row main-content" id ="products">
+          {{!-- LOADDED DATA --}}
           
           {{!-- <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 From
               </button> --}}
         </div>
         <ul class="pagination justify-content-center">
-          {{!-- <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-              <span class="sr-only">Previous</span>
-            </a>
-          </li> --}}
-          {{!-- <a href="/customer/shop-single/all?limit=6&skip={{skip}}"></a> --}}
-          <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=1">1</a></li>
-          <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=2">2</a></li>
-          <li class="page-item"><a class="page-link" href="/customer/shop-single/?page=3">3</a></li>
-          {{!-- <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-              <span class="sr-only">Next</span>
-            </a>
-          </li> --}}
+          <li class="page-link" value = "1" >1</li>
+          <li class="page-link" value = "2" >2</li>
+          <li class="page-link" value = "3" >3</li>
         </ul>
       </div>
     </div>
   </div> 
 </div>
+
+<script type="text/x-handlebars-template" id = "product-holder">
+  \{{#each products}} 
+    <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
+      <div class="product-item">
+        <a href="/customer/shop-single/product/\{{'slug'}}" class="product-img">
+          <div class="label new top-right">
+            <div class='content'>New</div>
+          </div>
+          <img src="/images/products/\{{image}}" alt="Image" class="img-fluid">
+        </a>
+        <h3 class="title">
+          <a href="/customer/shop-single/product/\{{slug}}">          
+            \{{name}}
+          </a>
+        </h3>
+        <div class="price">
+          <span>$ \{{price}}</span>
+        </div>
+      </div>
+    </div>
+  \{{/each}}
+</script>
+<script>
+  $(document).ready(function(){
+    $.ajax({
+      type: "GET",
+      url: document.URL + '/?page=1',
+      success: function(response){
+        var template = document.getElementById("product-holder").innerHTML;
+        
+        var compiledTemplate = Handlebars.compile(template);
+        var context = {
+            products : response[0].products,        
+        };
+        var result = compiledTemplate(context);
+        $("#products").html(result);            
+      },
+      error: function(err){
+        console.log(err);
+        alert('Failed');
+      }
+    });    
+  });
+</script>
+<script>
+    $('.page-link').on('click', function(e){
+        var page = this.getAttribute("value");
+        e.preventDefault(); // stop element default action
+        $.ajax({
+          type: "GET",
+          url: document.URL + '/?page=' + page,
+          success: function(response){
+            var template = $("#product-holder").html();
+            //console.log(template);            
+            var compiledTemplate = Handlebars.compile(template);
+            var context = {
+                products : response[0].products,        
+            };
+            var result = compiledTemplate(context);
+            //console.log(result);
+            $("#products").html(result);             
+            
+          },
+          error: function(err){
+            console.log(err);
+            alert('Failed');
+          }
+        });
+    });
+</script>
