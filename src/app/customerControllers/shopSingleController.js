@@ -11,27 +11,26 @@ class shopSingleController {
     // console.log(req.query);
     var page = 1;
 
-    if (req.query == {}) {
-      page = 1;
+    const constriesChoice = await Product.distinct('from').lean();
+    const datesChoice = await Product.distinct('date').lean();
+
+    if (Object.keys(req.query).length === 0) { // empty
+      res.render('customer/shop-single',
+         { layout: 'customer/main', title: 'All', countries: constriesChoice, dates: datesChoice });
     } else {
-      page = req.query.page;
+      page = parseInt(req.query.page);
     }
+
     var skip = (page - 1) * 6;
     const productPerPage = 6;
 
-    const constriesChoice = await Product.distinct('from').lean();
-
-    const datesChoice = await Product.distinct('date').lean();
-
     Product.find({}).limit(productPerPage).skip(skip)
-      .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
-      })
-      .catch(error => next(error));
-  }
+    .then(products => {
+      res.json([{ products: multipleMongooseToObject(products)}]);
+    })
+    .catch(error => next(error));
 
+  }
 
 
 
