@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
+require('../../config/passport/passport')(passport);
 
 const shopSingleController = require('../../app/customerControllers/shopSingleController');
 
-router.post('/adding', shopSingleController.adding);
-router.post('/review', shopSingleController.review);
+router.post('/adding', isLoggedIn, shopSingleController.adding);
+router.post('/review', isLoggedIn, shopSingleController.review);
 router.post('/search', shopSingleController.search);
 
 router.use('/outer', shopSingleController.outer);
@@ -24,8 +26,22 @@ router.use('/collection', shopSingleController.collection);
 
 
 router.use('/all', shopSingleController.index);
-router.use('/:slug', shopSingleController.item);
+router.use('/product/:slug', shopSingleController.item);
+router.use('/:slug', shopSingleController.index); // ?page=
+// router.use('/:slug', shopSingleController.item);
 // router.use('/:id', shopSingleController.item);
 router.use('/', shopSingleController.index);
+
+//Route middleware to make sure a user is logged in
+function isLoggedIn(req, res, next) {
+
+    console.log("Authenticate checking");
+    if (req.isAuthenticated()) { // is authenticated
+        return next();
+    }
+
+    // is not authenticated
+    res.redirect('/customer/login');
+}
 
 module.exports = router;
