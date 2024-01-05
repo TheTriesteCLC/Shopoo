@@ -39,8 +39,8 @@ router.post('/tables/product/update/:slug', siteController.updateProductSuccess)
 
 
 //Update product info
-router.get('/tables/product/update-info', siteController.updateProductProfile);
-router.post('/table/product/update-info/updated', siteController.updateProductProfileSuccess);
+router.get('/tables/product/update-info/:slug', siteController.updateProductProfile);
+router.post('/tables/product/update-info/updated/:slug', siteController.updateProductProfileSuccess);
 
 router.get('/tables/user/:slug', isLoggedIn, siteController.viewUserProfile);
 router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);
