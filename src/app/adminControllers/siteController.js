@@ -88,6 +88,11 @@ class siteController {
   orders(req, res) {
     Order.find({}).lean()
       .then(orders => {
+        for(let i = 0; i < orders.length; ++i) {
+          orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
+            return accum + (prod.price * prod.quant);
+          },0);
+        }
         res.render('admin/orders', { layout: 'admin/main', title: 'All orders', orders });
         // res.json(orders.length);
       })
@@ -97,6 +102,11 @@ class siteController {
   ordersPending(req, res) {
     Order.find({status: 'Pending'}).lean()
       .then(orders => {
+        for(let i = 0; i < orders.length; ++i) {
+          orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
+            return accum + (prod.price * prod.quant);
+          },0);
+        }
         res.render('admin/orders', { layout: 'admin/main', title: 'All pending orders', orders });
         // res.json(orders.length);
       })
@@ -105,17 +115,49 @@ class siteController {
   ordersShipping(req, res) {
     Order.find({status: 'Shipping'}).lean()
       .then(orders => {
+        for(let i = 0; i < orders.length; ++i) {
+          orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
+            return accum + (prod.price * prod.quant);
+          },0);
+        }
         res.render('admin/orders', { layout: 'admin/main', title: 'All shipping orders', orders });
         // res.json(orders.length);
       })
   }
+
   //[GET] /orders/done
   ordersDone(req, res) {
     Order.find({status: 'Done'}).lean()
       .then(orders => {
+        for(let i = 0; i < orders.length; ++i) {
+          orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
+            return accum + (prod.price * prod.quant);
+          },0);
+        }
         res.render('admin/orders', { layout: 'admin/main', title: 'All done orders', orders });
         // res.json(orders.length);
       })
+  }
+
+  //[POST] /orders/time
+  ordersTime(req, res) {
+    const formData = req.body;
+    
+    Order.find({
+      createdAt: {
+          $gte: new Date(Date.parse(formData.startDate)), 
+          $lte: new Date(Date.parse(formData.endDate))
+      }
+    }).lean()
+      .then(orders => {
+        for(let i = 0; i < orders.length; ++i) {
+          orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
+            return accum + (prod.price * prod.quant);
+          },0);
+        }
+        res.render('admin/orders', { layout: 'admin/main', title: `All orders from ${formData.startDate} to ${formData.endDate}`, orders });
+      })
+   
   }
 
   //[GET] /profile

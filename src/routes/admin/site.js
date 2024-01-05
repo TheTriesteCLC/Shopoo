@@ -47,6 +47,7 @@ router.get('/orders', isLoggedIn, siteController.orders);
 router.get('/orders/pending', isLoggedIn, siteController.ordersPending);
 router.get('/orders/shipping', isLoggedIn, siteController.ordersShipping);
 router.get('/orders/done', isLoggedIn, siteController.ordersDone);
+router.post('/orders/time', isLoggedIn, siteController.ordersTime);
 
 router.get('/tables/user/:slug', isLoggedIn, siteController.viewUserProfile);
 router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);

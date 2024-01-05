@@ -169,7 +169,7 @@
     </div>
 
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-3 w-100 d-flex justify-content-between mb-5">
         <ul class="list-unstyled categories">
           <li><a href="/admin/orders/">All <span></span></a></li>
           <li><a href="/admin/orders/pending">Pending <span></span></a></li>
@@ -200,8 +200,29 @@
             </div>
           </li> --}}
         </ul>
-        <div class="dropdown bg-transparent">
-            <form action=""></form>
+        <div class="bg-transparent">
+            <form method="POST" action="/admin/orders/time">
+              <div class="row">
+                <h5>Filtered by time</h5>
+                <div class="col-md-5 mb-4 me-4">
+
+                  <div class="form-outline">
+                    <input type="date" id="startDate" class="form-control form-control-lg bg-light today" name="startDate" required/>
+                    <label class="form-label" for="startDate">Start</label>
+                  </div>
+
+                </div>
+                <div class="col-md-5 mb-4">
+
+                  <div class="form-outline">
+                    <input type="date" id="endDate" class="form-control form-control-lg bg-light tomorrow" name="endDate" required/>
+                    <label class="form-label" for="endDate">End</label>
+                  </div>
+
+                </div>
+                <button type="submit" class="col-md-6 btn btn-info" >Apply filtered</button>
+              </div>
+            </form>
         </div>
       </div>
       <table class="table align-items-center mb-0">
@@ -282,3 +303,15 @@
     </div>
   </div> 
 </div>
+
+<script>
+  let currDate = new Date();
+  let tomDate = new Date();
+  tomDate.setDate(tomDate.getDate() + 1);
+
+  document.querySelector('input.today').valueAsDate = currDate;
+  document.querySelector('input.today').max = currDate.toJSON().split('T')[0];;
+
+  document.querySelector('input.tomorrow').valueAsDate = tomDate;
+  document.querySelector('input.tomorrow').min = tomDate.toJSON().split('T')[0];;
+</script>
