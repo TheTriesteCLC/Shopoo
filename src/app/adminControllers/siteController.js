@@ -42,10 +42,62 @@ class siteController {
 
         // res.json(ordersWithGrandTotal);
         // res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
-        res.render('admin/dashboard', { layout: 'admin/main', totalOrder, totalRevenue, totalUser, totalProduct });
+        res.render('admin/dashboard', { layout: 'admin/main', title: 'All time statistics', totalOrder, totalRevenue, totalUser, totalProduct });
+      })
+  }
+
+  //[POST] /dashboard/time
+  async dashboardTime(req, res, next) {
+    const formData = req.body;
+
+    let ordersWithGrandTotal = [];
+    let totalOrder = 0;
+    let totalRevenue = 0;
+    let totalUser = 0;
+    let totalProduct = 0;
+
+    await User.find({
+        createdAt: {
+          $gte: new Date(Date.parse(formData.startDate)), 
+          $lte: new Date(Date.parse(formData.endDate))
+      }
+    }).lean()
+      .then(users => {
+        totalUser = users.length;
       })
 
+    await Product.find({
+        createdAt: {
+          $gte: new Date(Date.parse(formData.startDate)), 
+          $lte: new Date(Date.parse(formData.endDate))
+      }
+    }).lean()
+      .then(products => {
+        totalProduct = products.length;
+      })
 
+    await Order.find({
+        createdAt: {
+          $gte: new Date(Date.parse(formData.startDate)), 
+          $lte: new Date(Date.parse(formData.endDate))
+      }
+    }).lean()
+      .then(orders => {
+        ordersWithGrandTotal = orders.map((order) => {
+          order['grandTotal'] = order.cart.reduce((accum, ele) => {
+            return accum + (ele.quant * ele.price);
+          }, 0);
+          return order;
+        });
+        totalOrder = ordersWithGrandTotal.length;
+        totalRevenue = ordersWithGrandTotal.reduce((accum, ele) => {
+          return accum + ele.grandTotal;
+        }, 0);
+
+        // res.json(ordersWithGrandTotal);
+        // res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
+        res.render('admin/dashboard', { layout: 'admin/main', title: `From ${formData.startDate} to ${formData.endDate}`, totalOrder, totalRevenue, totalUser, totalProduct });
+      })
   }
 
   //[GET] /tables
@@ -81,7 +133,7 @@ class siteController {
 
   //[GET] /rtl
   rtl(req, res) {
-    res.render('admin/rtl', { layout: 'admin/custom' });
+    res.render('admin/rtl', { layout: 'admin/main' });
   }
 
   //[GET] /orders
@@ -395,6 +447,91 @@ class siteController {
     console.log('updated success')
   
     res.redirect('/admin/tables');
+  }
+
+  
+  //[GET] /admin/product-report
+  async productReport(req, res, next) {
+    Product.findOne({ slug: req.params.slug }).lean()
+      .then(async product => {
+        await Order.find({ "cart.prod": product.name }).lean()
+          .then(orders => {
+            let pendingCount = 0;
+            let shippingCount = 0;
+            let doneCount = 0;
+
+            for (let i = 0; i < orders.length; ++i) {
+              if (orders[i].status === 'Pending') {
+                pendingCount += orders[i].cart.filter((ele) => ele.prod === product.name)[0].quant;
+              } else if (orders[i].status === 'Shipping') {
+                shippingCount += orders[i].cart.filter((ele) => ele.prod === product.name)[0].quant;
+              } else if (orders[i].status === 'Done') {
+                doneCount += orders[i].cart.filter((ele) => ele.prod === product.name)[0].quant;
+              }
+
+              orders[i]['grandTotal'] = orders[i].cart.reduce((accum, ele) => {
+                return accum + (ele.quant * ele.price);
+              }, 0);
+            }
+
+            product['category'] = Object.keys(product).filter((k) => product[k] === true);
+
+            // res.json({ product });
+            res.render('admin/productProfile', {
+              layout: 'admin/main', product: product, orders: orders,
+              pendingCount: pendingCount, shippingCount: shippingCount, doneCount: doneCount
+            });
+
+          })
+
+        // res.render('admin/productProfile', { layout: 'admin/main', product: product });
+
+        // res.json({ layout: 'admin/main', user: user, cartWithImg: cartWithImg, ordersWithGrandTotal: ordersWithGrandTotal });
+      })
+      .catch(error => next(error));
+
+
+    await Product.find({}).lean()
+      .then(async products => {
+        let productReports = [];
+        for(let i = 0; i < products.length; ++i) {
+          let productReport = {
+            name: products[i].name,
+            price: products[i].price,
+            category: Object.keys(products[i]).filter((k) => { return products[i][k] === true; })
+          };
+
+          let totalOrders = 0;
+          let totalOrdered = 0;
+          let revenue = 0;
+          await Order.find({ "cart.prod": productReport.name }).lean()
+            .then(orders => {
+              totalOrders = orders.length;
+              for (let i = 0; i < orders.length; ++i) {
+                totalOrdered += orders[i].cart.filter((ele) => ele.prod === productReport.name)[0].quant;
+                // orders[i]['grandTotal'] = orders[i].cart.reduce((accum, ele) => {
+                //   return accum + (ele.quant * ele.price);
+                // }, 0);
+              }
+
+              productReport['totalOrdered'] = totalOrdered;
+
+              // res.json({ product });
+              res.render('admin/productProfile', {
+                layout: 'admin/main', product: product, orders: orders,
+                pendingCount: pendingCount, shippingCount: shippingCount, doneCount: doneCount
+              });
+            })
+
+            productReport['totalOrders'] = orders.length;
+
+            productReports.push(productReport);
+        } 
+        
+      })
+      .catch(error => next(error));
+
+    res.render('admin/productReport', {layout: 'admin/main'});
   }
 }
 

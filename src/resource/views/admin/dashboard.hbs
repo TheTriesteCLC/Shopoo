@@ -6,6 +6,7 @@
           <div class="col-lg-6">
             <div class="d-flex flex-column h-100">
   <h2 class="font-weight-bolder mb-0">General Statistics</h2>
+  <h5>{{title}}</h5>
 </div>
 
           </div>
@@ -15,7 +16,7 @@
 
     <div class="row">
       <div class="col-lg-5 col-sm-5">
-        <div class="card  mb-2">
+<div class="card  mb-2">
   <div class="card-header p-3 pt-2">
     <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-xl mt-n4 position-absolute">
       <i class="material-icons opacity-10">weekend</i>
@@ -25,14 +26,9 @@
       <h4 class="mb-0">${{totalRevenue}}</h4>
     </div>
   </div>
-
-  {{!-- <hr class="dark horizontal my-0">
-  <div class="card-footer p-3">
-    <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55% </span>than last week</p>
-  </div> --}}
 </div>
 
-        <div class="card  mb-2">
+<div class="card  mb-2">
   <div class="card-header p-3 pt-2">
     <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary shadow text-center border-radius-xl mt-n4 position-absolute">
       <i class="material-icons opacity-10">leaderboard</i>
@@ -43,10 +39,6 @@
     </div>
   </div>
 
-  {{!-- <hr class="dark horizontal my-0">
-  <div class="card-footer p-3">
-    <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+3% </span>than last month</p>
-  </div> --}}
 </div>
 
       </div>
@@ -61,14 +53,9 @@
       <h4 class="mb-0 ">{{totalOrder}}</h4>
     </div>
   </div>
-
-  {{!-- <hr class="horizontal my-0 dark">
-  <div class="card-footer p-3">
-    <p class="mb-0 "><span class="text-success text-sm font-weight-bolder">+1% </span>than yesterday</p>
-  </div> --}}
 </div>
 
-        <div class="card ">
+<div class="card ">
   <div class="card-header p-3 pt-2 bg-transparent">
     <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
       <i class="material-icons opacity-10">person_add</i>
@@ -78,17 +65,12 @@
       <h4 class="mb-0 ">{{totalProduct}}</h4>
     </div>
   </div>
-
-  {{!-- <hr class="horizontal my-0 dark">
-  <div class="card-footer p-3">
-    <p class="mb-0 ">Just updated</p>
-  </div> --}}
 </div>
 
       </div>
     </div>
 
-    <div class="row mt-4">
+    {{!-- <div class="row mt-4">
       <div class="col-10">
         <div class="card mb-4 ">
   <div class="d-flex">
@@ -242,11 +224,45 @@
 </div>
 
       </div>
-    </div>
+    </div> --}}
+  <form method="POST" action="/admin/dashboard/time">
+              <div class="row">
+                <h5>Filtered by time</h5>
+                <div class="col-md-5 mb-4 me-4">
+
+                  <div class="form-outline">
+                    <input type="date" id="startDate" class="form-control form-control-lg bg-light today" name="startDate" required/>
+                    <label class="form-label" for="startDate">Start</label>
+                  </div>
+
+                </div>
+                <div class="col-md-5 mb-4">
+
+                  <div class="form-outline">
+                    <input type="date" id="endDate" class="form-control form-control-lg bg-light tomorrow" name="endDate" required/>
+                    <label class="form-label" for="endDate">End</label>
+                  </div>
+
+                </div>
+                <button type="submit" class="col-md-6 btn btn-info" >Apply filtered</button>
+              </div>
+    </form>
   </div>
 </div>
 
-<div class="row mt-4">
+<script>
+  let currDate = new Date();
+  let tomDate = new Date();
+  tomDate.setDate(tomDate.getDate() + 1);
+
+  document.querySelector('input.today').valueAsDate = currDate;
+  document.querySelector('input.today').max = currDate.toJSON().split('T')[0];;
+
+  document.querySelector('input.tomorrow').valueAsDate = tomDate;
+  document.querySelector('input.tomorrow').min = tomDate.toJSON().split('T')[0];;
+</script>
+
+{{!-- <div class="row mt-4">
   <div class="col-lg-5 mb-lg-0 mb-4">
     <div class="card z-index-2 mt-4">
   <div class="card-body mt-n5 px-3">
@@ -330,12 +346,12 @@
 </div>
 
   </div>
-</div>
+</div> --}}
 
-<div class="row">
+{{!-- <div class="row">
   <div class="col-12">
     <div id="globe" class="position-absolute end-0 top-10 mt-sm-3 mt-7 me-lg-7">
       <canvas width="700" height="600" class="w-lg-100 h-lg-100 w-75 h-75 me-lg-0 me-n10 mt-lg-5"></canvas>
     </div>
   </div>
-</div>
+</div> --}}
