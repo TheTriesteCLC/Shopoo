@@ -341,12 +341,27 @@ class siteController {
           'popular': parseFloat(formData.buyers) > 500 ? true : false,
         }
       }
-    );
+    );   
+
+    await Product.updateOne(
+      { name: formData.name },
+      {
+        slug: slugify(formData.name)
+      }
+      )
 
     console.log('updated success')
   
     res.redirect('/admin/tables');
   }
+}
+
+const slugify = (textToSlugify) => {
+  if (!textToSlugify) return '';
+
+  const lowercaseText = textToSlugify.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replace(/ +(?= )/g, '');
+
+  return lowercaseText.split(' ').join('-');
 }
 
 module.exports = new siteController;
