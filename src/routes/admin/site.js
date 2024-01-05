@@ -44,10 +44,16 @@ router.post('/product/save', siteController.saveProduct);
 router.get('/tables/product/update-info/:slug', isLoggedIn, siteController.updateProductProfile);
 router.post('/tables/product/update-info/updated/:slug', siteController.updateProductProfileSuccess);
 
+//View orders and filtered
+router.get('/orders', isLoggedIn, siteController.orders);
+router.get('/orders/pending', isLoggedIn, siteController.ordersPending);
+router.get('/orders/shipping', isLoggedIn, siteController.ordersShipping);
+router.get('/orders/done', isLoggedIn, siteController.ordersDone);
+
 router.get('/tables/user/:slug', isLoggedIn, siteController.viewUserProfile);
 router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);
 router.get('/profile', isLoggedIn, siteController.profile);
-router.get('/notifications', isLoggedIn, siteController.notifications);
+
 router.get('/rtl', isLoggedIn, siteController.rtl);
 router.get('/virtual-reality', isLoggedIn, siteController.virtualReality);
 router.get('/billing', isLoggedIn, siteController.billing);
