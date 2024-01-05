@@ -64,7 +64,9 @@ function isLoggedIn(req, res, next) {
 
     console.log("Authenticate checking");
     if (req.isAuthenticated()) { // is authenticated
-        return next();
+        if (req.user.status === "Active") { // is not Banned
+            return next();
+        }
     }
 
     // is not authenticated
