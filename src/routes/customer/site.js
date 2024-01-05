@@ -42,10 +42,10 @@ router.get('/protected', isLoggedIn, siteController.protected);
 
 //Cart 
 router.get('/cart', isLoggedIn, siteController.cart);
-router.post('/update-cart/', isLoggedIn, siteController.updateCart);
+router.post('/update-cart/', siteController.updateCart);
 
 //Checkout
-router.get('/checkout/:slug', siteController.checkout);
+router.get('/checkout/:slug', isLoggedIn, siteController.checkout);
 router.post('/checkout-success/:slug', siteController.checkoutSuccess);
 
 //View Order
@@ -53,10 +53,9 @@ router.get('/order/', isLoggedIn, siteController.order);
 
 //Trivial path
 router.get('/thankyou', siteController.thankyou);
-router.get('/checkout/:slug', siteController.checkout);
 router.get('/contact', siteController.contact);
 router.get('/elements', siteController.elements);
-router.get('/about', siteController.about);
+router.get('/about',siteController.about);
 router.get('/home', siteController.home);
 router.get('/', siteController.index);
 
