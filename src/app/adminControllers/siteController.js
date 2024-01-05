@@ -4,8 +4,8 @@ const User = require('../models/User');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
 
-// const moment = require('moment')
-// const today = moment().startOf('day')
+const moment = require('moment')
+const today = moment().startOf('day')
 
 class siteController {
   //[GET] /

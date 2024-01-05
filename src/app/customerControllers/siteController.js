@@ -39,12 +39,12 @@ class siteController {
 
   //[GET] /checkout/:slug
   async checkout(req, res, next) {
-    await User.findOne({ slug: req.params.slug }).lean()
+    await User.findOne({ username: req.user.username }).lean()
       .then(user => {
         let subtotalAll = user.cart.map(ele => {
           return {
             name: ele.prod,
-            price: ele.price,
+            price: ele.price,   
             quant: ele.quant,
             subtotal: ele.quant * ele.price
           }
@@ -144,7 +144,8 @@ class siteController {
 
   //[GET] /cart
   async cart(req, res, next) {
-    const user = req.user;
+    // const user = req.user;
+    const user = await User.findOne({username: req.user.username}).lean();
     const cartProducts = user.cart;
     let cartWithImg = [];
     let grandTotal = 0;
@@ -153,7 +154,7 @@ class siteController {
       let element = cartProducts[i];
 
       // get cart's products
-      await Product.findOne({ name: ele.prod }).lean()
+      await Product.findOne({ name: element.prod }).lean()
         .then(product => {
           element['image'] = product.image;
         });
@@ -172,9 +173,11 @@ class siteController {
 
     if (allProducts.length != 0) {
       for (var i = 0; i < allProducts.length; ++i) {
+        console.log(allProducts[i]);
+        console.log(allQuant[i]);
         if (allQuant[i] > 0) {
           await User.updateOne(
-            { slug: req.params.slug, "cart.prod": allProducts[i] },
+            { username: req.user.username, "cart.prod": allProducts[i] },
             {
               $set: {
                 "cart.$.quant": allQuant[i]
@@ -183,7 +186,7 @@ class siteController {
           );
         } else {
           await User.updateOne(
-            { slug: req.user.slug },
+            { username: req.user.username },
             {
               $pull: {
                 'cart': { 'prod': allProducts[i] }
@@ -191,6 +194,7 @@ class siteController {
             });
         }
       }
+
       res.redirect(`/customer/cart`);
     } else {
       res.redirect('/customer/shop-single');

@@ -6,11 +6,12 @@ const User = require('../models/User');
 class shopSingleController {
 
   //[GET] /shop-single/all
+  //[GET] /shop-single/?page=
   async index(req, res, next) {
     // console.log(req.query);
     var page = 1;
 
-    if (req == {}) {
+    if (req.query == {}) {
       page = 1;
     } else {
       page = req.query.page;
@@ -211,44 +212,7 @@ class shopSingleController {
 
 
 
-  //[GET] /shop-single/:slug
-  item(req, res, next) {
-
-    // res.render('customer/item', { layout: 'customer/main' });
-    // console.log(req.params);
-    Product.findOne({ slug: req.params.slug }).lean()
-      .then(async thisProduct => {
-        var related = [];
-
-        // console.log(thisProduct);
-        // console.log(reviews);
-
-        for (var propt in thisProduct) {
-          if (thisProduct[propt] === true) {
-            related.push(... await Product.find({ [propt]: true, slug: { $ne: thisProduct.slug } }).lean());
-            //console.log(`${propt} : ${product[propt]}`);  
-          }
-        }
-
-        const reviews = await (Review.find({ product: thisProduct.name }).lean());
-
-        // remove duplicate objects
-        const jsonObject = related.map(JSON.stringify);
-        const uniqueSet = new Set(jsonObject);
-        related = Array.from(uniqueSet).map(JSON.parse);
-
-        // limit to 4 products
-        while (related.length > 4) related.pop();
-
-        res.render('customer/item',
-          { layout: 'customer/main', title: 'Item', product: thisProduct, related: related, reviews: reviews });
-        // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
-
-      })
-      .catch(error => next(error));
-
-  }
-
+  
 
 
   //[GET] /shop-single/search
@@ -283,7 +247,10 @@ class shopSingleController {
 
   //[POST] /shop-single/adding?product=&price=
   async adding(req, res) {
-    const formData = req.body;
+    var user = req.user;
+
+    console.log("get user " + user.username);
+    // console.log(req.body);
 
     const productAdded = {
       prod: req.query.prod,
@@ -291,15 +258,16 @@ class shopSingleController {
       price: parseFloat(req.query.price),
     };
 
+    // findoneandUpdate?
     await User.updateOne(
-      { username: formData.username, password: formData.password },
+      { username: user.username},
       {
         $pull: { 'cart': { 'prod': productAdded.prod } }
       }
     )
 
-    await User.updateOne(
-      { username: formData.username, password: formData.password },
+    await User.findOneAndUpdate(
+      { username: user.username},
       {
         $push: {
           cart: {
@@ -314,6 +282,47 @@ class shopSingleController {
     res.redirect('/customer/shop-single');
 
   }
+
+  //[GET] /shop-single/product/:slug
+  item(req, res, next) {
+
+    // res.render('customer/item', { layout: 'customer/main' });
+    // console.log(req.params);
+    Product.findOne({ slug: req.params.slug }).lean()
+      .then(async thisProduct => {
+        var related = [];
+
+        // console.log(thisProduct);
+        // console.log(reviews);
+
+        // get related product
+        for (var propt in thisProduct) {
+          if (thisProduct[propt] === true) {
+            related.push(... await Product.find({ [propt]: true, slug: { $ne: thisProduct.slug } }).lean());
+            //console.log(`${propt} : ${product[propt]}`);  
+          }
+        }
+
+        // Still got error read null:.name
+        const reviews = await (Review.find({ product: thisProduct.name }).lean());
+
+        // remove duplicate objects
+        const jsonObject = related.map(JSON.stringify);
+        const uniqueSet = new Set(jsonObject);
+        related = Array.from(uniqueSet).map(JSON.parse);
+
+        // limit to 4 products
+        while (related.length > 4) related.pop();
+
+        res.render('customer/item',
+          { layout: 'customer/main', title: 'Item', product: thisProduct, related: related, reviews: reviews });
+        // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
+
+      })
+      .catch(error => next(error));
+
+  }
+
 }
 
 module.exports = new shopSingleController;
