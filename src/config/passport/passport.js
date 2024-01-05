@@ -11,7 +11,7 @@ module.exports = function(passport) {
 
     passport.deserializeUser(function (user, done) {
         console.log("Deseriaize User");
-        console.log(user);
+        // console.log(user);
         done(null, user);
     });
 
