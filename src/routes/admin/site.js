@@ -11,7 +11,7 @@ router.post('/login',
     passport.authenticate('local-login', { failureRedirect: './login' }),
     function (req, res) {
         console.log("redirecting");
-        res.redirect('./home');
+        res.redirect('./dashboard');
     }
 );
 
@@ -57,8 +57,7 @@ router.get('/virtual-reality', isLoggedIn, siteController.virtualReality);
 router.get('/billing', isLoggedIn, siteController.billing);
 router.get('/tables', isLoggedIn, siteController.tables);
 router.get('/dashboard', isLoggedIn, siteController.dashboard);
-router.get('/home', isLoggedIn, siteController.home);
-router.get('/', isLoggedIn, siteController.index);
+router.get('/', isLoggedIn, siteController.dashboard);
 
 //Route middleware to make sure an admin is logged in
 function isLoggedIn(req, res, next) {
