@@ -52,7 +52,7 @@ router.post('/checkout-success/:slug', siteController.checkoutSuccess);
 router.get('/order/', isLoggedIn, siteController.order);
 
 //Trivial path
-router.get('/thankyou', siteController.thankyou);
+router.get('/thankyou', isLoggedIn, siteController.thankyou);
 router.get('/contact', siteController.contact);
 router.get('/elements', siteController.elements);
 router.get('/about',siteController.about);
