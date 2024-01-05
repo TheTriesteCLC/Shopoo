@@ -39,12 +39,12 @@ class siteController {
 
   //[GET] /checkout/:slug
   async checkout(req, res, next) {
-    await User.findOne({ slug: req.params.slug }).lean()
+    await User.findOne({ username: req.user.username }).lean()
       .then(user => {
         let subtotalAll = user.cart.map(ele => {
           return {
             name: ele.prod,
-            price: ele.price,
+            price: ele.price,   
             quant: ele.quant,
             subtotal: ele.quant * ele.price
           }
