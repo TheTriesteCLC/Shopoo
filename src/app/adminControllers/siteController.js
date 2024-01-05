@@ -180,7 +180,6 @@ class siteController {
 
   //[GET] /admin/tables/product/:slug
   viewProductProfile(req, res, next) {
-
     Product.findOne({ slug: req.params.slug }).lean()
       .then(async product => {
         await Order.find({ "cart.prod": product.name }).lean()
@@ -245,6 +244,57 @@ class siteController {
       }
     );
     res.redirect('/admin/tables')
+  }
+  //[GET] /admin/tables/product/update-info/:slug
+  updateProductProfile(req, res, next) {
+    Product.findOne({slug: req.params.slug}).lean()
+      .then(product => {
+        res.render('admin/updateProduct', {layout: 'admin/main', product});
+      })
+      .catch(error => next(error));
+  }
+
+  //[POST] /admin/table/product/update-info/updated
+  async updateProductProfileSuccess(req, res, next) {
+    const formData = req.body;
+    // const updatedProduct = {
+    //   name: formData.name,
+    //   price: formData.price,
+    //   description: formData.description,
+    //   top: 'top' in formData ? true : false,
+    //   bottom: 'bottom' in formData ? true : false,
+    //   accessories: 'accessories' in formData ? true : false,
+    //   outer: 'outer' in formData ? true : false,
+    //   shoes: 'shoes' in formData ? true : false,
+    //   buyers: parseFloat(formData.buyers),
+    //   date: pasrseFloat(formData.year),
+    //   from: formData.from,
+    //   stock: parseFloat(formData.stock),
+    //   popular: parseFloat(formData.buyers) > 500 ? true : false,
+    // };
+
+    await Product.updateOne(
+      {slug: req.params.slug},
+      {
+        $set: {
+          'name': formData.name,
+          'price': parseFloat(formData.price),
+          'description': formData.description,
+          'top': 'top' in formData ? true : false,
+          'bottom': 'bottom' in formData ? true : false,
+          'accessories': 'accessories' in formData ? true : false,
+          'outer': 'outer' in formData ? true : false,
+          'shoes': 'shoes' in formData ? true : false,
+          'buyers': parseFloat(formData.buyers),
+          'date': parseFloat(formData.year),
+          'from': formData.from,
+          'stock': parseFloat(formData.stock),
+          'popular': parseFloat(formData.buyers) > 500 ? true : false,
+        }
+      }
+    );
+  
+    res.redirect('/admin/tables');
   }
 }
 
