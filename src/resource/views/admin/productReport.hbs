@@ -147,7 +147,7 @@
 
     <div class="row align-items-center mb-5">
       <div class="col-lg-8">
-        <h2 class="mb-3 mb-lg-0">{{title}}</h2>
+        <h2 class="mb-3 mb-lg-0">{{{title}}}</h2>
       </div>
       <div class="col-lg-4">
 
@@ -202,12 +202,12 @@
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total orders</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total ordered</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Revenue</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total sold</th>
+                      <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Revenue</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {{#each productReport}}
+                    {{#each productReports}}
                       <tr>
                         <td>
                           <div class="d-flex px-2 py-1">
@@ -217,7 +217,7 @@
                           </div>
                         </td>
                         <td>
-                          <p class="text-xs font-weight-bold mb-0">{{this.price}}</p>
+                          <p class="text-xs font-weight-bold mb-0">${{this.price}}</p>
                         </td>
                         <td class="align-middle text-center">
                           {{#each this.category}}
@@ -231,7 +231,7 @@
                           <span class="text-secondary text-xs font-weight-bold">{{this.totalOrdered}}</span>
                         </td>
                         <td class="text-center">
-                          <span class="text-secondary text-xs font-weight-bold">${{this.renvenue}}</span>
+                          <span class="text-secondary text-xs font-weight-bold">${{this.revenue}}</span>
                         </td>
                       </tr>
                     {{/each}}

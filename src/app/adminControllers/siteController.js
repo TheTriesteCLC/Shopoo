@@ -57,9 +57,9 @@ class siteController {
     let totalProduct = 0;
 
     await User.find({
-        createdAt: {
-          $gte: new Date(Date.parse(formData.startDate)), 
-          $lte: new Date(Date.parse(formData.endDate))
+      createdAt: {
+        $gte: new Date(Date.parse(formData.startDate)),
+        $lte: new Date(Date.parse(formData.endDate))
       }
     }).lean()
       .then(users => {
@@ -67,9 +67,9 @@ class siteController {
       })
 
     await Product.find({
-        createdAt: {
-          $gte: new Date(Date.parse(formData.startDate)), 
-          $lte: new Date(Date.parse(formData.endDate))
+      createdAt: {
+        $gte: new Date(Date.parse(formData.startDate)),
+        $lte: new Date(Date.parse(formData.endDate))
       }
     }).lean()
       .then(products => {
@@ -77,9 +77,9 @@ class siteController {
       })
 
     await Order.find({
-        createdAt: {
-          $gte: new Date(Date.parse(formData.startDate)), 
-          $lte: new Date(Date.parse(formData.endDate))
+      createdAt: {
+        $gte: new Date(Date.parse(formData.startDate)),
+        $lte: new Date(Date.parse(formData.endDate))
       }
     }).lean()
       .then(orders => {
@@ -140,10 +140,10 @@ class siteController {
   orders(req, res) {
     Order.find({}).lean()
       .then(orders => {
-        for(let i = 0; i < orders.length; ++i) {
+        for (let i = 0; i < orders.length; ++i) {
           orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
             return accum + (prod.price * prod.quant);
-          },0);
+          }, 0);
         }
         res.render('admin/orders', { layout: 'admin/main', title: 'All orders', orders });
         // res.json(orders.length);
@@ -152,12 +152,12 @@ class siteController {
 
   //[GET] /orders/pending
   ordersPending(req, res) {
-    Order.find({status: 'Pending'}).lean()
+    Order.find({ status: 'Pending' }).lean()
       .then(orders => {
-        for(let i = 0; i < orders.length; ++i) {
+        for (let i = 0; i < orders.length; ++i) {
           orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
             return accum + (prod.price * prod.quant);
-          },0);
+          }, 0);
         }
         res.render('admin/orders', { layout: 'admin/main', title: 'All pending orders', orders });
         // res.json(orders.length);
@@ -165,12 +165,12 @@ class siteController {
   }
   //[GET] /orders/shipping
   ordersShipping(req, res) {
-    Order.find({status: 'Shipping'}).lean()
+    Order.find({ status: 'Shipping' }).lean()
       .then(orders => {
-        for(let i = 0; i < orders.length; ++i) {
+        for (let i = 0; i < orders.length; ++i) {
           orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
             return accum + (prod.price * prod.quant);
-          },0);
+          }, 0);
         }
         res.render('admin/orders', { layout: 'admin/main', title: 'All shipping orders', orders });
         // res.json(orders.length);
@@ -179,12 +179,12 @@ class siteController {
 
   //[GET] /orders/done
   ordersDone(req, res) {
-    Order.find({status: 'Done'}).lean()
+    Order.find({ status: 'Done' }).lean()
       .then(orders => {
-        for(let i = 0; i < orders.length; ++i) {
+        for (let i = 0; i < orders.length; ++i) {
           orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
             return accum + (prod.price * prod.quant);
-          },0);
+          }, 0);
         }
         res.render('admin/orders', { layout: 'admin/main', title: 'All done orders', orders });
         // res.json(orders.length);
@@ -194,22 +194,22 @@ class siteController {
   //[POST] /orders/time
   ordersTime(req, res) {
     const formData = req.body;
-    
+
     Order.find({
       createdAt: {
-          $gte: new Date(Date.parse(formData.startDate)), 
-          $lte: new Date(Date.parse(formData.endDate))
+        $gte: new Date(Date.parse(formData.startDate)),
+        $lte: new Date(Date.parse(formData.endDate))
       }
     }).lean()
       .then(orders => {
-        for(let i = 0; i < orders.length; ++i) {
+        for (let i = 0; i < orders.length; ++i) {
           orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
             return accum + (prod.price * prod.quant);
-          },0);
+          }, 0);
         }
         res.render('admin/orders', { layout: 'admin/main', title: `All orders from ${formData.startDate} to ${formData.endDate}`, orders });
       })
-   
+
   }
 
   //[GET] /profile
@@ -370,16 +370,16 @@ class siteController {
   }
   //[GET] /admin/tables/product/update-info/:slug
   updateProductProfile(req, res, next) {
-    Product.findOne({slug: req.params.slug}).lean()
+    Product.findOne({ slug: req.params.slug }).lean()
       .then(product => {
-        res.render('admin/updateProduct', {layout: 'admin/main', product});
+        res.render('admin/updateProduct', { layout: 'admin/main', product });
       })
       .catch(error => next(error));
   }
 
   //[GET] admin/product/add
   addProduct(req, res, next) {
-    res.render('admin/addProduct', {layout: 'admin/main'});
+    res.render('admin/addProduct', { layout: 'admin/main' });
   }
 
   //[POST] admin/product/save
@@ -387,21 +387,21 @@ class siteController {
     var formData = req.body;
 
     formData = {
-          'name': formData.name,
-          'price': parseFloat(formData.price),
-          'description': formData.description,
-          'top': 'top' in formData ? true : false,
-          'bottom': 'bottom' in formData ? true : false,
-          'accessories': 'accessories' in formData ? true : false,
-          'outer': 'outer' in formData ? true : false,
-          'shoes': 'shoes' in formData ? true : false,
-          'buyers': parseFloat(formData.buyers),
-          'date': parseFloat(formData.year),
-          'from': formData.from,
-          'stock': parseFloat(formData.stock),
-          'popular': parseFloat(formData.buyers) > 500 ? true : false,
-          'status': formData.stock > 0 ? 'OnStock': 'OutStock'
-        };
+      'name': formData.name,
+      'price': parseFloat(formData.price),
+      'description': formData.description,
+      'top': 'top' in formData ? true : false,
+      'bottom': 'bottom' in formData ? true : false,
+      'accessories': 'accessories' in formData ? true : false,
+      'outer': 'outer' in formData ? true : false,
+      'shoes': 'shoes' in formData ? true : false,
+      'buyers': parseFloat(formData.buyers),
+      'date': parseFloat(formData.year),
+      'from': formData.from,
+      'stock': parseFloat(formData.stock),
+      'popular': parseFloat(formData.buyers) > 500 ? true : false,
+      'status': formData.stock > 0 ? 'OnStock' : 'OutStock'
+    };
 
     const newProduct = new Product(formData);
     newProduct.image = "null";
@@ -415,9 +415,9 @@ class siteController {
   //[POST] /admin/table/product/update-info/updated
   async updateProductProfileSuccess(req, res, next) {
     const formData = req.body;
-    
+
     await Product.updateOne(
-      {slug: req.params.slug},
+      { slug: req.params.slug },
       {
         $set: {
           'name': formData.name,
@@ -435,66 +435,26 @@ class siteController {
           'popular': parseFloat(formData.buyers) > 500 ? true : false,
         }
       }
-    );   
+    );
 
     await Product.updateOne(
       { name: formData.name },
       {
         slug: slugify(formData.name)
       }
-      )
+    )
 
     console.log('updated success')
-  
+
     res.redirect('/admin/tables');
   }
 
-  
   //[GET] /admin/product-report
   async productReport(req, res, next) {
-    Product.findOne({ slug: req.params.slug }).lean()
-      .then(async product => {
-        await Order.find({ "cart.prod": product.name }).lean()
-          .then(orders => {
-            let pendingCount = 0;
-            let shippingCount = 0;
-            let doneCount = 0;
-
-            for (let i = 0; i < orders.length; ++i) {
-              if (orders[i].status === 'Pending') {
-                pendingCount += orders[i].cart.filter((ele) => ele.prod === product.name)[0].quant;
-              } else if (orders[i].status === 'Shipping') {
-                shippingCount += orders[i].cart.filter((ele) => ele.prod === product.name)[0].quant;
-              } else if (orders[i].status === 'Done') {
-                doneCount += orders[i].cart.filter((ele) => ele.prod === product.name)[0].quant;
-              }
-
-              orders[i]['grandTotal'] = orders[i].cart.reduce((accum, ele) => {
-                return accum + (ele.quant * ele.price);
-              }, 0);
-            }
-
-            product['category'] = Object.keys(product).filter((k) => product[k] === true);
-
-            // res.json({ product });
-            res.render('admin/productProfile', {
-              layout: 'admin/main', product: product, orders: orders,
-              pendingCount: pendingCount, shippingCount: shippingCount, doneCount: doneCount
-            });
-
-          })
-
-        // res.render('admin/productProfile', { layout: 'admin/main', product: product });
-
-        // res.json({ layout: 'admin/main', user: user, cartWithImg: cartWithImg, ordersWithGrandTotal: ordersWithGrandTotal });
-      })
-      .catch(error => next(error));
-
-
     await Product.find({}).lean()
       .then(async products => {
         let productReports = [];
-        for(let i = 0; i < products.length; ++i) {
+        for (let i = 0; i < products.length; ++i) {
           let productReport = {
             name: products[i].name,
             price: products[i].price,
@@ -509,29 +469,59 @@ class siteController {
               totalOrders = orders.length;
               for (let i = 0; i < orders.length; ++i) {
                 totalOrdered += orders[i].cart.filter((ele) => ele.prod === productReport.name)[0].quant;
-                // orders[i]['grandTotal'] = orders[i].cart.reduce((accum, ele) => {
-                //   return accum + (ele.quant * ele.price);
-                // }, 0);
               }
 
+              productReport['totalOrders'] = orders.length;
               productReport['totalOrdered'] = totalOrdered;
-
-              // res.json({ product });
-              res.render('admin/productProfile', {
-                layout: 'admin/main', product: product, orders: orders,
-                pendingCount: pendingCount, shippingCount: shippingCount, doneCount: doneCount
-              });
+              productReport['revenue'] = totalOrdered * productReport.price;
             })
-
-            productReport['totalOrders'] = orders.length;
-
-            productReports.push(productReport);
-        } 
-        
+          productReports.push(productReport);
+        }
+        res.render('admin/productReport', { layout: 'admin/main', title: 'All products report', productReports });
       })
       .catch(error => next(error));
+  }
 
-    res.render('admin/productReport', {layout: 'admin/main'});
+  //[POST] /admin/product-report/time
+  async productReportTime(req, res, next) {
+    const formData = req.body;
+
+    await Product.find({}).lean()
+      .then(async products => {
+        let productReports = [];
+        for (let i = 0; i < products.length; ++i) {
+          let productReport = {
+            name: products[i].name,
+            price: products[i].price,
+            category: Object.keys(products[i]).filter((k) => { return products[i][k] === true; })
+          };
+
+          let totalOrders = 0;
+          let totalOrdered = 0;
+          let revenue = 0;
+          await Order.find(
+            {
+              "cart.prod": productReport.name,
+              createdAt: {
+                $gte: new Date(Date.parse(formData.startDate)),
+                $lte: new Date(Date.parse(formData.endDate))
+              }
+            }).lean()
+            .then(orders => {
+              totalOrders = orders.length;
+              for (let i = 0; i < orders.length; ++i) {
+                totalOrdered += orders[i].cart.filter((ele) => ele.prod === productReport.name)[0].quant;
+              }
+
+              productReport['totalOrders'] = orders.length;
+              productReport['totalOrdered'] = totalOrdered;
+              productReport['revenue'] = totalOrdered * productReport.price;
+            })
+          productReports.push(productReport);
+        }
+        res.render('admin/productReport', { layout: 'admin/main', title: `All products report <br/>Start: ${formData.startDate}<br/>End:${formData.endDate}`, productReports });
+      })
+      .catch(error => next(error));
   }
 }
 
