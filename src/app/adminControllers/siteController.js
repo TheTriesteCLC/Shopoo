@@ -4,8 +4,8 @@ const User = require('../models/User');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
 
-const moment = require('moment')
-const today = moment().startOf('day')
+// const moment = require('moment')
+// const today = moment().startOf('day')
 
 class siteController {
   //[GET] /
@@ -263,6 +263,25 @@ class siteController {
       }
     );
     res.redirect('/admin/tables')
+  }
+  //[GET] /admin/tables/product/update-info
+  updateProductProfile(req, res, next) {
+    res.render('admin/updateProduct', { layout: 'admin/main' });
+  }
+
+  //[POST] /admin/table/product/update-info/updated
+  updateProductProfileSuccess(req, res, next) {
+    const formData = req.body;
+    // await Product.updateOne(
+    //   { slug: req.params.slug },
+    //   {
+    //     $set: {
+    //       'status': formData.status
+    //     }
+    //   }
+    // );
+    // res.redirect('/admin/tables')
+    res.json(formData);
   }
 }
 
