@@ -8,13 +8,9 @@ const moment = require('moment')
 const today = moment().startOf('day')
 
 class siteController {
-  //[GET] /
-  index(req, res) {
-    res.render('admin/home', { layout: 'admin/main' });
-  }
 
-  //[GET] /home
-  async home(req, res) {
+  //[GET] /dashboard
+  async dashboard(req, res) {
     let ordersWithGrandTotal = [];
     let totalOrder = 0;
     let totalRevenue = 0;
@@ -46,24 +42,10 @@ class siteController {
 
         // res.json(ordersWithGrandTotal);
         // res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
-        res.render('admin/home', { layout: 'admin/main', totalOrder, totalRevenue, totalUser, totalProduct });
+        res.render('admin/dashboard', { layout: 'admin/main', totalOrder, totalRevenue, totalUser, totalProduct });
       })
 
 
-  }
-
-  //[GET] /dashboard
-  dashboard(req, res) {
-    Order.find({
-      createdAt: {
-        $gte: today.toDate(),
-        $lte: moment(today).endOf('day').toDate()
-      }
-    }).lean()
-      .then(orders => {
-        res.json(orders);
-      })
-    // res.render('admin/dashboard', { layout: 'admin/main' });
   }
 
   //[GET] /tables
