@@ -42,10 +42,62 @@ class siteController {
 
         // res.json(ordersWithGrandTotal);
         // res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
-        res.render('admin/dashboard', { layout: 'admin/main', totalOrder, totalRevenue, totalUser, totalProduct });
+        res.render('admin/dashboard', { layout: 'admin/main', title: 'All time statistics', totalOrder, totalRevenue, totalUser, totalProduct });
+      })
+  }
+
+  //[POST] /dashboard/time
+  async dashboardTime(req, res, next) {
+    const formData = req.body;
+
+    let ordersWithGrandTotal = [];
+    let totalOrder = 0;
+    let totalRevenue = 0;
+    let totalUser = 0;
+    let totalProduct = 0;
+
+    await User.find({
+      createdAt: {
+        $gte: new Date(Date.parse(formData.startDate)),
+        $lte: new Date(Date.parse(formData.endDate))
+      }
+    }).lean()
+      .then(users => {
+        totalUser = users.length;
       })
 
+    await Product.find({
+      createdAt: {
+        $gte: new Date(Date.parse(formData.startDate)),
+        $lte: new Date(Date.parse(formData.endDate))
+      }
+    }).lean()
+      .then(products => {
+        totalProduct = products.length;
+      })
 
+    await Order.find({
+      createdAt: {
+        $gte: new Date(Date.parse(formData.startDate)),
+        $lte: new Date(Date.parse(formData.endDate))
+      }
+    }).lean()
+      .then(orders => {
+        ordersWithGrandTotal = orders.map((order) => {
+          order['grandTotal'] = order.cart.reduce((accum, ele) => {
+            return accum + (ele.quant * ele.price);
+          }, 0);
+          return order;
+        });
+        totalOrder = ordersWithGrandTotal.length;
+        totalRevenue = ordersWithGrandTotal.reduce((accum, ele) => {
+          return accum + ele.grandTotal;
+        }, 0);
+
+        // res.json(ordersWithGrandTotal);
+        // res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
+        res.render('admin/dashboard', { layout: 'admin/main', title: `From ${formData.startDate} to ${formData.endDate}`, totalOrder, totalRevenue, totalUser, totalProduct });
+      })
   }
 
   //[GET] /tables
@@ -81,13 +133,18 @@ class siteController {
 
   //[GET] /rtl
   rtl(req, res) {
-    res.render('admin/rtl', { layout: 'admin/custom' });
+    res.render('admin/rtl', { layout: 'admin/main' });
   }
 
   //[GET] /orders
   orders(req, res) {
     Order.find({}).lean()
       .then(orders => {
+        for (let i = 0; i < orders.length; ++i) {
+          orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
+            return accum + (prod.price * prod.quant);
+          }, 0);
+        }
         res.render('admin/orders', { layout: 'admin/main', title: 'All orders', orders });
         // res.json(orders.length);
       })
@@ -95,27 +152,64 @@ class siteController {
 
   //[GET] /orders/pending
   ordersPending(req, res) {
-    Order.find({status: 'Pending'}).lean()
+    Order.find({ status: 'Pending' }).lean()
       .then(orders => {
+        for (let i = 0; i < orders.length; ++i) {
+          orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
+            return accum + (prod.price * prod.quant);
+          }, 0);
+        }
         res.render('admin/orders', { layout: 'admin/main', title: 'All pending orders', orders });
         // res.json(orders.length);
       })
   }
   //[GET] /orders/shipping
   ordersShipping(req, res) {
-    Order.find({status: 'Shipping'}).lean()
+    Order.find({ status: 'Shipping' }).lean()
       .then(orders => {
+        for (let i = 0; i < orders.length; ++i) {
+          orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
+            return accum + (prod.price * prod.quant);
+          }, 0);
+        }
         res.render('admin/orders', { layout: 'admin/main', title: 'All shipping orders', orders });
         // res.json(orders.length);
       })
   }
+
   //[GET] /orders/done
   ordersDone(req, res) {
-    Order.find({status: 'Done'}).lean()
+    Order.find({ status: 'Done' }).lean()
       .then(orders => {
+        for (let i = 0; i < orders.length; ++i) {
+          orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
+            return accum + (prod.price * prod.quant);
+          }, 0);
+        }
         res.render('admin/orders', { layout: 'admin/main', title: 'All done orders', orders });
         // res.json(orders.length);
       })
+  }
+
+  //[POST] /orders/time
+  ordersTime(req, res) {
+    const formData = req.body;
+
+    Order.find({
+      createdAt: {
+        $gte: new Date(Date.parse(formData.startDate)),
+        $lte: new Date(Date.parse(formData.endDate))
+      }
+    }).lean()
+      .then(orders => {
+        for (let i = 0; i < orders.length; ++i) {
+          orders[i]['grandTotal'] = orders[i].cart.reduce((accum, prod) => {
+            return accum + (prod.price * prod.quant);
+          }, 0);
+        }
+        res.render('admin/orders', { layout: 'admin/main', title: `All orders from ${formData.startDate} to ${formData.endDate}`, orders });
+      })
+
   }
 
   //[GET] /profile
@@ -276,16 +370,16 @@ class siteController {
   }
   //[GET] /admin/tables/product/update-info/:slug
   updateProductProfile(req, res, next) {
-    Product.findOne({slug: req.params.slug}).lean()
+    Product.findOne({ slug: req.params.slug }).lean()
       .then(product => {
-        res.render('admin/updateProduct', {layout: 'admin/main', product});
+        res.render('admin/updateProduct', { layout: 'admin/main', product });
       })
       .catch(error => next(error));
   }
 
   //[GET] admin/product/add
   addProduct(req, res, next) {
-    res.render('admin/addProduct', {layout: 'admin/main'});
+    res.render('admin/addProduct', { layout: 'admin/main' });
   }
 
   //[POST] admin/product/save
@@ -293,21 +387,21 @@ class siteController {
     var formData = req.body;
 
     formData = {
-          'name': formData.name,
-          'price': parseFloat(formData.price),
-          'description': formData.description,
-          'top': 'top' in formData ? true : false,
-          'bottom': 'bottom' in formData ? true : false,
-          'accessories': 'accessories' in formData ? true : false,
-          'outer': 'outer' in formData ? true : false,
-          'shoes': 'shoes' in formData ? true : false,
-          'buyers': parseFloat(formData.buyers),
-          'date': parseFloat(formData.year),
-          'from': formData.from,
-          'stock': parseFloat(formData.stock),
-          'popular': parseFloat(formData.buyers) > 500 ? true : false,
-          'status': formData.stock > 0 ? 'OnStock': 'OutStock'
-        };
+      'name': formData.name,
+      'price': parseFloat(formData.price),
+      'description': formData.description,
+      'top': 'top' in formData ? true : false,
+      'bottom': 'bottom' in formData ? true : false,
+      'accessories': 'accessories' in formData ? true : false,
+      'outer': 'outer' in formData ? true : false,
+      'shoes': 'shoes' in formData ? true : false,
+      'buyers': parseFloat(formData.buyers),
+      'date': parseFloat(formData.year),
+      'from': formData.from,
+      'stock': parseFloat(formData.stock),
+      'popular': parseFloat(formData.buyers) > 500 ? true : false,
+      'status': formData.stock > 0 ? 'OnStock' : 'OutStock'
+    };
 
     const newProduct = new Product(formData);
     newProduct.image = "null";
@@ -321,9 +415,9 @@ class siteController {
   //[POST] /admin/table/product/update-info/updated
   async updateProductProfileSuccess(req, res, next) {
     const formData = req.body;
-    
+
     await Product.updateOne(
-      {slug: req.params.slug},
+      { slug: req.params.slug },
       {
         $set: {
           'name': formData.name,
@@ -341,18 +435,93 @@ class siteController {
           'popular': parseFloat(formData.buyers) > 500 ? true : false,
         }
       }
-    );   
+    );
 
     await Product.updateOne(
       { name: formData.name },
       {
         slug: slugify(formData.name)
       }
-      )
+    )
 
     console.log('updated success')
-  
+
     res.redirect('/admin/tables');
+  }
+
+  //[GET] /admin/product-report
+  async productReport(req, res, next) {
+    await Product.find({}).lean()
+      .then(async products => {
+        let productReports = [];
+        for (let i = 0; i < products.length; ++i) {
+          let productReport = {
+            name: products[i].name,
+            price: products[i].price,
+            category: Object.keys(products[i]).filter((k) => { return products[i][k] === true; })
+          };
+
+          let totalOrders = 0;
+          let totalOrdered = 0;
+          let revenue = 0;
+          await Order.find({ "cart.prod": productReport.name }).lean()
+            .then(orders => {
+              totalOrders = orders.length;
+              for (let i = 0; i < orders.length; ++i) {
+                totalOrdered += orders[i].cart.filter((ele) => ele.prod === productReport.name)[0].quant;
+              }
+
+              productReport['totalOrders'] = orders.length;
+              productReport['totalOrdered'] = totalOrdered;
+              productReport['revenue'] = totalOrdered * productReport.price;
+            })
+          productReports.push(productReport);
+        }
+        res.render('admin/productReport', { layout: 'admin/main', title: 'All products report', productReports });
+      })
+      .catch(error => next(error));
+  }
+
+  //[POST] /admin/product-report/time
+  async productReportTime(req, res, next) {
+    const formData = req.body;
+
+    await Product.find({}).lean()
+      .then(async products => {
+        let productReports = [];
+        for (let i = 0; i < products.length; ++i) {
+          let productReport = {
+            name: products[i].name,
+            price: products[i].price,
+            category: Object.keys(products[i]).filter((k) => { return products[i][k] === true; })
+          };
+
+          let totalOrders = 0;
+          let totalOrdered = 0;
+          let revenue = 0;
+          await Order.find(
+            {
+              "cart.prod": productReport.name,
+              createdAt: {
+                $gte: new Date(Date.parse(formData.startDate)),
+                $lte: new Date(Date.parse(formData.endDate))
+              }
+            }).lean()
+            .then(orders => {
+              totalOrders = orders.length;
+              for (let i = 0; i < orders.length; ++i) {
+                totalOrdered += orders[i].cart.filter((ele) => ele.prod === productReport.name)[0].quant;
+              }
+
+              productReport['totalOrders'] = orders.length;
+              productReport['totalOrdered'] = totalOrdered;
+              productReport['revenue'] = totalOrdered * productReport.price;
+            })
+          productReports.push(productReport);
+        }
+        res.render('admin/productReport', { layout: 'admin/main', title: `All products report <br/>Start: ${formData.startDate}<br/>End:${formData.endDate}`, productReports });
+      })
+      .catch(error => next(error));
   }
 }
 

@@ -147,7 +147,7 @@
 
     <div class="row align-items-center mb-5">
       <div class="col-lg-8">
-        <h2 class="mb-3 mb-lg-0">{{title}}</h2>
+        <h2 class="mb-3 mb-lg-0">{{{title}}}</h2>
       </div>
       <div class="col-lg-4">
 
@@ -170,38 +170,8 @@
 
     <div class="row">
       <div class="col-md-3 w-100 d-flex justify-content-between mb-5">
-        <ul class="list-unstyled categories">
-          <li><a href="/admin/orders/">All <span></span></a></li>
-          <li><a href="/admin/orders/pending">Pending <span></span></a></li>
-          <li><a href="/admin/orders/shipping">Shipping<span></span></a></li>
-          <li><a href="/admin/orders/done">Done<span></span></a></li>
-          {{!-- <li>
-            <div class="dropdown bg-transparent">
-              <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                From
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                {{#each countries}}
-                  <a href="/customer/shop-single/from?country={{this}}" class="dropdown-item">{{this}}</a>
-                {{/each}}
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="dropdown bg-transparent">
-              <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Year
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                {{#each dates}}
-                  <a href="/customer/shop-single/collection?date={{this}}" class="dropdown-item">{{this}}</a>
-                {{/each}}
-              </div>
-            </div>
-          </li> --}}
-        </ul>
         <div class="bg-transparent">
-            <form method="POST" action="/admin/orders/time">
+            <form method="POST" action="/admin/product-report/time">
               <div class="row">
                 <h5>Filtered by time</h5>
                 <div class="col-md-5 mb-4 me-4">
@@ -229,72 +199,39 @@
                 <thead>
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Address</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phone</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Create date</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Products</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 ">Total</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Note</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Promo Code</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 ">Status</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total orders</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total sold</th>
+                      <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Revenue</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {{#each orders}}
+                    {{#each productReports}}
                       <tr>
                         <td>
                           <div class="d-flex px-2 py-1">
                             <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">{{this.firstName}} {{this.lastName}}</h6>
-                              <p class="text-xs text-secondary mb-0">{{this.email}}</p>
+                              <h6 class="mb-0 text-sm">{{this.name}}</h6>
                             </div>
                           </div>
                         </td>
                         <td>
-                          <p class="text-xs font-weight-bold mb-0">{{this.apartment}} {{this.street}}</p>
-                          <p class="text-xs text-secondary mb-0">{{this.city}}, {{this.country}}</p>
-                          <p class="text-xs text-secondary mb-0"><span class="text-dark">Postal:</span> {{this.postal}}</p>
+                          <p class="text-xs font-weight-bold mb-0">${{this.price}}</p>
                         </td>
-                        <td class="text-center text-sm">
-                          <span class="text-secondary text-xs font-weight-bold">{{this.phone}}</span>
-                        </td>
-                        <td class="text-center">
-                          <p class="text-xs text-secondary mb-0">{{this.createdAt}}</p>
-                          <span class="badge badge-sm bg-gradient-success"></span>
-                        </td>
-                        <td class="align-middle">
-                          {{#each this.cart}}
-                            <div class="pb-2">
-                                <p class="text-xs font-weight-bold mb-0">{{this.prod}}</p>
-                                <p class="text-xs text-secondary mb-0">${{this.price}} <span class="text-dark">x</span> {{this.quant}}</p>
-                            </div>
+                        <td class="align-middle text-center">
+                          {{#each this.category}}
+                            <p class="text-xs font-weight-bold">{{this}}</p>
                           {{/each}}
                         </td>
                         <td class="text-center">
-                          <span class="text-secondary text-xs font-weight-bold">${{this.grandTotal}}</span>
+                          <span class="text-secondary text-xs font-weight-bold">{{this.totalOrders}}</span>
                         </td>
                         <td class="text-center">
-                          <span class="text-secondary text-xs font-weight-bold">{{this.note}}</span>
+                          <span class="text-secondary text-xs font-weight-bold">{{this.totalOrdered}}</span>
                         </td>
                         <td class="text-center">
-                          <span class="text-secondary text-xs font-weight-bold">{{this.promo}}</span>
-                        </td>
-                        <td class="text-center">
-                          <span class="text-secondary text-xs font-weight-bold">{{this.status}}</span>
-                        </td>
-                        <td class="text-center">
-                          <form method="POST" action="/admin/tables/product/order/update/{{this.slug}}">
-                            <div class="form-group mb-3">
-                              <select id="status" class="form-select" name="status" required>
-                                <option value="Pending">Pending</option> 
-                                <option value="Shipping">Shipping</option>  
-                                <option value="Done">Done</option>    
-                              </select>
-                            </div>
-                            <button class="btn btn-black btn-sm bg-gradient-success" type="submit">
-                              Update status
-                            </button>
-                          </form>
+                          <span class="text-secondary text-xs font-weight-bold">${{this.revenue}}</span>
                         </td>
                       </tr>
                     {{/each}}

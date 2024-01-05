@@ -44,20 +44,30 @@ router.post('/product/save', siteController.saveProduct);
 router.get('/tables/product/update-info/:slug', isLoggedIn, siteController.updateProductProfile);
 router.post('/tables/product/update-info/updated/:slug', siteController.updateProductProfileSuccess);
 
+//Tables
+router.get('/tables/user/:slug', isLoggedIn, siteController.viewUserProfile);
+router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);
+router.get('/tables', isLoggedIn, siteController.tables);
+
+
 //View orders and filtered
 router.get('/orders', isLoggedIn, siteController.orders);
 router.get('/orders/pending', isLoggedIn, siteController.ordersPending);
 router.get('/orders/shipping', isLoggedIn, siteController.ordersShipping);
 router.get('/orders/done', isLoggedIn, siteController.ordersDone);
+router.post('/orders/time', isLoggedIn, siteController.ordersTime);
 
-router.get('/tables/user/:slug', isLoggedIn, siteController.viewUserProfile);
-router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);
+//Product report
+router.get('/product-report', isLoggedIn, siteController.productReport);
+router.post('/product-report/time', isLoggedIn, siteController.productReportTime);
+
+//Trivial path
 router.get('/profile', isLoggedIn, siteController.profile);
-
-router.get('/rtl', isLoggedIn, siteController.rtl);
 router.get('/virtual-reality', isLoggedIn, siteController.virtualReality);
 router.get('/billing', isLoggedIn, siteController.billing);
-router.get('/tables', isLoggedIn, siteController.tables);
+
+//Report in dashboard
+router.post('/dashboard/time', isLoggedIn, siteController.dashboardTime);
 router.get('/dashboard', isLoggedIn, siteController.dashboard);
 router.get('/', isLoggedIn, siteController.dashboard);
 
