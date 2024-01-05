@@ -45,8 +45,8 @@ router.get('/cart', isLoggedIn, siteController.cart);
 router.post('/update-cart/', siteController.updateCart);
 
 //Checkout
-router.get('/checkout/:slug', isLoggedIn, siteController.checkout);
-router.post('/checkout-success/:slug', siteController.checkoutSuccess);
+router.get('/checkout/', isLoggedIn, siteController.checkout);
+router.post('/checkout-success/', siteController.checkoutSuccess);
 
 //View Order
 router.get('/order/', isLoggedIn, siteController.order);
