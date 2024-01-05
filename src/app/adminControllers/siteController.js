@@ -102,9 +102,38 @@ class siteController {
     res.render('admin/rtl', { layout: 'admin/custom' });
   }
 
-  //[GET] /notifications
-  notifications(req, res) {
-    res.render('admin/notifications', { layout: 'admin/main' });
+  //[GET] /orders
+  orders(req, res) {
+    Order.find({}).lean()
+      .then(orders => {
+        res.render('admin/orders', { layout: 'admin/main', title: 'All orders', orders });
+        // res.json(orders.length);
+      })
+  }
+
+  //[GET] /orders/pending
+  ordersPending(req, res) {
+    Order.find({status: 'Pending'}).lean()
+      .then(orders => {
+        res.render('admin/orders', { layout: 'admin/main', title: 'All pending orders', orders });
+        // res.json(orders.length);
+      })
+  }
+  //[GET] /orders/shipping
+  ordersShipping(req, res) {
+    Order.find({status: 'Shipping'}).lean()
+      .then(orders => {
+        res.render('admin/orders', { layout: 'admin/main', title: 'All shipping orders', orders });
+        // res.json(orders.length);
+      })
+  }
+  //[GET] /orders/done
+  ordersDone(req, res) {
+    Order.find({status: 'Done'}).lean()
+      .then(orders => {
+        res.render('admin/orders', { layout: 'admin/main', title: 'All done orders', orders });
+        // res.json(orders.length);
+      })
   }
 
   //[GET] /profile
@@ -275,22 +304,7 @@ class siteController {
   //[POST] /admin/table/product/update-info/updated
   async updateProductProfileSuccess(req, res, next) {
     const formData = req.body;
-    // const updatedProduct = {
-    //   name: formData.name,
-    //   price: formData.price,
-    //   description: formData.description,
-    //   top: 'top' in formData ? true : false,
-    //   bottom: 'bottom' in formData ? true : false,
-    //   accessories: 'accessories' in formData ? true : false,
-    //   outer: 'outer' in formData ? true : false,
-    //   shoes: 'shoes' in formData ? true : false,
-    //   buyers: parseFloat(formData.buyers),
-    //   date: pasrseFloat(formData.year),
-    //   from: formData.from,
-    //   stock: parseFloat(formData.stock),
-    //   popular: parseFloat(formData.buyers) > 500 ? true : false,
-    // };
-
+    
     await Product.updateOne(
       {slug: req.params.slug},
       {
