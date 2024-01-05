@@ -34,12 +34,14 @@ router.post('/tables/user/update/:slug', siteController.updateUserSuccess);
 //Update product status
 router.post('/tables/product/order/update/:slug', siteController.updateOrderSuccess);
 router.post('/tables/product/update/:slug', siteController.updateProductSuccess);
+router.get('/product/add', isLoggedIn, siteController.addProduct);
+router.post('/product/save', siteController.saveProduct);
 // router.get('/update-profile/:slug', siteController.updateProfile);
 // router.post('/update-profile/updated', siteController.update);
 
 
 //Update product info
-router.get('/tables/product/update-info/:slug', siteController.updateProductProfile);
+router.get('/tables/product/update-info/:slug', isLoggedIn, siteController.updateProductProfile);
 router.post('/tables/product/update-info/updated/:slug', siteController.updateProductProfileSuccess);
 
 //View orders and filtered

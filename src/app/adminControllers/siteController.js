@@ -325,6 +325,41 @@ class siteController {
       .catch(error => next(error));
   }
 
+  //[GET] admin/product/add
+  addProduct(req, res, next) {
+    res.render('admin/addProduct', {layout: 'admin/main'});
+  }
+
+  //[POST] admin/product/save
+  saveProduct(req, res, next) {
+    var formData = req.body;
+
+    formData = {
+          'name': formData.name,
+          'price': parseFloat(formData.price),
+          'description': formData.description,
+          'top': 'top' in formData ? true : false,
+          'bottom': 'bottom' in formData ? true : false,
+          'accessories': 'accessories' in formData ? true : false,
+          'outer': 'outer' in formData ? true : false,
+          'shoes': 'shoes' in formData ? true : false,
+          'buyers': parseFloat(formData.buyers),
+          'date': parseFloat(formData.year),
+          'from': formData.from,
+          'stock': parseFloat(formData.stock),
+          'popular': parseFloat(formData.buyers) > 500 ? true : false,
+          'status': formData.stock > 0 ? 'OnStock': 'OutStock'
+        };
+
+    const newProduct = new Product(formData);
+    newProduct.image = "null";
+    newProduct.save();
+    // newProduct
+    console.log(newProduct);
+
+    res.redirect('/admin/tables');
+  }
+
   //[POST] /admin/table/product/update-info/updated
   async updateProductProfileSuccess(req, res, next) {
     const formData = req.body;
@@ -348,10 +383,27 @@ class siteController {
           'popular': parseFloat(formData.buyers) > 500 ? true : false,
         }
       }
-    );
+    );   
+
+    await Product.updateOne(
+      { name: formData.name },
+      {
+        slug: slugify(formData.name)
+      }
+      )
+
+    console.log('updated success')
   
     res.redirect('/admin/tables');
   }
+}
+
+const slugify = (textToSlugify) => {
+  if (!textToSlugify) return '';
+
+  const lowercaseText = textToSlugify.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replace(/ +(?= )/g, '');
+
+  return lowercaseText.split(' ').join('-');
 }
 
 module.exports = new siteController;
