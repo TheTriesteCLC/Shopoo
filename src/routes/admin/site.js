@@ -45,9 +45,10 @@ router.get('/tables/product/update-info/:slug', isLoggedIn, siteController.updat
 router.post('/tables/product/update-info/updated/:slug', siteController.updateProductProfileSuccess);
 
 //Tables
-router.get('/tables/user/:slug', isLoggedIn, siteController.viewUserProfile);
+router.get('/tables/user/:slug', siteController.viewUserProfile);
+router.get('/tables/name/', siteController.nameFilter);
 router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);
-router.get('/tables', isLoggedIn, siteController.tables);
+router.get('/tables/', siteController.tables);
 
 //product (need fix)
 router.get('/tables/product-popular', isLoggedIn, siteController.tablesProductPopular);
