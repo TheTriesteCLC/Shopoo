@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 require('../../config/passport/passport')(passport);
+const jwt = require("jsonwebtoken");
+
+const { generateToken, getMailOptions, getTransport } = require("../../config/service/service");
 
 const siteController = require('../../app/customerControllers/siteController');
 
@@ -30,12 +33,42 @@ router.post('/signup',
     passport.authenticate('local-signup', { failureRedirect: './signup' }),
     function (req, res) {
         console.log("redirecting");
-        res.redirect('./protected');
+        console.log(req.user);
+        var email = req.user.email;
+        //Prepare variables
+        const token = generateToken({
+            email: email
+        });
+        const link = `http://localhost:3000/customer/verify?token=${token}`;
+        console.log("link");
+        console.log(link);
+
+        //Create mailrequest
+        let mailRequest = getMailOptions(email, link);
+        
+        //Send mail
+        return getTransport().sendMail(mailRequest, (error) => {
+            if (error) {
+                res.status(500).send("Can't send email.");
+            } else {
+                // res.status(200);
+                // res.send({
+                //     message: `Link sent to ${email}`,
+                // });
+                res.redirect('./activate');
+            }
+        });
     }
 );
 
+//Activate profile
+router.get('/activate', isPending, siteController.activate);
+
+//Verify profile
+router.get('/verify', siteController.verify);
+
 //Logout
-router.get('/logout',isLoggedIn, siteController.logout);
+router.get('/logout', siteController.logout);
 
 //Test authentication
 router.get('/protected', isLoggedIn, siteController.protected);
@@ -64,13 +97,28 @@ function isLoggedIn(req, res, next) {
 
     console.log("Authenticate checking");
     if (req.isAuthenticated()) { // is authenticated
-        if (req.user.status === "Active") { // is not Banned
+        if (req.user.status === "Active") { // is not Banned or Pending
+            return next();
+        }
+        if (req.user.status === "Pending") { // is not Banned or Pending
+            res.redirect('/customer/activate');
+            
+        }
+    } else {
+            
+        // is not authenticated
+        res.redirect('/customer/login');
+    }
+
+}
+
+function isPending(req, res, next){
+    if (req.isAuthenticated()) { // is authenticated
+        if (req.user.status === "Pending") {
             return next();
         }
     }
-
-    // is not authenticated
-    res.redirect('/customer/login');
+    res.redirect('/customer/');
 }
 
 module.exports = router;

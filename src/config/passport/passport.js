@@ -75,7 +75,7 @@ module.exports = function(passport) {
             // set the user's local credentials
             newUser = new Account(req.body);            
             newUser.slug = 'user-' + username;
-            newUser.status = 'Active';
+            newUser.status = 'Pending';
         } else {
             console.log('This is an admin');
             Account = require('../../app/models/Admin');

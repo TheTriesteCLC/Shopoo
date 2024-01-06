@@ -5,36 +5,32 @@ const { raw } = require('express');
 const Order = require('../models/Order');
 const { use } = require('passport');
 
+const { generateToken, getMailOptions, getTransport, verifyToken } = require("../../config/service/service");
 
 class siteController {
   //[GET] /
   index(req, res) {
-    res.render('customer/home', { layout: 'customer/main', currUser: req.user });
+    res.render('customer/home', { layout: 'customer/main'});
   }
 
   //[GET] /home
   home(req, res) {
-    res.render('customer/home', { layout: 'customer/main', currUser: req.user });
+    res.render('customer/home', { layout: 'customer/main' });
   }
 
   //[GET] /about
   about(req, res) {
-    res.render('customer/about', { layout: 'customer/main', currUser: req.user });
+    res.render('customer/about', { layout: 'customer/main'});
   }
 
   //[GET] /elements
   elements(req, res) {
-    res.render('customer/elements', { layout: 'customer/main', currUser: req.user });
+    res.render('customer/elements', { layout: 'customer/main' });
   }
 
   //[GET] /contact
   contact(req, res) {
-    res.render('customer/contact', { layout: 'customer/main', currUser: req.user });
-  }
-
-  //[GET] /cart
-  loginCart(req, res) {
-    res.render('customer/loginCart', { layout: 'customer/main' });
+    res.render('customer/contact', { layout: 'customer/main' });
   }
 
   //[GET] /checkout/:slug
@@ -55,7 +51,7 @@ class siteController {
 
         if (subtotalAll.length > 0) {
           res.render('customer/checkout', { layout: 'customer/main', username: user.username,
-           userSlug: req.params.slug, subtotalAll: subtotalAll, grandTotal: grandTotal, currUser: req.user });
+          subtotalAll: subtotalAll, grandTotal: grandTotal });
         } else {
           res.redirect('/customer/shop-single');
         }
@@ -64,7 +60,7 @@ class siteController {
 
   //[GET] /thankyou
   thankyou(req, res) {
-    res.render('customer/thankyou', { layout: 'customer/main', currUser: req.user });
+    res.render('customer/thankyou', { layout: 'customer/main' });
   }
 
   //[GET] /signup
@@ -88,20 +84,64 @@ class siteController {
     });
   }
 
+  //[GET] /activate
+  activate(req, res, next){
+    res.render('customer/activate', { layout: 'customer/main', user: req.user })
+  }
+
+  //[GET] /verify
+  async verify(req, res, next){
+    const token = req.query.token;
+
+    if (Object.keys(token).length === 0) {
+      res.status(401).send("Invalid user token");
+      return;
+    }
+
+    var result = verifyToken(token);
+    
+    if (!result.success) {
+      return res.status(403).json({ error: result.error });
+    }
+
+    if (
+      !result.data
+    ) {
+      res.status(401).send("No email found");
+      return;
+    }
+
+    console.log("decodedToken");
+    console.log(result.data);
+
+    await User.updateOne({ email: result.data.email },{status:'Active'});  
+    
+    if(!req.user){
+      res.redirect('./protected');
+      return;
+    }  
+    var user = await User.findOne({ email: result.data.email }).lean();    
+    req.session.passport.user = user;
+    console.log(user);
+    res.redirect('./protected');
+  }
+
   //[GET] /protected
   protected(req, res, next) {
-    res.render('customer/protected', { layout: 'customer/main', currUser: req.user })
+    console.log('current user ');
+    console.log(req.user);
+    res.render('customer/protected', { layout: 'customer/main', user: req.user })
   }
 
   //[GET] /profile/
   profile(req, res, next) {
-    res.render('customer/profile', { layout: 'customer/main', currUser: req.user });
+    res.render('customer/profile', { layout: 'customer/main', user: req.user });
     // res.json({ products: singleMongooseToObject(products) });
   }
 
   //[GET] /update-profile/
   updateProfile(req, res, next) {
-    res.render('customer/update-profile', { layout: 'customer/main', currUser: req.user });
+    res.render('customer/update-profile', { layout: 'customer/main', user: req.user });
     // res.json({ products: singleMongooseToObject(products) });
   }
 
@@ -110,13 +150,13 @@ class siteController {
     const formData = req.body;
     
     // get current user session
-    var currUser = await User.findOne({username: req.user.username});
+    var user = await User.findOne({username: req.user.username});
 
     // check two passwords
-    var checkPass = await currUser.comparePassword(formData.password);
+    var checkPass = await user.comparePassword(formData.password);
 
     if (checkPass){
-      currUser = await User.findOneAndUpdate({username: formData.username},
+      user = await User.findOneAndUpdate({username: formData.username},
         {
           fullname: formData.fullname,
           email: formData.email,
@@ -132,11 +172,11 @@ class siteController {
   
       console.log('Updated');
   
-      if (currUser === null) {
+      if (user === null) {
         res.redirect('/customer/update-profile');
       } else {
         // update session user
-        req.session.passport.user = currUser;
+        req.session.passport.user = user;
         res.redirect('/customer/profile');
       }    
     }
@@ -145,9 +185,9 @@ class siteController {
 
   //[GET] /cart
   async cart(req, res, next) {
-    const currUser = req.user;
+    // const user = req.user;
 
-    const user = await User.findOne({username: currUser.username}).lean();
+    const user = await User.findOne({username: req.user.username}).lean();
     const cartProducts = user.cart;
     let cartWithImg = [];
     let grandTotal = 0;
@@ -165,8 +205,7 @@ class siteController {
       cartWithImg.push(element);
     }
     res.render('customer/cart', { layout: 'customer/main', 
-    user: user, cartWithImg: cartWithImg, grandTotal: grandTotal,
-    currUser })
+    user: user, cartWithImg: cartWithImg, grandTotal: grandTotal, })
   }
 
   //[POST] /customer/cart/update-cart
@@ -244,9 +283,9 @@ class siteController {
 
   //[GET] /order/
   order(req, res, next) {
-    const currUser = req.user;
+    const user = req.user;
 
-    Order.find({ username: currUser.username }).lean()
+    Order.find({ username: user.username }).lean()
       .then(orders => {
         const ordersWithGrandTotal = orders.map((order) => {
           order['grandTotal'] = order.cart.reduce((accum, element) => {
@@ -256,16 +295,16 @@ class siteController {
         });
         // res.json(ordersWithGrandTotal);
         res.render('customer/order', { layout: 'customer/main', 
-        ordersWithGrandTotal: ordersWithGrandTotal, username: currUser.username, currUser });
+        ordersWithGrandTotal: ordersWithGrandTotal, });
       })
 
   }
 
   //[GET] /forgot-password
   forgot(req, res, next) {
-    const currUser = req.user;
+    const user = req.user;
 
-    res.render('customer/forgot', { layout: 'customer/main', currUser });
+    res.render('customer/forgot', { layout: 'customer/main' });
   }
 
   //[POST] /forgot-success
