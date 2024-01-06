@@ -16,8 +16,7 @@
   <div class="container">
 
     <div class="row align-items-center mb-5">
-      <div class="col-lg-8">
-        <h2 class="mb-3 mb-lg-0">{{title}}</h2>
+      <div class="col-lg-8" id="page-title">
       </div>
       <div class="col-lg-4">
 
@@ -27,11 +26,11 @@
                 Price
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="/customer/shop-single/price-asc">Ascending</a>
-                <a class="dropdown-item" href="/customer/shop-single/price-dec">Decending</a>
-                <a class="dropdown-item" href="/customer/shop-single/price-50">Under $50</a>
-                <a class="dropdown-item" href="/customer/shop-single/price-100">Under $100</a>
-                <a class="dropdown-item" href="/customer/shop-single/price-300">Under $300</a>
+                <a class="dropdown-item filter" value="price-asc" href="/customer/shop-single/price-asc">Ascending</a>
+                <a class="dropdown-item filter" href="/customer/shop-single/price-dec">Decending</a>
+                <a class="dropdown-item filter" href="/customer/shop-single/price-50">Under $50</a>
+                <a class="dropdown-item filter" href="/customer/shop-single/price-100">Under $100</a>
+                <a class="dropdown-item filter" href="/customer/shop-single/price-300">Under $300</a>
               </div>
             </div>
         </div>
@@ -41,12 +40,12 @@
     <div class="row">
       <div class="col-md-3">
         <ul class="list-unstyled categories">
-          <li><a href="/customer/shop-single/">All <span></span></a></li>
-          <li><a href="/customer/shop-single/outer">Outerwear <span></span></a></li>
-          <li><a href="/customer/shop-single/top">Top <span></span></a></li>
-          <li><a href="/customer/shop-single/bottom">Bottom <span></span></a></li>
-          <li><a href="/customer/shop-single/accessories">Accessories <span></span></a></li>
-          <li><a href="/customer/shop-single/shoes">Shoes <span></span></a></li>
+          <li><a class ="filter" value="all" href="/customer/shop-single/">All <span></span></a></li>
+          <li><a class ="filter" value="outer" href="">Outerwear <span></span></a></li>
+          <li><a class ="filter" value="top" href="">Top <span></span></a></li>
+          <li><a class ="filter" value="bottom" href="">Bottom <span></span></a></li>
+          <li><a class ="filter" value="accessories" href="">Accessories <span></span></a></li>
+          <li><a class ="filter" value="shoes" href="">Shoes <span></span></a></li>
           <li>
             <div class="dropdown bg-transparent">
               <button class="btn btn-secondary dropdown-toggle bg-transparent text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,7 +53,7 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 {{#each countries}}
-                  <a href="/customer/shop-single/from?country={{this}}" class="dropdown-item">{{this}}</a>
+                  <a href="" value="from?country={{this}}" class="dropdown-item filter">{{this}}</a>
                 {{/each}}
               </div>
             </div>
@@ -66,7 +65,7 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 {{#each dates}}
-                  <a href="/customer/shop-single/collection?date={{this}}" class="dropdown-item">{{this}}</a>
+                  <a href="" value="collection?date={{this}}" class="dropdown-item filter">{{this}}</a>
                 {{/each}}
               </div>
             </div>
@@ -83,15 +82,18 @@
               </button> --}}
         </div>
         <ul class="pagination justify-content-center">
-          <li class="page-link" value = "1" >1</li>
-          <li class="page-link" value = "2" >2</li>
-          <li class="page-link" value = "3" >3</li>
+          <li> <a href="" class="page-link" value = "1" >1</a></li>
+          <li> <a href="" class="page-link" value = "2" >2</a></li>
+          <li> <a href="" class="page-link" value = "3" >3</a></li>
         </ul>
       </div>
     </div>
   </div> 
 </div>
 
+<script type="text/x-handlebars-template" id = "title-holder">
+  <h2 class="mb-3 mb-lg-0">\{{title}}</h2>
+</script>
 <script type="text/x-handlebars-template" id = "product-holder">
   \{{#each products}} 
     <div class="col-6 col-sm-6 col-md-6 mb-4 col-lg-4">
@@ -115,19 +117,13 @@
   \{{/each}}
 </script>
 <script>
+  var referrer = '';
   $(document).ready(function(){
     $.ajax({
       type: "GET",
-      url: document.URL + '/?page=1',
+      url: document.URL + referrer + '/?page=1',
       success: function(response){
-        var template = document.getElementById("product-holder").innerHTML;
-        
-        var compiledTemplate = Handlebars.compile(template);
-        var context = {
-            products : response[0].products,        
-        };
-        var result = compiledTemplate(context);
-        $("#products").html(result);            
+        handleResponse(response);
       },
       error: function(err){
         console.log(err);
@@ -135,30 +131,59 @@
       }
     });    
   });
-</script>
-<script>
-    $('.page-link').on('click', function(e){
-        var page = this.getAttribute("value");
-        e.preventDefault(); // stop element default action
-        $.ajax({
-          type: "GET",
-          url: document.URL + '/?page=' + page,
-          success: function(response){
-            var template = $("#product-holder").html();
-            //console.log(template);            
-            var compiledTemplate = Handlebars.compile(template);
-            var context = {
-                products : response[0].products,        
-            };
-            var result = compiledTemplate(context);
-            //console.log(result);
-            $("#products").html(result);             
-            
-          },
-          error: function(err){
-            console.log(err);
-            alert('Failed');
-          }
-        });
+  $('.page-link').on('click', function(e){
+    var page = this.getAttribute("value");
+    console.log(referrer +'/?page=' + page);
+    e.preventDefault(); // stop element default action
+    $.ajax({
+      type: "GET",
+      url: document.URL + referrer + '/?page=' + page,
+      success: function(response){
+        handleResponse(response);
+      },
+      error: function(err){
+        console.log(err);
+        alert('Failed');
+      }
     });
+  });
+  $('.filter').on('click', function(e){
+    var value = this.getAttribute("value");
+    referrer = '/' + value;
+    console.log(referrer);
+    e.preventDefault();
+    $.ajax({
+      type: "GET",
+      url: document.URL + referrer,
+      success: function(response){
+        handleResponse(response);
+      },
+      error: function(err){
+        console.log(err);
+        alert('Failed');
+      }
+    });
+  });
+
+  function handleResponse(response){
+    var context = {
+        title: response.title      
+    };   
+    loadTemplate("title-holder", context, "page-title");
+
+    context = {
+        products : response.products,        
+    };
+    loadTemplate("product-holder", context, "products");  
+
+  }
+
+  function loadTemplate(templateid, context, targetid){
+    var template = document.getElementById(templateid).innerHTML;
+    var compiledTemplate = Handlebars.compile(template);
+    var result = compiledTemplate(context);
+    document.getElementById(targetid).innerHTML = result;
+    
+    //$(target).html(result);  
+  }
 </script>
