@@ -108,23 +108,37 @@ class siteController {
     const productFrom = await Product.distinct('from').lean();
     const productDate = await Product.distinct('date').lean();
 
-    await User.find({}).lean()
-      .then(async users => {
-        await Product.find({}).lean()
-          .then(products => {
-
-            products = products.map((ele) => {
-              return {
-                ...ele,
-                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-              }
-            });
-            // res.json(products);
-            res.render('admin/tables',
-              { layout: 'admin/main', users: users, products: products, userFullname, userEmail, productFrom, productDate });
-          })
+    if (Object.keys(req.query).length !== 0) { // not empty
+      Product.find({}).lean()
+      .then(products => {
+        res.json({title:'All products',
+         products});
       })
       .catch(error => next(error));
+    } else {
+      res.render('admin/tables',
+          { layout: 'admin/main', userFullname, userEmail, productFrom, productDate });
+    }
+
+    // await User.find({}).lean()
+    //   .then(async users => {
+    //     await Product.find({}).lean()
+    //       .then(products => {
+
+    //         products = products.map((ele) => {
+    //           return {
+    //             ...ele,
+    //             category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+    //           }
+    //         });
+    //         // res.json(products);
+    //         res.render('admin/tables',
+    //           { layout: 'admin/main', users: users, products: products, 
+    //           productTitle: 'All products', 
+    //           userFullname, userEmail, productFrom, productDate });
+    //       })
+    //   })
+    //   .catch(error => next(error));
   }
 
   //[GET] /billing
