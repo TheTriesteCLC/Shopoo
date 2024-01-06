@@ -23,18 +23,27 @@ exports.generateToken = (email) => {
 };
 
 exports.getMailOptions = (email, link) => {
-    let body = `
-    <h2>Hey ${email}</h2>
-    <p>Here's the special magic link you requested:</p>
-    <p>${link}</p>
-    <p>Please note that for added security this link becomes invalid after 45 minutes</p>
-    <p>Stay Jiggy</p>`;
-  
-    return {
-      body,
-      subject: "Urgent: Super Secret Magic Link",
-      to: email,
-      html: body,
-      from: emailAddr,
-    };
+  let body = `
+  <h2>Hey ${email}</h2>
+  <p>Here's the special magic link you requested:</p>
+  <p>${link}</p>
+  <p>Please note that for added security this link becomes invalid after 45 minutes</p>
+  <p>Stay Jiggy</p>`;
+
+  return {
+    body,
+    subject: "Urgent: Super Secret Magic Link",
+    to: email,
+    html: body,
+    from: emailAddr,
   };
+};
+
+exports.verifyToken = (token) => {
+  try {
+    const decodedToken = jwt.verify(token, secretKey);
+    return { success: true, data: decodedToken };
+  } catch(err) {
+    return { success: false, error: err.message };
+  }
+}
