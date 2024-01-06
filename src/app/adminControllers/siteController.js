@@ -100,17 +100,24 @@ class siteController {
       })
   }
 
-  //[GET] /tables
+  //[GET] /tables /tables?getall
   async tables(req, res, next) {
-    const userFullname = await User.distinct('fullname').lean();
-    const userEmail = await User.distinct('email').lean();
+    console.log(req.query);
+    if (Object.keys(req.query).length !== 0) { // not empty
+      await User.find({})
+      .then(users => {
+        res.json({users: multipleMongooseToObject(users)});
+      })
 
-    const productFrom = await Product.distinct('from').lean();
-    const productDate = await Product.distinct('date').lean();
+    } else {
+      console.log('render');
+      
+      const userFullname = await User.distinct('fullname').lean();
+      const userEmail = await User.distinct('email').lean();
 
-    await User.find({}).lean()
-      .then(async users => {
-        await Product.find({}).lean()
+      const productFrom = await Product.distinct('from').lean();
+      const productDate = await Product.distinct('date').lean();
+      await Product.find({}).lean()
           .then(products => {
 
             products = products.map((ele) => {
@@ -119,13 +126,44 @@ class siteController {
                 category: Object.keys(ele).filter((k) => { return ele[k] === true; })
               }
             });
-            // res.json(products);
             res.render('admin/tables',
-              { layout: 'admin/main', users: users, products: products, userFullname, userEmail, productFrom, productDate });
-          })
+              { layout: 'admin/main', products: products, userFullname, userEmail, productFrom, productDate });
       })
-      .catch(error => next(error));
+    }
+    // await User.find({}).lean()
+    //   .then(async users => {
+    //     await Product.find({}).lean()
+    //       .then(products => {
+
+    //         products = products.map((ele) => {
+    //           return {
+    //             ...ele,
+    //             category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+    //           }
+    //         });
+    //         // res.json(products);
+    //         res.render('admin/tables',
+    //           { layout: 'admin/main', users: users, products: products, userFullname, userEmail, productFrom, productDate });
+    //       })
+    //   })
+    //   .catch(error => next(error));
   }
+
+
+  // name?value=
+  async nameFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await User.find({fullname: req.query.value})
+    .then(users => {
+      res.json({users: multipleMongooseToObject(users)});
+    })
+    console.log('Stop');
+    return;
+
+  }
+  
 
   //[GET] /billing
   billing(req, res) {
@@ -331,6 +369,7 @@ class siteController {
 
   //[POST] /admin/table/user/update/:slug
   async updateUserSuccess(req, res, next) {
+    console.log('updateUserSuccess');
     await User.findOne({ slug: req.params.slug }).lean()
       .then(async user => {
         if (user.status === 'Active') {
@@ -398,6 +437,8 @@ class siteController {
 
   //[POST] /admin/tables/product/order/update/:slug
   async updateOrderSuccess(req, res, next) {
+    console.log('updateOrderSuccess');
+
     const formData = req.body;
     await Order.updateOne(
       { slug: req.params.slug },
@@ -411,6 +452,8 @@ class siteController {
   }
   //[POST] /admin/tables/product/update/:slug
   async updateProductSuccess(req, res, next) {
+    console.log('updateProductSuccess');
+
     const formData = req.body;
     await Product.updateOne(
       { slug: req.params.slug },
@@ -439,6 +482,8 @@ class siteController {
   //[POST] admin/product/save
   saveProduct(req, res, next) {
     var formData = req.body;
+    console.log('saveProduct');
+
 
     formData = {
       'name': formData.name,
