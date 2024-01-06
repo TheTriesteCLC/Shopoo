@@ -77,6 +77,25 @@
                 <div class="col-md-6 mb-4 pb-2">
 
                   <div class="form-outline">
+                    <input type="text" id="canban" class="form-control form-control-lg bg-light" placeholder="Enter 'banning' for providing priviledge" name="canBan" value=""/>
+                    <label class="form-label" for="canban">Banning account priviledge</label>
+                  </div>
+
+                </div>
+                <div class="col-md-6 mb-4 pb-2">
+
+                  <div class="form-outline">
+                    <input type="text" id="canAdd" class="form-control form-control-lg bg-light" placeholder="Enter 'adding' for providing priviledge" name="canAdd" value=""/>
+                    <label class="form-label" for="canAdd">Adding products priviledge</label>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-4 pb-2">
+
+                  <div class="form-outline">
                     <input type="text" id="username" class="form-control form-control-lg bg-light" name="username" required/>
                     <label class="form-label" for="username">Enter username for authentication</label>
                   </div>
@@ -88,7 +107,7 @@
                     <input type="password" id="password" class="form-control form-control-lg bg-light" name="password" required/>
                     <label class="form-label" for="password">Enter password for authentication</label>
                     <div>
-                      <input type="checkbox" onclick="passwordToggle()">Show Password
+                      <input type="checkbox" onclick="passwordToggle('password')">Show Password
                     </div>
                   </div>
 

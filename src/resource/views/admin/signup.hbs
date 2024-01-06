@@ -41,17 +41,11 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link me-2" href="/admin/sign-up">
+                    <a class="nav-link me-2" href="/admin/signup">
                       <i
                         class="fas fa-user-circle opacity-6 text-dark me-1"
                       ></i>
                       Sign Up
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link me-2" href="/admin/sign-in">
-                      <i class="fas fa-key opacity-6 text-dark me-1"></i>
-                      Login
                     </a>
                   </li>
                 </ul>
@@ -179,7 +173,7 @@
                     <input type="password" id="password" class="form-control form-control-lg bg-light" name="password" required/>
                     <label class="form-label" for="password">Password</label>
                     <div>
-                      <input type="checkbox" onclick="passwordToggle()">Show Password
+                      <input type="checkbox" onclick="passwordToggle('password')">Show Password
                     </div>
                   </div>
 
@@ -190,9 +184,9 @@
                 <button type="submit" class="btn btn-primary">Create</button>
               </div>
 
-              <div class="text-center mt-4">
+              {{!-- <div class="text-center mt-4">
                 <p>Already have an account? <a href="/admin/login">Login</a></p>
-            </div>
+            </div> --}}
             </form>
           </div>
         </div>

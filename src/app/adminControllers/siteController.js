@@ -244,7 +244,9 @@ class siteController {
           dob: formData.dob,
           phone: formData.phone,
           address: formData.address,
-          sex: formData.sex
+          sex: formData.sex,
+          canAdd: formData.canAdd === 'adding' ? true : false,
+          canBan: formData.canAdd === 'adding' ? true : false,
         },
         {
           new: true

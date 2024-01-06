@@ -122,8 +122,7 @@ class siteController {
           dob: formData.dob,
           phone: formData.phone,
           address: formData.address,
-          sex: formData.sex
-          
+          sex: formData.sex,
         },
         {
           new: true
