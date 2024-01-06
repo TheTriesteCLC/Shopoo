@@ -109,13 +109,13 @@ class siteController {
     const formData = req.body;
     
     // get current user session
-    var user = await User.findOne({username: req.user.username});
+    var currUser = await User.findOne({username: req.user.username});
 
     // check two passwords
-    var checkPass = await user.comparePassword(formData.password);
+    var checkPass = await currUser.comparePassword(formData.password);
 
     if (checkPass){
-      user = await User.findOneAndUpdate({username: formData.username},
+      currUser = await User.findOneAndUpdate({username: formData.username},
         {
           fullname: formData.fullname,
           email: formData.email,
@@ -131,11 +131,11 @@ class siteController {
   
       console.log('Updated');
   
-      if (user === null) {
+      if (currAdmin === null) {
         res.redirect('/customer/update-profile');
       } else {
         // update session user
-        req.session.passport.user = user;
+        req.session.passport.user = currUser;
         res.redirect('/customer/profile');
       }    
     }

@@ -214,7 +214,53 @@ class siteController {
 
   //[GET] /profile
   profile(req, res) {
-    res.render('admin/profile', { layout: 'admin/main' });
+    const currAdmin = req.user;
+
+    res.render('admin/profile', { layout: 'admin/main', currAdmin });
+  }
+
+  //[GET] /update-profile
+  updateProfile(req, res) {
+    const currAdmin = req.user;
+
+    res.render('admin/update-profile', { layout: 'admin/main', currAdmin });
+  }
+
+  //[POST] /update-profile/updated
+  async update(req, res) {
+    const formData = req.body;
+    
+    // get current user session
+    var currAdmin = await Admin.findOne({username: req.user.username});
+
+    // check two passwords
+    var checkPass = await currAdmin.comparePassword(formData.password);
+
+    if (checkPass){
+      currAdmin = await Admin.findOneAndUpdate({username: formData.username},
+        {
+          fullname: formData.fullname,
+          email: formData.email,
+          dob: formData.dob,
+          phone: formData.phone,
+          address: formData.address,
+          sex: formData.sex
+        },
+        {
+          new: true
+        }
+      );      
+  
+      console.log('Updated');
+  
+      if (currAdmin === null) {
+        res.redirect('/admin/update-profile');
+      } else {
+        // update session user
+        req.session.passport.user = currAdmin;
+        res.redirect('/admin/profile');
+      }    
+    }
   }
 
   //[GET] /login

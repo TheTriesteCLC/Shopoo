@@ -61,8 +61,14 @@ router.post('/orders/time', isLoggedIn, siteController.ordersTime);
 router.get('/product-report', isLoggedIn, siteController.productReport);
 router.post('/product-report/time', isLoggedIn, siteController.productReportTime);
 
-//Trivial path
+//Admin profile
 router.get('/profile', isLoggedIn, siteController.profile);
+router.get('/update-profile', isLoggedIn, siteController.updateProfile);
+router.post('/update-profile/updated', isLoggedIn, siteController.update);
+
+
+//Trivial path
+
 router.get('/virtual-reality', isLoggedIn, siteController.virtualReality);
 router.get('/billing', isLoggedIn, siteController.billing);
 
