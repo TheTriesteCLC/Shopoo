@@ -2,8 +2,46 @@
         <div class="col-12">
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-              <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                <h6 class="text-white text-capitalize ps-3">All user</h6>
+              <div class="d-flex justify-content-between bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 px-3">
+                <h6 class="text-white text-capitalize">All user</h6>
+                <div class="d-flex">
+                  <div class="dropdown d-inline mx-5">
+                    <button class="btn btn-info dropdown-toggle mb-0" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false"data-bs-target=".filterDropdown">
+                      Name
+                    </button>
+                    <ul class="dropdown-menu filterDropdown">
+                      {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
+                      {{#each usernames}}
+                        <li><a class="dropdown-item" href="#">{{this}}</a></li>
+                      {{/each}}
+                    </ul>
+                  </div>
+                  <div class="dropdown d-inline mx-5">
+                    <button class="btn btn-info dropdown-toggle mb-0" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false"data-bs-target=".filterDropdown">
+                      Email
+                    </button>
+                    <ul class="dropdown-menu filterDropdown">
+                      {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
+                      {{#each userEmail}}
+                        <li><a class="dropdown-item" href="#">{{this}}</a></li>
+                      {{/each}}
+                    </ul>
+                  </div>
+                  <div class="dropdown d-inline ms-5">
+                      <button class="btn btn-info dropdown-toggle mb-0" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-target=".sortDropdown">
+                        Sort
+                      </button>
+                      <ul class="dropdown-menu sortDropdown">
+                        <li><a class="dropdown-item" href="#">Name</a></li>
+                        <li><a class="dropdown-item" href="#">Email</a></li>
+                        <li><a class="dropdown-item" href="#">Registration time</a></li>
+                      </ul>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
@@ -61,8 +99,52 @@
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="d-flex justify-content-between bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 px-3">
-                <h6 class="text-white text-capitalize">All products</h6>
-                <a href ="product/add"><h6 class="text-white text-capitalize">Add product</h6></a>
+                <div>
+                  <h6 class="text-white text-capitalize d-inline me-5">All products</h6>
+                  <a href ="product/add">
+                    <button class="btn btn-info d-inline mb-0">
+                      <h6 class="text-white text-capitalize mb-0">Add product</h6>
+                    </button>
+                  </a>
+                </div>
+                <div class="d-flex">
+                  <div class="dropdown d-inline mx-5">
+                    <button class="btn btn-info dropdown-toggle mb-0" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false"data-bs-target=".filterDropdown">
+                      Category
+                    </button>
+                    <ul class="dropdown-menu filterDropdown">
+                      {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
+                      {{#each productCategory}}
+                        <li><a class="dropdown-item" href="#">{{this}}</a></li>
+                      {{/each}}
+                    </ul>
+                  </div>
+                  <div class="dropdown d-inline mx-5">
+                    <button class="btn btn-info dropdown-toggle mb-0" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false"data-bs-target=".filterDropdown">
+                      From
+                    </button>
+                    <ul class="dropdown-menu filterDropdown">
+                      {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
+                      {{#each productFrom}}
+                        <li><a class="dropdown-item" href="#">{{this}}</a></li>
+                      {{/each}}
+                    </ul>
+                  </div>
+                  <div class="dropdown d-inline ms-5">
+                      <button class="btn btn-info dropdown-toggle mb-0" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-target=".sortDropdown">
+                        Sort
+                      </button>
+                      <ul class="dropdown-menu sortDropdown">
+                        <li><a class="dropdown-item" href="#">Price</a></li>
+                        <li><a class="dropdown-item" href="#">Creation time</a></li>
+                        <li><a class="dropdown-item" href="#">Total purchase</a></li>
+                      </ul>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
