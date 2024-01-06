@@ -131,8 +131,8 @@ class siteController {
               productTitle: 'All products',
               userFullname, userEmail, productFrom, productDate });
           })
-      })
-      .catch(error => next(error));
+          .catch(error => next(error));
+    }
   }
 
   //[GET] /tables/product-popular
