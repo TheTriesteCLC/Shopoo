@@ -16,7 +16,7 @@ router.post('/login',
 );
 
 //Signup new profile
-router.get('/signup', siteController.signup);
+router.get('/signup',isLoggedIn, siteController.signup);
 router.post('/signup',
     passport.authenticate('local-signup', { failureRedirect: './signup' }),
     function (req, res) {
@@ -26,7 +26,7 @@ router.post('/signup',
 );
 
 //Logout
-router.get('/logout', siteController.logout);
+router.get('/logout',isLoggedIn, siteController.logout);
 
 //Ban or unban user
 router.post('/tables/user/update/:slug', siteController.updateUserSuccess);

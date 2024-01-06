@@ -102,6 +102,9 @@ class siteController {
 
   //[GET] /tables
   async tables(req, res, next) {
+    const productForm = await Product.distinct('from').lean();
+    const productDate = await Product.distinct('date').lean();
+
     await User.find({}).lean()
       .then(async users => {
         await Product.find({}).lean()
