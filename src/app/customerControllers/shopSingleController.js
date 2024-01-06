@@ -8,7 +8,7 @@ class shopSingleController {
   //[GET] /shop-single/all
   //[GET] /shop-single/?page=
   async index(req, res, next) {
-    console.log(req.query);
+    // console.log(req.query);
     //var page = 1;
 
     const constriesChoice = await Product.distinct('from').lean();
@@ -235,10 +235,11 @@ class shopSingleController {
 
     formData.product = productReview;
     const newReview = new Review(formData);
+    newReview.username = req.user.username;
     newReview.save()
-      .then(() => res.redirect('/customer'))
+      .then(() => res.redirect(req.headers.referer))
       .catch(error => {
-
+        console.log(error);
       });
   }
 
