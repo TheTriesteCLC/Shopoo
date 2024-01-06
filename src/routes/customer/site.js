@@ -35,7 +35,7 @@ router.post('/signup',
 );
 
 //Logout
-router.get('/logout', siteController.logout);
+router.get('/logout',isLoggedIn, siteController.logout);
 
 //Test authentication
 router.get('/protected', isLoggedIn, siteController.protected);

@@ -33,87 +33,87 @@ class shopSingleController {
     }
   }
 
-  //[GET] /shop-single/outer
-  async outer(req, res, next) {
-    var page = 1;
-    if (Object.keys(req.query).length !== 0) { // not empty
-      page = parseInt(req.query.page);
-    }
+  // //[GET] /shop-single/outer
+  // async outer(req, res, next) {
+  //   var page = 1;
+  //   if (Object.keys(req.query).length !== 0) { // not empty
+  //     page = parseInt(req.query.page);
+  //   }
 
-    var skip = (page - 1) * 6;
-    Product.find({ outer: true }).limit(productPerPage).skip(skip)
-      .then(products => {
-        // res.render('customer/shop-single',
-        //   { layout: 'customer/main', title: 'Outerwear', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Outerwear', products: multipleMongooseToObject(products) });
-      })
-      .catch(error => next(error));
-  }
+  //   var skip = (page - 1) * 6;
+  //   Product.find({ outer: true }).limit(productPerPage).skip(skip)
+  //     .then(products => {
+  //       // res.render('customer/shop-single',
+  //       //   { layout: 'customer/main', title: 'Outerwear', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+  //       res.json({title: 'Outerwear', products: multipleMongooseToObject(products) });
+  //     })
+  //     .catch(error => next(error));
+  // }
   
-  //[GET] /shop-single/top
-  async top(req, res, next) {
-    var page = 1;
-    if (Object.keys(req.query).length !== 0) { // not empty
-      page = parseInt(req.query.page);
-    }
+  // //[GET] /shop-single/top
+  // async top(req, res, next) {
+  //   var page = 1;
+  //   if (Object.keys(req.query).length !== 0) { // not empty
+  //     page = parseInt(req.query.page);
+  //   }
 
-    var skip = (page - 1) * 6;
-    Product.find({ top: true }).limit(productPerPage).skip(skip)
-      .then(products => {
-        // res.render('customer/shop-single',
-        //   { layout: 'customer/main', title: 'Top', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Top', products: multipleMongooseToObject(products) });
-      })
-      .catch(error => next(error));
-  }
-  //[GET] /shop-single/bottom
-  async bottom(req, res, next) {
-    var page = 1;
-    if (Object.keys(req.query).length !== 0) { // not empty
-      page = parseInt(req.query.page);
-    }
+  //   var skip = (page - 1) * 6;
+  //   Product.find({ top: true }).limit(productPerPage).skip(skip)
+  //     .then(products => {
+  //       // res.render('customer/shop-single',
+  //       //   { layout: 'customer/main', title: 'Top', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+  //       res.json({title: 'Top', products: multipleMongooseToObject(products) });
+  //     })
+  //     .catch(error => next(error));
+  // }
+  // //[GET] /shop-single/bottom
+  // async bottom(req, res, next) {
+  //   var page = 1;
+  //   if (Object.keys(req.query).length !== 0) { // not empty
+  //     page = parseInt(req.query.page);
+  //   }
 
-    var skip = (page - 1) * 6;
-    Product.find({ bottom: true }).limit(productPerPage).skip(skip)
-      .then(products => {
-        // res.render('customer/shop-single',
-        //   { layout: 'customer/main', title: 'Bottom', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Bottom', products: multipleMongooseToObject(products) });
-      })
-      .catch(error => next(error));
-  }
-  //[GET] /shop-single/accessories
-  async accessories(req, res, next) {
-    var page = 1;
-    if (Object.keys(req.query).length !== 0) { // not empty
-      page = parseInt(req.query.page);
-    }
+  //   var skip = (page - 1) * 6;
+  //   Product.find({ bottom: true }).limit(productPerPage).skip(skip)
+  //     .then(products => {
+  //       // res.render('customer/shop-single',
+  //       //   { layout: 'customer/main', title: 'Bottom', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+  //       res.json({title: 'Bottom', products: multipleMongooseToObject(products) });
+  //     })
+  //     .catch(error => next(error));
+  // }
+  // //[GET] /shop-single/accessories
+  // async accessories(req, res, next) {
+  //   var page = 1;
+  //   if (Object.keys(req.query).length !== 0) { // not empty
+  //     page = parseInt(req.query.page);
+  //   }
 
-    var skip = (page - 1) * 6;
-    Product.find({ accessories: true }).limit(productPerPage).skip(skip)
-      .then(products => {
-        // res.render('customer/shop-single',
-        //   { layout: 'customer/main', title: 'Accessories', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Accessories', products: multipleMongooseToObject(products) });
-      })
-      .catch(error => next(error));
-  }
-  //[GET] /shop-single/shoes
-  async shoes(req, res, next) {
-    var page = 1;
-    if (Object.keys(req.query).length !== 0) { // not empty
-      page = parseInt(req.query.page);
-    }
+  //   var skip = (page - 1) * 6;
+  //   Product.find({ accessories: true }).limit(productPerPage).skip(skip)
+  //     .then(products => {
+  //       // res.render('customer/shop-single',
+  //       //   { layout: 'customer/main', title: 'Accessories', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+  //       res.json({title: 'Accessories', products: multipleMongooseToObject(products) });
+  //     })
+  //     .catch(error => next(error));
+  // }
+  // //[GET] /shop-single/shoes
+  // async shoes(req, res, next) {
+  //   var page = 1;
+  //   if (Object.keys(req.query).length !== 0) { // not empty
+  //     page = parseInt(req.query.page);
+  //   }
 
-    var skip = (page - 1) * 6;
-    Product.find({ shoes: true }).limit(productPerPage).skip(skip)
-      .then(products => {
-        // res.render('customer/shop-single',
-        //   { layout: 'customer/main', title: 'Shoes', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({ title: 'Shoes', products: multipleMongooseToObject(products) });
-      })
-      .catch(error => next(error));
-  }
+  //   var skip = (page - 1) * 6;
+  //   Product.find({ shoes: true }).limit(productPerPage).skip(skip)
+  //     .then(products => {
+  //       // res.render('customer/shop-single',
+  //       //   { layout: 'customer/main', title: 'Shoes', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+  //       res.json({ title: 'Shoes', products: multipleMongooseToObject(products) });
+  //     })
+  //     .catch(error => next(error));
+  // }
 
   //[GET] /shop-single/price-asc
   async priceAsc(req, res, next) {

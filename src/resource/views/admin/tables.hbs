@@ -116,7 +116,23 @@
                       {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
                       <li><a class="dropdown-item" href="#">Another action</a></li>
                       <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
-                      {{#each productCategory}}
+                      <li><a class="dropdown-item" href="#">Popular</a></li>
+                        <li><a class="dropdown-item" href="#">Outerwear</a></li>
+                        <li><a class="dropdown-item" href="#">Top</a></li>
+                        <li><a class="dropdown-item" href="#">Bottom</a></li>
+                        <li><a class="dropdown-item" href="#">Accessories</a></li>
+                        <li><a class="dropdown-item" href="#">Shoes</a></li>
+                    </ul>
+                  </div>
+                  <div class="dropdown d-inline mx-5">
+                    <button class="btn btn-info dropdown-toggle mb-0" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false"data-bs-target=".filterDropdown">
+                      From
+                    </button>
+                    <ul class="dropdown-menu filterDropdown">
+                      {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
+                      {{#each productFrom}}
                         <li><a class="dropdown-item" href="#">{{this}}</a></li>
                       {{/each}}
                     </ul>
@@ -129,7 +145,7 @@
                       {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
                       <li><a class="dropdown-item" href="#">Another action</a></li>
                       <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
-                      {{#each productFrom}}
+                      {{#each productDate}}
                         <li><a class="dropdown-item" href="#">{{this}}</a></li>
                       {{/each}}
                     </ul>

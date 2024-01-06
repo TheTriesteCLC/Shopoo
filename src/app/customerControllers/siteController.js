@@ -9,27 +9,27 @@ const { use } = require('passport');
 class siteController {
   //[GET] /
   index(req, res) {
-    res.render('customer/home', { layout: 'customer/main' });
+    res.render('customer/home', { layout: 'customer/main', currUser: req.user });
   }
 
   //[GET] /home
   home(req, res) {
-    res.render('customer/home', { layout: 'customer/main' });
+    res.render('customer/home', { layout: 'customer/main', currUser: req.user });
   }
 
   //[GET] /about
   about(req, res) {
-    res.render('customer/about', { layout: 'customer/main' });
+    res.render('customer/about', { layout: 'customer/main', currUser: req.user });
   }
 
   //[GET] /elements
   elements(req, res) {
-    res.render('customer/elements', { layout: 'customer/main' });
+    res.render('customer/elements', { layout: 'customer/main', currUser: req.user });
   }
 
   //[GET] /contact
   contact(req, res) {
-    res.render('customer/contact', { layout: 'customer/main' });
+    res.render('customer/contact', { layout: 'customer/main', currUser: req.user });
   }
 
   //[GET] /cart
@@ -54,7 +54,8 @@ class siteController {
         }, 0);
 
         if (subtotalAll.length > 0) {
-          res.render('customer/checkout', { layout: 'customer/main', username: user.username, userSlug: req.params.slug, subtotalAll: subtotalAll, grandTotal: grandTotal });
+          res.render('customer/checkout', { layout: 'customer/main', username: user.username,
+           userSlug: req.params.slug, subtotalAll: subtotalAll, grandTotal: grandTotal, currUser: req.user });
         } else {
           res.redirect('/customer/shop-single');
         }
@@ -63,7 +64,7 @@ class siteController {
 
   //[GET] /thankyou
   thankyou(req, res) {
-    res.render('customer/thankyou', { layout: 'customer/main' });
+    res.render('customer/thankyou', { layout: 'customer/main', currUser: req.user });
   }
 
   //[GET] /signup
@@ -89,18 +90,18 @@ class siteController {
 
   //[GET] /protected
   protected(req, res, next) {
-    res.render('customer/protected', { layout: 'customer/main', user: req.user })
+    res.render('customer/protected', { layout: 'customer/main', currUser: req.user })
   }
 
   //[GET] /profile/
   profile(req, res, next) {
-    res.render('customer/profile', { layout: 'customer/main', user: req.user });
+    res.render('customer/profile', { layout: 'customer/main', currUser: req.user });
     // res.json({ products: singleMongooseToObject(products) });
   }
 
   //[GET] /update-profile/
   updateProfile(req, res, next) {
-    res.render('customer/update-profile', { layout: 'customer/main', user: req.user });
+    res.render('customer/update-profile', { layout: 'customer/main', currUser: req.user });
     // res.json({ products: singleMongooseToObject(products) });
   }
 
@@ -122,8 +123,7 @@ class siteController {
           dob: formData.dob,
           phone: formData.phone,
           address: formData.address,
-          sex: formData.sex
-          
+          sex: formData.sex,
         },
         {
           new: true
@@ -145,8 +145,9 @@ class siteController {
 
   //[GET] /cart
   async cart(req, res, next) {
-    // const user = req.user;
-    const user = await User.findOne({username: req.user.username}).lean();
+    const currUser = req.user;
+
+    const user = await User.findOne({username: currUser.username}).lean();
     const cartProducts = user.cart;
     let cartWithImg = [];
     let grandTotal = 0;
@@ -163,7 +164,9 @@ class siteController {
       grandTotal += element.quant * element.price;
       cartWithImg.push(element);
     }
-    res.render('customer/cart', { layout: 'customer/main', user: user, cartWithImg: cartWithImg, grandTotal: grandTotal })
+    res.render('customer/cart', { layout: 'customer/main', 
+    user: user, cartWithImg: cartWithImg, grandTotal: grandTotal,
+    currUser })
   }
 
   //[POST] /customer/cart/update-cart
@@ -241,9 +244,9 @@ class siteController {
 
   //[GET] /order/
   order(req, res, next) {
-    const user = req.user;
+    const currUser = req.user;
 
-    Order.find({ username: user.username }).lean()
+    Order.find({ username: currUser.username }).lean()
       .then(orders => {
         const ordersWithGrandTotal = orders.map((order) => {
           order['grandTotal'] = order.cart.reduce((accum, element) => {
@@ -252,14 +255,17 @@ class siteController {
           return order;
         });
         // res.json(ordersWithGrandTotal);
-        res.render('customer/order', { layout: 'customer/main', ordersWithGrandTotal: ordersWithGrandTotal, username: user.username });
+        res.render('customer/order', { layout: 'customer/main', 
+        ordersWithGrandTotal: ordersWithGrandTotal, username: currUser.username, currUser });
       })
 
   }
 
   //[GET] /forgot-password
   forgot(req, res, next) {
-    res.render('customer/forgot', { layout: 'customer/main' });
+    const currUser = req.user;
+
+    res.render('customer/forgot', { layout: 'customer/main', currUser });
   }
 
   //[POST] /forgot-success

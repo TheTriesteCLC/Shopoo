@@ -1,5 +1,5 @@
-function passwordToggle() {
-    var x = document.getElementById("password");
+function passwordToggle(paswordID) {
+    var x = document.getElementById(paswordID);
     if (x.type === "password") {
         x.type = "text";
     } else {

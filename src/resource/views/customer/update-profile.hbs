@@ -5,7 +5,7 @@
                 <div class="col-md-6 mb-4">
 
                   <div class="form-outline">
-                    <input type="text" id="fullname" class="form-control form-control-lg" name="fullname" value="{{user.fullname}}"/>
+                    <input type="text" id="fullname" class="form-control form-control-lg" name="fullname" value="{{currUser.fullname}}"/>
                     <label class="form-label" for="fullname">Full Name</label>
                   </div>
 
@@ -13,7 +13,7 @@
                 <div class="col-md-6 mb-4">
 
                   <div class="form-outline">
-                    <input type="text" id="email" class="form-control form-control-lg" name="email" value="{{user.email}}" required/>
+                    <input type="text" id="email" class="form-control form-control-lg" name="email" value="{{currUser.email}}" required/>
                     <label class="form-label" for="email">Email</label>
                   </div>
 
@@ -24,7 +24,7 @@
                 <div class="col-md-6 mb-4 d-flex align-items-center">
 
                   <div class="form-outline datepicker w-100">
-                    <input type="date" class="form-control form-control-lg" id="birthdayDate" name="dob" value="{{user.dob}}" required/>
+                    <input type="date" class="form-control form-control-lg" id="birthdayDate" name="dob" value="{{currUser.dob}}" required/>
                     <label for="birthdayDate" class="form-label">Birthday</label>
                   </div>
 
@@ -58,7 +58,7 @@
                 <div class="col-md-6 mb-4 pb-2">
 
                   <div class="form-outline">
-                    <input type="tel" id="phone" class="form-control form-control-lg" pattern="+[0-9]{11}" name="phone" value="{{user.phone}}" required/>
+                    <input type="tel" id="phone" class="form-control form-control-lg" pattern="+[0-9]{11}" name="phone" value="{{currUser.phone}}" required/>
                     <label class="form-label" for="phone">Phone Number</label>
                   </div>
 
@@ -66,7 +66,7 @@
                 <div class="col-md-6 mb-4 pb-2">
 
                   <div class="form-outline">
-                    <input type="street" id="address" class="form-control form-control-lg" name="address" value="{{user.address}}" required/>
+                    <input type="street" id="address" class="form-control form-control-lg" name="address" value="{{currUser.address}}" required/>
                     <label class="form-label" for="address">Address</label>
                   </div>
 
@@ -88,7 +88,7 @@
                     <input type="password" id="password" class="form-control form-control-lg" name="password" required/>
                     <label class="form-label" for="password">Enter password for authentication</label>
                     <div>
-                      <input type="checkbox" onclick="passwordToggle()">Show Password
+                      <input type="checkbox" onclick="passwordToggle('password')">Show Password
                     </div>
                   </div>
 

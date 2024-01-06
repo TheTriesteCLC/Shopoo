@@ -102,6 +102,9 @@ class siteController {
 
   //[GET] /tables
   async tables(req, res, next) {
+    const productForm = await Product.distinct('from').lean();
+    const productDate = await Product.distinct('date').lean();
+
     await User.find({}).lean()
       .then(async users => {
         await Product.find({}).lean()
@@ -244,7 +247,9 @@ class siteController {
           dob: formData.dob,
           phone: formData.phone,
           address: formData.address,
-          sex: formData.sex
+          sex: formData.sex,
+          canAdd: formData.canAdd === 'adding' ? true : false,
+          canBan: formData.canAdd === 'adding' ? true : false,
         },
         {
           new: true
