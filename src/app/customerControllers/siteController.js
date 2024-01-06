@@ -83,6 +83,10 @@ class siteController {
     });
   }
 
+  activate(req, res, next){
+    res.render('customer/activate', { layout: 'customer/main', user: req.user })
+  }
+
   //[GET] /protected
   protected(req, res, next) {
     console.log('current user ');
