@@ -14,78 +14,9 @@ router.post('/login',
     passport.authenticate('local-login', { failureRedirect: './login' }),
     function (req, res) {
         console.log("redirecting");
-        var email = req.user.email;
-        //Prepare variables
-        const token = generateToken({
-            email: email
-        });
-        const link = `http://localhost:3000/customer/verify?token=${token}`;
-        console.log("link");
-        console.log(link);
-
-        //Create mailrequest
-        let mailRequest = getMailOptions(email, link);
-        
-
-        //Send mail
-        // return getTransport().sendMail(mailRequest, (error) => {
-        //     if (error) {
-        //         res.status(500).send("Can't send email.");
-        //     } else {
-        //         res.status(200);
-        //         res.send({
-        //             message: `Link sent to ${email}`,
-        //         });
-        //     }
-        // });
-        res.send({
-            message: `Link: ${link}`,
-        });
-
+        res.redirect('./protected');
     }
 );
-
-//Verify
-router.get('/verify', (req, res) => {
-    console.log("VERIFY");
-    console.log(req.user);
-    const token = req.query.token;
-    console.log("token");
-    console.log(token);
-
-    if (Object.keys(token).length === 0) {
-      res.status(401).send("Invalid user token");
-      return;
-    }
-  
-    const secretKey = '440457';
-    let decodedToken;
-    try {
-
-        decodedToken = jwt.verify(token, secretKey);
-    } catch(err) {
-        console.log(err);
-        res.status(401).send("Invalid authentication credentials");
-        return;
-    }
-  
-    if (
-      !decodedToken.hasOwnProperty("email")
-    ) {
-      res.status(401).send("No email found");
-      return;
-    }
-
-    console.log("decodedToken");
-    console.log(decodedToken);
-
-    // const expirationDate = decodedToken;
-    // if (expirationDate < new Date()) {
-    //     console.log("Token has expired.");
-    //     return;
-    // }  
-    res.redirect('./protected');
-});
 
 //Forgot password
 router.get('/forgot-password', siteController.forgot);
@@ -102,15 +33,42 @@ router.post('/signup',
     passport.authenticate('local-signup', { failureRedirect: './signup' }),
     function (req, res) {
         console.log("redirecting");
-        res.redirect('./protected');
+        console.log(req.user);
+        var email = req.user.email;
+        //Prepare variables
+        const token = generateToken({
+            email: email
+        });
+        const link = `http://localhost:3000/customer/verify?token=${token}`;
+        console.log("link");
+        console.log(link);
+
+        //Create mailrequest
+        let mailRequest = getMailOptions(email, link);
+        
+        //Send mail
+        return getTransport().sendMail(mailRequest, (error) => {
+            if (error) {
+                res.status(500).send("Can't send email.");
+            } else {
+                // res.status(200);
+                // res.send({
+                //     message: `Link sent to ${email}`,
+                // });
+                res.redirect('./activate');
+            }
+        });
     }
 );
 
 //Activate profile
 router.get('/activate', isPending, siteController.activate);
 
+//Verify profile
+router.get('/verify', siteController.verify);
+
 //Logout
-router.get('/logout', isLoggedIn, siteController.logout);
+router.get('/logout', siteController.logout);
 
 //Test authentication
 router.get('/protected', isLoggedIn, siteController.protected);
@@ -142,13 +100,16 @@ function isLoggedIn(req, res, next) {
         if (req.user.status === "Active") { // is not Banned or Pending
             return next();
         }
-        if (req.user.status === "Active") { // is not Banned or Pending
+        if (req.user.status === "Pending") { // is not Banned or Pending
             res.redirect('/customer/activate');
+            
         }
+    } else {
+            
+        // is not authenticated
+        res.redirect('/customer/login');
     }
 
-    // is not authenticated
-    res.redirect('/customer/login');
 }
 
 function isPending(req, res, next){
