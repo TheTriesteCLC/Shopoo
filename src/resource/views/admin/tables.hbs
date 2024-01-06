@@ -13,7 +13,7 @@
                       {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
                       <li><a class="dropdown-item" href="#">Another action</a></li>
                       <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
-                      {{#each usernames}}
+                      {{#each userFullname}}
                         <li><a class="dropdown-item" href="#">{{this}}</a></li>
                       {{/each}}
                     </ul>
@@ -139,7 +139,7 @@
                   </div>
                   <div class="dropdown d-inline mx-5">
                     <button class="btn btn-info dropdown-toggle mb-0" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false"data-bs-target=".filterDropdown">
-                      From
+                      Collection
                     </button>
                     <ul class="dropdown-menu filterDropdown">
                       {{!-- <li><a class="dropdown-item" href="#">Action</a></li>

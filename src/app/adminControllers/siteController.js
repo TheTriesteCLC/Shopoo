@@ -102,7 +102,10 @@ class siteController {
 
   //[GET] /tables
   async tables(req, res, next) {
-    const productForm = await Product.distinct('from').lean();
+    const userFullname = await User.distinct('fullname').lean();
+    const userEmail = await User.distinct('email').lean();
+
+    const productFrom = await Product.distinct('from').lean();
     const productDate = await Product.distinct('date').lean();
 
     await User.find({}).lean()
@@ -118,7 +121,7 @@ class siteController {
             });
             // res.json(products);
             res.render('admin/tables',
-              { layout: 'admin/main', users: users, products: products });
+              { layout: 'admin/main', users: users, products: products, userFullname, userEmail, productFrom, productDate });
           })
       })
       .catch(error => next(error));
