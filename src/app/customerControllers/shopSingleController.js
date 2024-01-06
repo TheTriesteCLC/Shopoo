@@ -3,6 +3,8 @@ const Product = require('../models/Product');
 const Review = require('../models/Review');
 const User = require('../models/User');
 
+const productPerPage = 6;
+
 class shopSingleController {  
 
   //[GET] /shop-single/all
@@ -19,207 +21,235 @@ class shopSingleController {
       page = parseInt(req.query.page);
 
       var skip = (page - 1) * 6;
-      const productPerPage = 6;
 
       Product.find({}).limit(productPerPage).skip(skip)
       .then(products => {
-        res.json([{ products: multipleMongooseToObject(products)}]);
+        res.json({title:'All', products: multipleMongooseToObject(products)});
       })
       .catch(error => next(error));
     } else {
       res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'All', countries: constriesChoice, dates: datesChoice });
+          { layout: 'customer/main', countries: constriesChoice, dates: datesChoice });
     }
   }
 
   //[GET] /shop-single/outer
   async outer(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
-
-    Product.find({ outer: true })
+    var skip = (page - 1) * 6;
+    Product.find({ outer: true }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'Outerwear', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: 'Outerwear', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({title: 'Outerwear', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
   
   //[GET] /shop-single/top
   async top(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
-
-
-    Product.find({ top: true })
+    var skip = (page - 1) * 6;
+    Product.find({ top: true }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'Top', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: 'Top', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({title: 'Top', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
   //[GET] /shop-single/bottom
   async bottom(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
-
-    Product.find({ bottom: true })
+    var skip = (page - 1) * 6;
+    Product.find({ bottom: true }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'Bottom', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: 'Bottom', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({title: 'Bottom', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
   //[GET] /shop-single/accessories
   async accessories(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
-
-    Product.find({ accessories: true })
+    var skip = (page - 1) * 6;
+    Product.find({ accessories: true }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'Accessories', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: 'Accessories', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({title: 'Accessories', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
   //[GET] /shop-single/shoes
   async shoes(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
-
-    Product.find({ shoes: true })
+    var skip = (page - 1) * 6;
+    Product.find({ shoes: true }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'Shoes', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: 'Shoes', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({ title: 'Shoes', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
 
   //[GET] /shop-single/price-asc
   async priceAsc(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
-
-    Product.find({}).sort({ price: 1 })
+    var skip = (page - 1) * 6;
+    Product.find({}).sort({ price: 1 }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'Ascending price', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: 'Ascending price', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({title: 'Ascending price', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
   //[GET] /shop-single/price-dec
   async priceDec(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
-
-    Product.find({}).sort({ price: -1 })
+    var skip = (page - 1) * 6;
+    Product.find({}).sort({ price: -1 }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'Decending price', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: 'Decending price', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({title: 'Decending price', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
   //[GET] /shop-single/price-50
   async price50(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
+    var skip = (page - 1) * 6;
 
-    Product.find({ price: { $lt: 50 } }).sort({ price: 1 })
+    Product.find({ price: { $lt: 50 } }).sort({ price: 1 }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'Under $50', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: 'Under $50', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({title: 'Under %50', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
   //[GET] /shop-single/price-100
   async price100(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
+    var skip = (page - 1) * 6;
 
-    Product.find({ price: { $lt: 100 } }).sort({ price: 1 })
+    Product.find({ price: { $lt: 100 } }).sort({ price: 1 }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'Under $100', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: 'Under $100', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({ title: 'Under $100', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
   //[GET] /shop-single/price-300
   async price300(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
+    var skip = (page - 1) * 6;
 
-    Product.find({ price: { $lt: 300 } }).sort({ price: 1 })
+    Product.find({ price: { $lt: 300 } }).sort({ price: 1 }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: 'Under $300', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: 'Under $300', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({ title: 'Under $300', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
 
   //[GET] /shop-single/from
   async from(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
+    var skip = (page - 1) * 6;
 
-    Product.find({ from: req.query.country })
+    Product.find({ from: req.query.country }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: `From ${req.query.country}`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: singleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: `From ${req.query.country}`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({title: `From ${req.query.country}`, products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
 
   //[GET] /shop-single/collection
   async collection(req, res, next) {
-    const constriesChoice = await Product.distinct('from').lean();
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
 
-    const datesChoice = await Product.distinct('date').lean();
+    var skip = (page - 1) * 6;
 
-    Product.find({ date: req.query.date })
+    Product.find({ date: req.query.date }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: `Collection ${req.query.date}`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: multipleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: `Collection ${req.query.date}`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        res.json({ title: `Collection ${req.query.date}`, products: multipleMongooseToObject(products)});
       })
 
       .catch(error => next(error));
   }
 
-
-
-  
-
-
   //[GET] /shop-single/search
   async search(req, res, next) {
+    var page = 1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      page = parseInt(req.query.page);
+    }
+
+    var skip = (page - 1) * 6;
     const formData = req.body;
     const constriesChoice = await Product.distinct('from').lean();
 
     const datesChoice = await Product.distinct('date').lean();
 
-    Product.find({ $text: { $search: formData.nameSearch, $caseSensitive: false } })
+    Product.find({ $text: { $search: formData.nameSearch, $caseSensitive: false } }).limit(productPerPage).skip(skip)
       .then(products => {
         res.render('customer/shop-single',
           { layout: 'customer/main', title: `Result for "${formData.nameSearch}"`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
@@ -227,6 +257,10 @@ class shopSingleController {
       })
       .catch(error => next(error));
   }
+
+
+
+
 
   //[POST] /shop-single/review?product=
   review(req, res) {
