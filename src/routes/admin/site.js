@@ -45,13 +45,25 @@ router.get('/tables/product/update-info/:slug', isLoggedIn, siteController.updat
 router.post('/tables/product/update-info/updated/:slug', siteController.updateProductProfileSuccess);
 
 //Tables
-router.get('/tables/user/:slug', siteController.viewUserProfile);
 router.get('/tables/name/', siteController.nameFilter);
 router.get('/tables/email/', siteController.emailFilter);
-router.get('/tables/name-asc/', siteController.nameAscFilter);
-router.get('/tables/email-asc/', siteController.emailAscFilter);
-router.get('/tables/time-asc/', siteController.timeAscFilter);
+router.get('/tables/user/name-asc/', siteController.nameAscSort);
+router.get('/tables/user/email-asc/', siteController.emailAscSort);
+router.get('/tables/user/time-asc/', siteController.timeUserAscSort);
+router.get('/tables/user/:slug', siteController.viewUserProfile);
 
+
+router.get('/tables/from/', siteController.fromFilter);
+router.get('/tables/date/', siteController.dateFilter);
+router.get('/tables/products/popular/', siteController.popularFilter);
+router.get('/tables/products/outer/', siteController.outerFilter);
+router.get('/tables/products/top/', siteController.topFilter);
+router.get('/tables/products/bottom/', siteController.bottomFilter);
+router.get('/tables/products/accessories/', siteController.accessoriesFilter);
+router.get('/tables/products/shoes/', siteController.shoesFilter);
+router.get('/tables/products/price-asc/', siteController.priceAscSort);
+router.get('/tables/products/time-asc/', siteController.timeProductAscSort);
+router.get('/tables/products/purchase-asc/', siteController.purchaseAscSort);
 router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);
 router.get('/tables/', siteController.tables);
 

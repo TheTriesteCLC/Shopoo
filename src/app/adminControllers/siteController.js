@@ -104,10 +104,23 @@ class siteController {
   async tables(req, res, next) {
     console.log(req.query);
     if (Object.keys(req.query).length !== 0) { // not empty
-      await User.find({})
-        .then(users => {
-          res.json({ users: multipleMongooseToObject(users), titleUsers: 'All users' });
-        })
+      if (req.query['getall'] === 'users') {
+        await User.find({})
+          .then(users => {
+            res.json({ users: multipleMongooseToObject(users), titleUsers: 'All users' });
+          })
+      } else if (req.query['getall'] === 'products') {
+        await Product.find({}).lean()
+          .then(products => {
+            products = products.map((ele) => {
+              return {
+                ...ele,
+                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+              }
+            });
+            res.json({ products: products, titleProducts: 'All products' });
+          })
+      }
 
     } else {
       console.log('render');
@@ -173,14 +186,14 @@ class siteController {
     console.log(req.query);
     await User.find({ email: req.query.value })
       .then(users => {
-        res.json({ users: multipleMongooseToObject(users), titleUsers: 'Email filtered' });
+        res.json({ users: multipleMongooseToObject(users), titleUsers: `Email '${req.query.value}' filtered ` });
       })
     console.log('Stop');
     return;
   }
 
-  // name-asc
-  async nameAscFilter(req, res, next) {
+  // user/name-asc
+  async nameAscSort(req, res, next) {
 
     //console.log('catched');
     console.log(req.query);
@@ -193,29 +206,252 @@ class siteController {
     return;
   }
 
-  // email-asc
-  async emailAscFilter(req, res, next) {
+  // user/email-asc
+  async emailAscSort(req, res, next) {
 
     //console.log('catched');
     console.log(req.query);
     await User.find({})
       .then(users => {
-        let userNameSort = multipleMongooseToObject(users).sort(function (a, b) { return a.email.localeCompare(b.email); });
-        res.json({ users: userNameSort, titleUsers: 'Email sorted ascending' });
+        let userEmailSort = multipleMongooseToObject(users).sort(function (a, b) { return a.email.localeCompare(b.email); });
+        res.json({ users: userEmailSort, titleUsers: 'Email sorted ascending' });
       })
     console.log('Stop');
     return;
   }
 
-  // time-asc
-  async timeAscFilter(req, res, next) {
+  // user/time-asc
+  async timeUserAscSort(req, res, next) {
 
     //console.log('catched');
     console.log(req.query);
     await User.find({}).sort({ createdAt: 1 })
       .then(users => {
-        let userNameSort = multipleMongooseToObject(users);
-        res.json({ users: userNameSort, titleUsers: 'Registration time sorted ascending' });
+        res.json({ users: multipleMongooseToObject(users), titleUsers: 'Registration time sorted ascending' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // from?value=
+  async fromFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({ from: req.query.value }).lean()
+      .then(products => {
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: `From '${req.query.value}' filtered ` });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // date?value=
+  async dateFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({ date: req.query.value }).lean()
+      .then(products => {
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: `Collection '${req.query.value}' filtered ` });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // product/popular
+  async popularFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({ popular: true }).lean()
+      .then(products => {
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: 'Category popular filtered' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // product/outer
+  async outerFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({ outer: true }).lean()
+      .then(products => {
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: 'Category outer filtered' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // product/top
+  async topFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({ top: true }).lean()
+      .then(products => {
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: 'Category top filtered' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // product/bottom
+  async bottomFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({ bottom: true }).lean()
+      .then(products => {
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: 'Category bottom filtered' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // product/accessories
+  async accessoriesFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({ accessories: true }).lean()
+      .then(products => {
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: 'Category accessories filtered' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // product/shoes
+  async shoesFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({ shoes: true }).lean()
+      .then(products => {
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: 'Category shoes filtered' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // products/price-asc
+  async priceAscSort(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({}).sort({ price: 1 }).lean()
+      .then(products => {
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: 'Price sorted ascending' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // products/purchase
+  async purchaseAscSort(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({}).lean()
+      .then(async products => {
+
+
+        for (let i = 0; i < products.length; ++i) {
+          await Order.find({ "cart.prod": products[i].name }).lean()
+            .then(orders => {
+              products[i]['totalOrdered'] = orders.reduce((accumOrder, order) => {
+                return accumOrder + order.cart.reduce((accumCart, ele) => {
+                  return accumCart + (ele.prod === products[i].name ? ele.quant : 0);
+                }, 0);
+              }, 0)
+            })
+        }
+        products = products.sort(function (a, b) { return a['totalOrdered'] - b['totalOrdered'] })
+
+
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: 'Purchased sorted ascending' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // product/time-asc
+  async timeProductAscSort(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await Product.find({}).sort({ createdAt: 1 }).lean()
+      .then(products => {
+        products = products.map((ele) => {
+          return {
+            ...ele,
+            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+          }
+        });
+        res.json({ products: products, titleProducts: 'Creation time sorted ascending' });
       })
     console.log('Stop');
     return;
