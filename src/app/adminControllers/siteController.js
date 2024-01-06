@@ -121,7 +121,183 @@ class siteController {
             });
             // res.json(products);
             res.render('admin/tables',
-              { layout: 'admin/main', users: users, products: products, userFullname, userEmail, productFrom, productDate });
+              { layout: 'admin/main', users: users, products: products, 
+              productTitle: 'All products',
+              userFullname, userEmail, productFrom, productDate });
+          })
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /tables/product-popular
+  async tablesProductPopular(req, res, next) {
+    const userFullname = await User.distinct('fullname').lean();
+    const userEmail = await User.distinct('email').lean();
+
+    const productFrom = await Product.distinct('from').lean();
+    const productDate = await Product.distinct('date').lean();
+
+    await User.find({}).lean()
+      .then(async users => {
+        await Product.find({popular: true}).lean()
+          .then(products => {
+
+            products = products.map((ele) => {
+              return {
+                ...ele,
+                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+              }
+            });
+            // res.json(products);
+            res.render('admin/tables',
+              { layout: 'admin/main', users: users, products: products, 
+              productTitle: 'Popular',
+              userFullname, userEmail, productFrom, productDate });
+          })
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /tables/product-top
+  async tablesProductTop(req, res, next) {
+    const userFullname = await User.distinct('fullname').lean();
+    const userEmail = await User.distinct('email').lean();
+
+    const productFrom = await Product.distinct('from').lean();
+    const productDate = await Product.distinct('date').lean();
+
+    await User.find({}).lean()
+      .then(async users => {
+        await Product.find({top: true}).lean()
+          .then(products => {
+
+            products = products.map((ele) => {
+              return {
+                ...ele,
+                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+              }
+            });
+            // res.json(products);
+            res.render('admin/tables',
+              { layout: 'admin/main', users: users, products: products, 
+              productTitle: 'Top',
+              userFullname, userEmail, productFrom, productDate });
+          })
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /tables/product-bottom
+  async tablesProductBottom(req, res, next) {
+    const userFullname = await User.distinct('fullname').lean();
+    const userEmail = await User.distinct('email').lean();
+
+    const productFrom = await Product.distinct('from').lean();
+    const productDate = await Product.distinct('date').lean();
+
+    await User.find({}).lean()
+      .then(async users => {
+        await Product.find({bottom: true}).lean()
+          .then(products => {
+
+            products = products.map((ele) => {
+              return {
+                ...ele,
+                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+              }
+            });
+            // res.json(products);
+            res.render('admin/tables',
+              { layout: 'admin/main', users: users, products: products, 
+              productTitle: 'Bottom',
+              userFullname, userEmail, productFrom, productDate });
+          })
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /tables/product-outer
+  async tablesProductOuter(req, res, next) {
+    const userFullname = await User.distinct('fullname').lean();
+    const userEmail = await User.distinct('email').lean();
+
+    const productFrom = await Product.distinct('from').lean();
+    const productDate = await Product.distinct('date').lean();
+
+    await User.find({}).lean()
+      .then(async users => {
+        await Product.find({outer: true}).lean()
+          .then(products => {
+
+            products = products.map((ele) => {
+              return {
+                ...ele,
+                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+              }
+            });
+            // res.json(products);
+            res.render('admin/tables',
+              { layout: 'admin/main', users: users, products: products, 
+              productTitle: 'Outerwear',
+              userFullname, userEmail, productFrom, productDate });
+          })
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /tables/product-accessories
+  async tablesProductAccessories(req, res, next) {
+    const userFullname = await User.distinct('fullname').lean();
+    const userEmail = await User.distinct('email').lean();
+
+    const productFrom = await Product.distinct('from').lean();
+    const productDate = await Product.distinct('date').lean();
+
+    await User.find({}).lean()
+      .then(async users => {
+        await Product.find({accessories: true}).lean()
+          .then(products => {
+
+            products = products.map((ele) => {
+              return {
+                ...ele,
+                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+              }
+            });
+            // res.json(products);
+            res.render('admin/tables',
+              { layout: 'admin/main', users: users, products: products, 
+              productTitle: 'Accessories',
+              userFullname, userEmail, productFrom, productDate });
+          })
+      })
+      .catch(error => next(error));
+  }
+
+  //[GET] /tables/product-shoes
+  async tablesProductShoes(req, res, next) {
+    const userFullname = await User.distinct('fullname').lean();
+    const userEmail = await User.distinct('email').lean();
+
+    const productFrom = await Product.distinct('from').lean();
+    const productDate = await Product.distinct('date').lean();
+
+    await User.find({}).lean()
+      .then(async users => {
+        await Product.find({shoes: true}).lean()
+          .then(products => {
+
+            products = products.map((ele) => {
+              return {
+                ...ele,
+                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+              }
+            });
+            // res.json(products);
+            res.render('admin/tables',
+              { layout: 'admin/main', users: users, products: products, 
+              productTitle: 'Shoes',
+              userFullname, userEmail, productFrom, productDate });
           })
       })
       .catch(error => next(error));
