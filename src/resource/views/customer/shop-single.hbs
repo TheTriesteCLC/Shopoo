@@ -40,7 +40,7 @@
     <div class="row">
       <div class="col-md-3">
         <ul class="list-unstyled categories">
-          <li><a class ="filter" value="all" href="/customer/shop-single/">All <span></span></a></li>
+          <li><a class ="filter" value="" href="/customer/shop-single/">All <span></span></a></li>
           <li><a class ="filter" value="outer" href="">Outerwear <span></span></a></li>
           <li><a class ="filter" value="top" href="">Top <span></span></a></li>
           <li><a class ="filter" value="bottom" href="">Bottom <span></span></a></li>
@@ -121,7 +121,7 @@
   $(document).ready(function(){
     $.ajax({
       type: "GET",
-      url: document.URL + referrer + '/?page=1',
+      url: document.URL + '/?page=1',
       success: function(response){
         handleResponse(response);
       },
@@ -133,11 +133,18 @@
   });
   $('.page-link').on('click', function(e){
     var page = this.getAttribute("value");
-    console.log(referrer +'/?page=' + page);
+    var queryDivider = "?";
+
+    if (referrer.includes('?')){
+      alert('Query');
+      queryDivider = "\&";
+    }
+
+    console.log(referrer +queryDivider +'page=' + page);
     e.preventDefault(); // stop element default action
     $.ajax({
       type: "GET",
-      url: document.URL + referrer + '/?page=' + page,
+      url: document.URL + '/' + referrer + queryDivider + 'page=' + page,
       success: function(response){
         handleResponse(response);
       },
@@ -149,12 +156,18 @@
   });
   $('.filter').on('click', function(e){
     var value = this.getAttribute("value");
-    referrer = '/' + value;
+    
+    referrer = value;
+
+    if(value == ""){
+      value = "?page=1";
+    } 
+
     console.log(referrer);
     e.preventDefault();
     $.ajax({
       type: "GET",
-      url: document.URL + referrer,
+      url: document.URL + '/' + value,
       success: function(response){
         handleResponse(response);
       },
