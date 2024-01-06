@@ -123,6 +123,7 @@ class siteController {
           phone: formData.phone,
           address: formData.address,
           sex: formData.sex
+          
         },
         {
           new: true
@@ -131,7 +132,7 @@ class siteController {
   
       console.log('Updated');
   
-      if (currAdmin === null) {
+      if (currUser === null) {
         res.redirect('/customer/update-profile');
       } else {
         // update session user

@@ -21,7 +21,7 @@ router.post('/signup',
     passport.authenticate('local-signup', { failureRedirect: './signup' }),
     function (req, res) {
         console.log("redirecting");
-        res.redirect('./home');
+        res.redirect('./dashboard');
     }
 );
 
