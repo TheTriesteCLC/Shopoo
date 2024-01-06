@@ -5,6 +5,7 @@ const { raw } = require('express');
 const Order = require('../models/Order');
 const { use } = require('passport');
 
+const { generateToken, getMailOptions, getTransport, verifyToken } = require("../../config/service/service");
 
 class siteController {
   //[GET] /
@@ -83,8 +84,46 @@ class siteController {
     });
   }
 
+  //[GET] /activate
   activate(req, res, next){
     res.render('customer/activate', { layout: 'customer/main', user: req.user })
+  }
+
+  //[GET] /verify
+  async verify(req, res, next){
+    const token = req.query.token;
+
+    if (Object.keys(token).length === 0) {
+      res.status(401).send("Invalid user token");
+      return;
+    }
+
+    var result = verifyToken(token);
+    
+    if (!result.success) {
+      return res.status(403).json({ error: result.error });
+    }
+
+    if (
+      !result.data
+    ) {
+      res.status(401).send("No email found");
+      return;
+    }
+
+    console.log("decodedToken");
+    console.log(result.data);
+
+    await User.updateOne({ email: result.data.email },{status:'Active'});  
+    
+    if(!req.user){
+      res.redirect('./protected');
+      return;
+    }  
+    var user = await User.findOne({ email: result.data.email }).lean();    
+    req.session.passport.user = user;
+    console.log(user);
+    res.redirect('./protected');
   }
 
   //[GET] /protected
@@ -148,7 +187,7 @@ class siteController {
   async cart(req, res, next) {
     // const user = req.user;
 
-    const user = await User.findOne({username: user.username}).lean();
+    const user = await User.findOne({username: req.user.username}).lean();
     const cartProducts = user.cart;
     let cartWithImg = [];
     let grandTotal = 0;
