@@ -106,13 +106,14 @@ router.post('/signup',
     }
 );
 
+//Activate profile
+router.get('/activate', isPending, siteController.activate);
+
 //Logout
-router.get('/logout',isLoggedIn, siteController.logout);
+router.get('/logout', isLoggedIn, siteController.logout);
 
 //Test authentication
 router.get('/protected', isLoggedIn, siteController.protected);
-
-//Email
 
 //Cart 
 router.get('/cart', isLoggedIn, siteController.cart);
@@ -138,13 +139,25 @@ function isLoggedIn(req, res, next) {
 
     console.log("Authenticate checking");
     if (req.isAuthenticated()) { // is authenticated
-        if (req.user.status === "Active") { // is not Banned
+        if (req.user.status === "Active") { // is not Banned or Pending
             return next();
+        }
+        if (req.user.status === "Active") { // is not Banned or Pending
+            res.redirect('/customer/activate');
         }
     }
 
     // is not authenticated
     res.redirect('/customer/login');
+}
+
+function isPending(req, res, next){
+    if (req.isAuthenticated()) { // is authenticated
+        if (req.user.status === "Pending") {
+            return next();
+        }
+    }
+    res.redirect('/customer/');
 }
 
 module.exports = router;
