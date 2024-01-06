@@ -51,12 +51,12 @@ router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfil
 router.get('/tables/', siteController.tables);
 
 //product (need fix)
-router.get('/tables/product-popular', isLoggedIn, siteController.tablesProductPopular);
-router.get('/tables/product-outer', isLoggedIn, siteController.tablesProductOuter);
-router.get('/tables/product-top', isLoggedIn, siteController.tablesProductTop);
-router.get('/tables/product-bottom', isLoggedIn, siteController.tablesProductBottom);
-router.get('/tables/product-accessories', isLoggedIn, siteController.tablesProductAccessories);
-router.get('/tables/product-shoes', isLoggedIn, siteController.tablesProductShoes);
+// router.get('/tables/product-popular', isLoggedIn, siteController.tablesProductPopular);
+// router.get('/tables/product-outer', isLoggedIn, siteController.tablesProductOuter);
+// router.get('/tables/product-top', isLoggedIn, siteController.tablesProductTop);
+// router.get('/tables/product-bottom', isLoggedIn, siteController.tablesProductBottom);
+// router.get('/tables/product-accessories', isLoggedIn, siteController.tablesProductAccessories);
+// router.get('/tables/product-shoes', isLoggedIn, siteController.tablesProductShoes);
 
 //View orders and filtered
 router.get('/orders', isLoggedIn, siteController.orders);
