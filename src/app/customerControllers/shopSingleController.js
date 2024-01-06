@@ -3,37 +3,34 @@ const Product = require('../models/Product');
 const Review = require('../models/Review');
 const User = require('../models/User');
 
-class shopSingleController {
+class shopSingleController {  
 
   //[GET] /shop-single/all
   //[GET] /shop-single/?page=
   async index(req, res, next) {
-    // console.log(req.query);
-    var page = 1;
+    console.log(req.query);
+    //var page = 1;
 
     const constriesChoice = await Product.distinct('from').lean();
     const datesChoice = await Product.distinct('date').lean();
 
-    if (Object.keys(req.query).length === 0) { // empty
-      res.render('customer/shop-single',
-         { layout: 'customer/main', title: 'All', countries: constriesChoice, dates: datesChoice });
-    } else {
+    if (Object.keys(req.query).length !== 0) { // not empty
+      var page = 1;
       page = parseInt(req.query.page);
+
+      var skip = (page - 1) * 6;
+      const productPerPage = 6;
+
+      Product.find({}).limit(productPerPage).skip(skip)
+      .then(products => {
+        res.json([{ products: multipleMongooseToObject(products)}]);
+      })
+      .catch(error => next(error));
+    } else {
+      res.render('customer/shop-single',
+          { layout: 'customer/main', title: 'All', countries: constriesChoice, dates: datesChoice });
     }
-
-    var skip = (page - 1) * 6;
-    const productPerPage = 6;
-
-    Product.find({}).limit(productPerPage).skip(skip)
-    .then(products => {
-      res.json([{ products: multipleMongooseToObject(products)}]);
-    })
-    .catch(error => next(error));
-
   }
-
-
-
 
   //[GET] /shop-single/outer
   async outer(req, res, next) {
@@ -49,6 +46,7 @@ class shopSingleController {
       })
       .catch(error => next(error));
   }
+  
   //[GET] /shop-single/top
   async top(req, res, next) {
     const constriesChoice = await Product.distinct('from').lean();
