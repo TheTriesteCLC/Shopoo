@@ -105,30 +105,33 @@ class siteController {
     console.log(req.query);
     if (Object.keys(req.query).length !== 0) { // not empty
       await User.find({})
-      .then(users => {
-        res.json({users: multipleMongooseToObject(users)});
-      })
+        .then(users => {
+          res.json({ users: multipleMongooseToObject(users), titleUsers: 'All users' });
+        })
 
     } else {
       console.log('render');
-      
+
       const userFullname = await User.distinct('fullname').lean();
       const userEmail = await User.distinct('email').lean();
 
       const productFrom = await Product.distinct('from').lean();
       const productDate = await Product.distinct('date').lean();
       await Product.find({}).lean()
-          .then(products => {
+        .then(products => {
 
-            products = products.map((ele) => {
-              return {
-                ...ele,
-                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-              }
+          products = products.map((ele) => {
+            return {
+              ...ele,
+              category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+            }
+          });
+          res.render('admin/tables',
+            {
+              layout: 'admin/main', products: products,
+              userFullname, userEmail, productFrom, productDate
             });
-            res.render('admin/tables',
-              { layout: 'admin/main', products: products, userFullname, userEmail, productFrom, productDate });
-      })
+        })
     }
     // await User.find({}).lean()
     //   .then(async users => {
@@ -155,15 +158,69 @@ class siteController {
 
     //console.log('catched');
     console.log(req.query);
-    await User.find({fullname: req.query.value})
-    .then(users => {
-      res.json({users: multipleMongooseToObject(users)});
-    })
+    await User.find({ fullname: req.query.value })
+      .then(users => {
+        res.json({ users: multipleMongooseToObject(users), titleUsers: `Fullname '${req.query.value}' filtered` });
+      })
     console.log('Stop');
     return;
-
   }
-  
+
+  // email?value=
+  async emailFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await User.find({ email: req.query.value })
+      .then(users => {
+        res.json({ users: multipleMongooseToObject(users), titleUsers: 'Email filtered' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // name-asc
+  async nameAscFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await User.find({})
+      .then(users => {
+        let userNameSort = multipleMongooseToObject(users).sort(function (a, b) { return a.fullname.localeCompare(b.fullname); });
+        res.json({ users: userNameSort, titleUsers: 'Fullname sorted ascending' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // email-asc
+  async emailAscFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await User.find({})
+      .then(users => {
+        let userNameSort = multipleMongooseToObject(users).sort(function (a, b) { return a.email.localeCompare(b.email); });
+        res.json({ users: userNameSort, titleUsers: 'Email sorted ascending' });
+      })
+    console.log('Stop');
+    return;
+  }
+
+  // time-asc
+  async timeAscFilter(req, res, next) {
+
+    //console.log('catched');
+    console.log(req.query);
+    await User.find({}).sort({ createdAt: 1 })
+      .then(users => {
+        let userNameSort = multipleMongooseToObject(users);
+        res.json({ users: userNameSort, titleUsers: 'Registration time sorted ascending' });
+      })
+    console.log('Stop');
+    return;
+  }
+
 
   //[GET] /billing
   billing(req, res) {
@@ -273,15 +330,15 @@ class siteController {
   //[POST] /update-profile/updated
   async update(req, res) {
     const formData = req.body;
-    
+
     // get current user session
-    var currAdmin = await Admin.findOne({username: req.user.username});
+    var currAdmin = await Admin.findOne({ username: req.user.username });
 
     // check two passwords
     var checkPass = await currAdmin.comparePassword(formData.password);
 
-    if (checkPass){
-      currAdmin = await Admin.findOneAndUpdate({username: formData.username},
+    if (checkPass) {
+      currAdmin = await Admin.findOneAndUpdate({ username: formData.username },
         {
           fullname: formData.fullname,
           email: formData.email,
@@ -295,17 +352,17 @@ class siteController {
         {
           new: true
         }
-      );      
-  
+      );
+
       console.log('Updated');
-  
+
       if (currAdmin === null) {
         res.redirect('/admin/update-profile');
       } else {
         // update session user
         req.session.passport.user = currAdmin;
         res.redirect('/admin/profile');
-      }    
+      }
     }
   }
 
