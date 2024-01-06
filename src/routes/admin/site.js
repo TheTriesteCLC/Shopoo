@@ -16,7 +16,7 @@ router.post('/login',
 );
 
 //Signup new profile
-router.get('/signup',isLoggedIn, siteController.signup);
+router.get('/signup', isLoggedIn, siteController.signup);
 router.post('/signup',
     passport.authenticate('local-signup', { failureRedirect: './signup' }),
     function (req, res) {
@@ -26,7 +26,7 @@ router.post('/signup',
 );
 
 //Logout
-router.get('/logout',isLoggedIn, siteController.logout);
+router.get('/logout', isLoggedIn, siteController.logout);
 
 //Ban or unban user
 router.post('/tables/user/update/:slug', siteController.updateUserSuccess);
@@ -47,6 +47,11 @@ router.post('/tables/product/update-info/updated/:slug', siteController.updatePr
 //Tables
 router.get('/tables/user/:slug', siteController.viewUserProfile);
 router.get('/tables/name/', siteController.nameFilter);
+router.get('/tables/email/', siteController.emailFilter);
+router.get('/tables/name-asc/', siteController.nameAscFilter);
+router.get('/tables/email-asc/', siteController.emailAscFilter);
+router.get('/tables/time-asc/', siteController.timeAscFilter);
+
 router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);
 router.get('/tables/', siteController.tables);
 
