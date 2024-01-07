@@ -84,6 +84,20 @@ class siteController {
     });
   }
 
+  //[GET] signup/available
+  async avalable(req, res, next){
+    console.log('recieved');
+    console.log(req);
+    console.log(req.query);
+    var account = await User.findOne(req.query);
+
+    if (account){
+      res.json({isAvailable: false});
+    } else {
+      res.json({isAvailable: true});
+    }
+  }
+
   //[GET] /activate
   activate(req, res, next){
     res.render('customer/activate', { layout: 'customer/main', user: req.user })
