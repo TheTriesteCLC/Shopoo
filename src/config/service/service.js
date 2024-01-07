@@ -27,12 +27,12 @@ exports.getMailOptions = (email, link) => {
   <h2>Hey ${email}</h2>
   <p>Here's the special magic link you requested:</p>
   <p>${link}</p>
-  <p>Please note that for added security this link becomes invalid after 45 minutes</p>
+  <p>Please note that for added security this link becomes invalid after 1 hour</p>
   <p>Stay Jiggy</p>`;
 
   return {
     body,
-    subject: "Urgent: Super Secret Magic Link",
+    subject: "Account verify",
     to: email,
     html: body,
     from: emailAddr,
