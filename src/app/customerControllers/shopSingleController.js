@@ -328,8 +328,8 @@ class shopSingleController {
         if (Object.keys(req.query).length !== 0){
           var page = req.query.page;
           var count = await Review.countDocuments({ product: thisProduct.name });
-          var pagingFlag = 0;
-      
+          var pagingFlag = 0;          
+          
           if (page == 1){
             pagingFlag = -1;
           }
@@ -347,6 +347,11 @@ class shopSingleController {
           console.log(page);
           console.log(skip);
           console.log(pagingFlag);
+
+          if (count == 0){
+            res.json({reviews: {}, page: page, pagingFlag: pagingFlag});
+            return;
+          }
       
           const reviews = await (Review.find({ product: thisProduct.name }).limit(reviewPerPage).skip(skip).lean());
           res.json({reviews: reviews, page: page, pagingFlag: pagingFlag});
