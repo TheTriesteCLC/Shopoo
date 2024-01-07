@@ -792,6 +792,7 @@ class siteController {
       'from': formData.from,
       'stock': parseFloat(formData.stock),
       'popular': parseFloat(formData.buyers) > 500 ? true : false,
+      'image': 'defaultProductIcon.jpg',
       'status': formData.stock > 0 ? 'OnStock' : 'OutStock'
     };
 
