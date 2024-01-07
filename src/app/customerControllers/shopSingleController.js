@@ -1,9 +1,11 @@
+const { relativeTimeRounding } = require('moment');
 const { multipleMongooseToObject, singleMongooseToObject } = require('../../util/mongoose');
 const Product = require('../models/Product');
 const Review = require('../models/Review');
 const User = require('../models/User');
 
 const productPerPage = 6;
+const reviewPerPage = 4;
 
 class shopSingleController {  
 
@@ -322,6 +324,36 @@ class shopSingleController {
     // console.log(req.params);
     Product.findOne({ slug: req.params.slug }).lean()
       .then(async thisProduct => {
+        console.log(req.query);
+        if (Object.keys(req.query).length !== 0){
+          var page = req.query.page;
+          var count = await Review.countDocuments({ product: thisProduct.name });
+          var pagingFlag = 0;
+      
+          if (page == 1){
+            pagingFlag = -1;
+          }
+
+          if (page * reviewPerPage >= count){
+            page = Math.ceil(count / reviewPerPage);
+      
+            if (pagingFlag === -1) {
+              pagingFlag = 2;
+            } else pagingFlag = 1;
+          }
+          
+          var skip = (page - 1) * reviewPerPage;
+
+          console.log(page);
+          console.log(skip);
+          console.log(pagingFlag);
+      
+          const reviews = await (Review.find({ product: thisProduct.name }).limit(reviewPerPage).skip(skip).lean());
+          res.json({reviews: reviews, page: page, pagingFlag: pagingFlag});
+          console.log('HERE');
+          return;
+        } 
+
         var related = [];
 
         // console.log(thisProduct);
@@ -335,9 +367,6 @@ class shopSingleController {
           }
         }
 
-        // Still got error read null:.name
-        const reviews = await (Review.find({ product: thisProduct.name }).lean());
-
         // remove duplicate objects
         const jsonObject = related.map(JSON.stringify);
         const uniqueSet = new Set(jsonObject);
@@ -347,7 +376,7 @@ class shopSingleController {
         while (related.length > 4) related.pop();
 
         res.render('customer/item',
-          { layout: 'customer/main', title: 'Item', product: thisProduct, related: related, reviews: reviews });
+          { layout: 'customer/main', title: 'Item', product: thisProduct, related: related});
         // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
 
       })
