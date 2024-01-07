@@ -16,8 +16,10 @@
                     </button>
                     <ul class="dropdown-menu filterDropdown">
                       {{#each userFullname}}
-                        <li><a class="dropdown-item users-filter" value ='name/?value={{this}}' href="">{{this}}</a></li>
+                        <li><a class="dropdown-item users-filter" type="filter" name="fullname" value ='{{this}}' href="">{{this}}</a></li>
                       {{/each}}
+                        <li><a class="dropdown-item users-filter" type="filter" name="" value ='none' href="">None</a></li>
+
                     </ul>
                   </div>
                   <div class="dropdown d-inline mx-5">
@@ -26,8 +28,9 @@
                     </button>
                     <ul class="dropdown-menu filterDropdown">
                       {{#each userEmail}}
-                        <li><a class="dropdown-item users-filter" value ="email/?value={{this}}" href="">{{this}}</a></li>
+                        <li><a class="dropdown-item users-filter" type="filter" name="email" value ="{{this}}" href="">{{this}}</a></li>
                       {{/each}}
+                        <li><a class="dropdown-item users-filter" type="filter" name="" value ='none' href="">None</a></li>
                     </ul>
                   </div>
                   <div class="dropdown d-inline ms-5">
@@ -35,9 +38,9 @@
                         Sort
                       </button>
                       <ul class="dropdown-menu sortDropdown">
-                        <li><a class="dropdown-item users-filter" value = "user/name-asc" href="">Name</a></li>
-                        <li><a class="dropdown-item users-filter" value = "user/email-asc" href="">Email</a></li>
-                        <li><a class="dropdown-item users-filter" value = "user/time-asc" href="">Registration time</a></li>
+                        <li><a class="dropdown-item users-filter" type="sorter" name="fullname" value = "1" href="">Name</a></li>
+                        <li><a class="dropdown-item users-filter" type="sorter" name="email" value = "1" href="">Email</a></li>
+                        <li><a class="dropdown-item users-filter" type="sorter" name="createdAt" value = "1" href="">Registration time</a></li>
                       </ul>
                   </div>
                 </div>
@@ -103,12 +106,13 @@
                       {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
                       <li><a class="dropdown-item" href="#">Another action</a></li>
                       <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
-                      <li><a class="dropdown-item products-filter" value="products/popular">Popular</a></li>
-                      <li><a class="dropdown-item products-filter" value="products/outer">Outerwear</a></li>
-                      <li><a class="dropdown-item products-filter" value="products/top">Top</a></li>
-                      <li><a class="dropdown-item products-filter" value="products/bottom">Bottom</a></li>
-                      <li><a class="dropdown-item products-filter" value="products/accessories">Accessories</a></li>
-                      <li><a class="dropdown-item products-filter" value="products/shoes">Shoes</a></li>
+                      <li><a class="dropdown-item products-filter" type="filter" value="true" name="popular">Popular</a></li>
+                      <li><a class="dropdown-item products-filter" type="filter" value="true" name="outer">Outerwear</a></li>
+                      <li><a class="dropdown-item products-filter" type="filter" value="true" name="top">Top</a></li>
+                      <li><a class="dropdown-item products-filter" type="filter" value="true" name="bottom">Bottom</a></li>
+                      <li><a class="dropdown-item products-filter" type="filter" value="true" name="accessories">Accessories</a></li>
+                      <li><a class="dropdown-item products-filter" type="filter" value="true" name="shoes">Shoes</a></li>
+                      <li><a class="dropdown-item products-filter" type="filter" value="none" name="">None</a></li>
                     </ul>
                   </div>
                   <div class="dropdown d-inline mx-5">
@@ -116,12 +120,10 @@
                       From
                     </button>
                     <ul class="dropdown-menu filterDropdown">
-                      {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
-                      <li><a class="dropdown-item" href="#">Another action</a></li>
-                      <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
                       {{#each productFrom}}
-                        <li><a class="dropdown-item products-filter" value ="from/?value={{this}}" href="">{{this}}</a></li>
+                        <li><a class="dropdown-item products-filter" type="filter" name="from" value="{{this}}" href="">{{this}}</a></li>
                       {{/each}}
+                        <li><a class="dropdown-item products-filter" type="filter" name="" value="none" href="">None</a></li>
                     </ul>
                   </div>
                   <div class="dropdown d-inline mx-5">
@@ -129,12 +131,10 @@
                       Collection
                     </button>
                     <ul class="dropdown-menu filterDropdown">
-                      {{!-- <li><a class="dropdown-item" href="#">Action</a></li>
-                      <li><a class="dropdown-item" href="#">Another action</a></li>
-                      <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
                       {{#each productDate}}
-                        <li><a class="dropdown-item products-filter" value ="date/?value={{this}}" href="">{{this}}</a></li>
+                        <li><a class="dropdown-item products-filter" type="filter" name="date" value="{{this}}" href="">{{this}}</a></li>
                       {{/each}}
+                        <li><a class="dropdown-item products-filter" type="filter" name="" value="none" href="">None</a></li>
                     </ul>
                   </div>
                   <div class="dropdown d-inline ms-5">
@@ -142,9 +142,9 @@
                         Sort
                       </button>
                       <ul class="dropdown-menu sortDropdown">
-                        <li><a class="dropdown-item products-filter" value="products/price-asc" href="">Price</a></li>
-                        <li><a class="dropdown-item products-filter" value="products/time-asc" href="">Creation time</a></li>
-                        <li><a class="dropdown-item products-filter" value="products/purchase-asc" href="">Total purchase</a></li>
+                        <li><a class="dropdown-item products-filter" type="sorter" name="price" value="1" href="">Price</a></li>
+                        <li><a class="dropdown-item products-filter" type="sorter" name="createdAt" value="1" href="">Creation time</a></li>
+                        <li><a class="dropdown-item products-filter" type="sorter" name="purchase" value="1" href="">Total purchase</a></li>
                       </ul>
                   </div>
                 </div>
@@ -282,11 +282,16 @@
 <script>
   var userPage = 1;
   var productPage = 1;
+  var userCondition ='';
+  var userSortBy ='';
+  var prodCondition ='';
+  var prodSortBy ='';
+
   $(document).ready(function(){
 
     $.ajax({
       type: "GET",
-      url: document.URL + '?getall=users&page=1' ,
+      url: document.URL + '/?getall=users&page=1' ,
       success: function(response){
         //alert('Start users');
         handleResponseUsers(response);
@@ -299,7 +304,7 @@
 
     $.ajax({
       type: "GET",
-      url: document.URL + '?getall=products&page=1',
+      url: document.URL + '/?getall=products&page=1',
       success: function(response){
         //alert('Start products');
         handleResponseProducts(response);
@@ -313,38 +318,76 @@
   
 </script>
 <script>
-  $('.users-filter').on('click', function(e){
+  $('.users-filter, .products-filter').on('click', function(e){
     e.preventDefault();
+    var getItems;
+    if (this.getAttribute('class').indexOf('users-filter') > 0) {
+      getItems = 'users';
+    } else {
+      getItems = 'products';
+    }
+
     var value = this.getAttribute('value');
-    console.log(document.URL + '/' + value);
+    var field = this.getAttribute('name');
+    var type = this.getAttribute('type');
+    var thisPage = 1;
+    var thisCondition = '';
+    var thisSortBy = '';
+
+    // Page
+    if (getItems == 'users'){
+      userPage = thisPage;
+    } else {
+      productPage = thisPage;
+    }
+    
+    // Condition
+    if (type == 'filter'){
+      if (value =='none') {
+        thisCondition = '';
+      } else{
+        thisCondition = '&condition={"' + field +'":"'+ value +'"}';
+      }
+
+      // update
+      if (getItems == 'users'){
+        userCondition = thisCondition;
+        thisSortBy = userSortBy;
+      } else {
+        prodCondition = thisCondition;
+        thisSortBy = prodSortBy;
+      }
+    }
+
+    // SortBy
+    if (type == 'sorter'){
+      thisSortBy = '&sortBy={"' + field +'":'+ value +'}';
+
+      // update
+      if (getItems == 'users'){
+        userSortBy = thisSortBy;
+        thisCondition = userCondition;
+      } else {
+        prodSortBy = thisSortBy;
+        thisCondition = prodCondition;
+      }
+    }
+
     $.ajax({
       type: "GET",
-      url: document.URL + '/' + value,
+      url: document.URL + '/?getall=' + getItems + '&page=' + thisPage + thisCondition + thisSortBy,
       success: function(response){
-        handleResponseUsers(response);
+        console.log(response);
+        if (getItems == 'users'){
+          handleResponseUsers(response);
+        } else handleResponseProducts(response);     
+
       },
       error: function(err){
         console.log(err);
         //alert('Failed2');
       }
     });    
-  });
-
-  $('.products-filter').on('click', function(e){
-    e.preventDefault();
-    var value = this.getAttribute('value');
-    console.log(document.URL + '/' + value);
-    $.ajax({
-      type: "GET",
-      url: document.URL + '/' + value,
-      success: function(response){
-        handleResponseProducts(response);
-      },
-      error: function(err){
-        console.log(err);
-        //alert('Failed2');
-      }
-    });  
   });
 </script>
 <script>
@@ -353,16 +396,22 @@
     e.preventDefault();
     var page;
     var value = this.getAttribute("value") ;
+    var thisCondition = '';
+    var thisSortBy = '';
 
     if (value === "users"){
       page = userPage + 1;
+      thisCondition = userCondition;
+      thisSortBy = userSortBy;
     } else {
       page = productPage + 1;
+      thisCondition = prodCondition;
+      thisSortBy = prodSortBy;
     }
 
     $.ajax({
       type: "GET",
-      url: document.URL + '?getall=' + value + '&page=' + page,
+      url: document.URL + '?getall=' + value + '&page=' + page + thisCondition + thisSortBy,
       success: function(response){
         console.log(response);
         if (value === "users"){
@@ -382,22 +431,28 @@
     e.preventDefault();
     var page;
     var value = this.getAttribute("value") ;
+    var thisCondition = '';
+    var thisSortBy = '';
 
     if (value === "users"){
       page = userPage;
       if (page > 1) {
         page = page - 1;
       }
-    }else {
+      thisCondition = userCondition;
+      thisSortBy = userSortBy;
+    } else {
       page = productPage;
       if (page > 1) {
         page = page - 1;
       }
+      thisCondition = prodCondition;
+      thisSortBy = prodSortBy;
     }
 
     $.ajax({
       type: "GET",
-      url: document.URL + '?getall=' + value + '&page=' + page,
+      url: document.URL + '?getall=' + value + '&page=' + page + thisCondition + thisSortBy,
       success: function(response){
         //alert('Start users');
         if (value === "users"){
@@ -427,13 +482,13 @@
     loadTemplate("titleUsers-holder", context, "users-title");
 
     document.getElementById("user-prev").disabled = false;
-    if (response.pagingFlag === -1){
+    if (response.pagingFlag === -1 || response.pagingFlag === 2){
       //alert('disable prev');
       document.getElementById("user-prev").disabled = true;
     }
 
     document.getElementById("user-next").disabled = false;
-    if (response.pagingFlag === 1){
+    if (response.pagingFlag === 1 || response.pagingFlag === 2){
       //alert('disable next')
       document.getElementById("user-next").disabled = true;
     }
@@ -455,13 +510,13 @@
     loadTemplate("titleProducts-holder", context, "products-title");
 
     document.getElementById("product-prev").disabled = false;
-    if (response.pagingFlag === -1){
+    if (response.pagingFlag === -1 || response.pagingFlag === 2){
       //alert('disable prev');
       document.getElementById("product-prev").disabled = true;
     }
 
     document.getElementById("product-next").disabled = false;
-    if (response.pagingFlag === 1){
+    if (response.pagingFlag === 1 || response.pagingFlag === 2){
       //alert('disable next')
       document.getElementById("product-next").disabled = true;
     }

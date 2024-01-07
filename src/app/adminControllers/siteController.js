@@ -105,50 +105,77 @@ class siteController {
   //[GET] /tables /tables?getall
   async tables(req, res, next) {
     console.log(req.query);
-    if (Object.keys(req.query).length !== 0) { // not empty
-      if (req.query['getall'] === 'users') {
-        var page = parseInt(req.query.page);
-        if (page < 1) page = 1;
-      
-        var pagingFlag = 0;
 
-        if (page === 1){
-          pagingFlag = -1;
+    if (Object.keys(req.query).length !== 0) { // not empty
+      // prepare queries
+      var condition = {};
+
+      if (req.query.condition === undefined){
+        console.log("condition is empty")
+      } else {
+        condition = JSON.parse(req.query.condition);
+        console.log(condition);
+      }
+
+      var sortBy = {};
+
+      if (req.query.sortBy === undefined){
+        console.log('sort is empty');
+      } else {
+        if(req.query.sortBy.includes("purchase")){
+          console.log('redirect purchase')
+          this.purchaseAscSort({condition: condition, page: req.query.page},res,next);
+          // res.redirect("./products/purchase-asc");
+          return;
         }
+        sortBy = JSON.parse(req.query.sortBy);
+        console.log(sortBy);
+      }
+
+      var page = parseInt(req.query.page);
+      if (page < 1) page = 1;
+    
+      var pagingFlag = 0;
+
+      if (page === 1){
+        pagingFlag = -1;
+      }
+
+      //checking user or product
+      if (req.query.getall == 'users') {
         
-        var count = await User.countDocuments({});
+        var count = await User.countDocuments(condition);
+        console.log(count);
         if (page * itemPerPage >= count){
           page = Math.ceil(count / itemPerPage);
-          pagingFlag = 1;
+          if (pagingFlag === -1) {
+            pagingFlag = 2;
+          } else pagingFlag = 1;
         }
 
         var skip = (page - 1) * itemPerPage;
 
-        await User.find({}).limit(itemPerPage).skip(skip)
+        await User.find(condition).limit(itemPerPage).skip(skip).collation({locale:'vi',strength: 2}).sort(sortBy)
           .then(users => {
             res.json({ users: multipleMongooseToObject(users), titleUsers: 'All users', 
             page: page, pagingFlag: pagingFlag});
           })
       } else 
-      if (req.query['getall'] === 'products') {
-        var page = parseInt(req.query.page);
-        if (page < 1) page = 1;
-      
-        var pagingFlag = 0;
-
-        if (page === 1){
-          pagingFlag = -1;
-        }
+      if (req.query.getall === 'products') {
         
-        var count = await Product.countDocuments({});
+        var count = await Product.countDocuments(condition);
+        console.log(count);
         if (page * itemPerPage >= count){
           page = Math.ceil(count / itemPerPage);
-          pagingFlag = 1;
+          if (pagingFlag === -1) {
+            pagingFlag = 2;
+          } else pagingFlag = 1;
         }
+        console.log(pagingFlag);
 
         var skip = (page - 1) * itemPerPage;
 
-        await Product.find({}).limit(itemPerPage).skip(skip).lean()
+        await Product.find(condition).limit(itemPerPage).skip(skip).collation({locale:'vi',strength: 2}).sort(sortBy).lean()
           .then(products => {
             products = products.map((ele) => {
               return {
@@ -177,254 +204,39 @@ class siteController {
     }
   }
 
-
-  // name?value=
-  async nameFilter(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await User.find({ fullname: req.query.value })
-      .then(users => {
-        res.json({ users: multipleMongooseToObject(users), titleUsers: `Fullname '${req.query.value}' filtered` });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // email?value=
-  async emailFilter(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await User.find({ email: req.query.value })
-      .then(users => {
-        res.json({ users: multipleMongooseToObject(users), titleUsers: `Email '${req.query.value}' filtered ` });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // user/name-asc
-  async nameAscSort(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await User.find({})
-      .then(users => {
-        let userNameSort = multipleMongooseToObject(users).sort(function (a, b) { return a.fullname.localeCompare(b.fullname); });
-        res.json({ users: userNameSort, titleUsers: 'Fullname sorted ascending' });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // user/email-asc
-  async emailAscSort(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await User.find({})
-      .then(users => {
-        let userEmailSort = multipleMongooseToObject(users).sort(function (a, b) { return a.email.localeCompare(b.email); });
-        res.json({ users: userEmailSort, titleUsers: 'Email sorted ascending' });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // user/time-asc
-  async timeUserAscSort(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await User.find({}).sort({ createdAt: 1 })
-      .then(users => {
-        res.json({ users: multipleMongooseToObject(users), titleUsers: 'Registration time sorted ascending' });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // from?value=
-  async fromFilter(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({ from: req.query.value }).lean()
-      .then(products => {
-        products = products.map((ele) => {
-          return {
-            ...ele,
-            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-          }
-        });
-        res.json({ products: products, titleProducts: `From '${req.query.value}' filtered ` });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // date?value=
-  async dateFilter(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({ date: req.query.value }).lean()
-      .then(products => {
-        products = products.map((ele) => {
-          return {
-            ...ele,
-            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-          }
-        });
-        res.json({ products: products, titleProducts: `Collection '${req.query.value}' filtered ` });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // product/popular
-  async popularFilter(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({ popular: true }).lean()
-      .then(products => {
-        products = products.map((ele) => {
-          return {
-            ...ele,
-            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-          }
-        });
-        res.json({ products: products, titleProducts: 'Category popular filtered' });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // product/outer
-  async outerFilter(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({ outer: true }).lean()
-      .then(products => {
-        products = products.map((ele) => {
-          return {
-            ...ele,
-            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-          }
-        });
-        res.json({ products: products, titleProducts: 'Category outer filtered' });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // product/top
-  async topFilter(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({ top: true }).lean()
-      .then(products => {
-        products = products.map((ele) => {
-          return {
-            ...ele,
-            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-          }
-        });
-        res.json({ products: products, titleProducts: 'Category top filtered' });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // product/bottom
-  async bottomFilter(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({ bottom: true }).lean()
-      .then(products => {
-        products = products.map((ele) => {
-          return {
-            ...ele,
-            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-          }
-        });
-        res.json({ products: products, titleProducts: 'Category bottom filtered' });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // product/accessories
-  async accessoriesFilter(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({ accessories: true }).lean()
-      .then(products => {
-        products = products.map((ele) => {
-          return {
-            ...ele,
-            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-          }
-        });
-        res.json({ products: products, titleProducts: 'Category accessories filtered' });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // product/shoes
-  async shoesFilter(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({ shoes: true }).lean()
-      .then(products => {
-        products = products.map((ele) => {
-          return {
-            ...ele,
-            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-          }
-        });
-        res.json({ products: products, titleProducts: 'Category shoes filtered' });
-      })
-    console.log('Stop');
-    return;
-  }
-
-  // products/price-asc
-  async priceAscSort(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({}).sort({ price: 1 }).lean()
-      .then(products => {
-        products = products.map((ele) => {
-          return {
-            ...ele,
-            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-          }
-        });
-        res.json({ products: products, titleProducts: 'Price sorted ascending' });
-      })
-    console.log('Stop');
-    return;
-  }
-
+  
   // products/purchase
   async purchaseAscSort(req, res, next) {
 
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({}).lean()
+    console.log(req);
+    var page = req.page;
+    var condition = req.condition;
+    var pagingFlag = 0;
+
+    if (page == 1){
+      pagingFlag = -1;
+    }
+
+    console.log(page);
+    console.log(pagingFlag);
+    var count = await Product.countDocuments(condition);
+    console.log(count);
+
+    if (page * itemPerPage >= count){
+      page = Math.ceil(count / itemPerPage);
+
+      if (pagingFlag === -1) {
+        pagingFlag = 2;
+      } else pagingFlag = 1;
+    }
+
+    console.log(pagingFlag);
+
+
+    var skip = (page - 1) * itemPerPage;
+
+    await Product.find(condition).limit(itemPerPage).skip(skip).lean()
       .then(async products => {
-
-
         for (let i = 0; i < products.length; ++i) {
           await Order.find({ "cart.prod": products[i].name }).lean()
             .then(orders => {
@@ -436,39 +248,18 @@ class siteController {
             })
         }
         products = products.sort(function (a, b) { return a['totalOrdered'] - b['totalOrdered'] })
-
-
         products = products.map((ele) => {
           return {
             ...ele,
             category: Object.keys(ele).filter((k) => { return ele[k] === true; })
           }
         });
-        res.json({ products: products, titleProducts: 'Purchased sorted ascending' });
+        res.json({ products: products, titleProducts: 'Purchased sorted ascending',
+        page: page, pagingFlag: pagingFlag });
       })
     console.log('Stop');
     return;
   }
-
-  // product/time-asc
-  async timeProductAscSort(req, res, next) {
-
-    //console.log('catched');
-    console.log(req.query);
-    await Product.find({}).sort({ createdAt: 1 }).lean()
-      .then(products => {
-        products = products.map((ele) => {
-          return {
-            ...ele,
-            category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-          }
-        });
-        res.json({ products: products, titleProducts: 'Creation time sorted ascending' });
-      })
-    console.log('Stop');
-    return;
-  }
-
 
   //[GET] /billing
   billing(req, res) {
