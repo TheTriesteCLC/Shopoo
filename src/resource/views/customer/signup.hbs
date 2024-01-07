@@ -12,6 +12,7 @@
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 </div> --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 
   <div class="mt-5">
@@ -33,7 +34,7 @@
                 <div class="col-md-6 mb-4">
 
                   <div class="form-outline">
-                    <input type="text" id="email" class="form-control form-control-lg" name="email"/>
+                    <input type="text" id="email" class="form-control form-control-lg availability-check" name="email"/>
                     <label class="form-label" for="email">Email</label>
                   </div>
 
@@ -97,7 +98,7 @@
                 <div class="col-md-6 mb-4 pb-2">
 
                   <div class="form-outline">
-                    <input type="text" id="username" class="form-control form-control-lg" name="username" required/>
+                    <input type="text" id="username" class="form-control form-control-lg availability-check" name="username" required/>
                     <label class="form-label" for="username">Username</label>
                   </div>
 
@@ -128,3 +129,24 @@
       </div>
     </div>
   </div>
+<script>
+  $(".availability-check").blur(function(e){
+    var eValue = this.value;
+    var eName = this.getAttribute("name");
+
+    $.ajax({
+      type: "POST",
+      url: document.URL + '/available?' + eName +'=' +eValue,
+      success: function(response){
+
+        if (!response.isAvailable){
+          alert("This " + eName + " has already in use");
+        } 
+      },
+      error: function(err){
+        console.log(err);
+        alert('Failed');
+      }
+    });
+  });
+</script>
