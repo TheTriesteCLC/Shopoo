@@ -40,18 +40,19 @@ module.exports = function(passport) {
             Account = require('../../app/models/Admin');
         }
 
-        console.log('processing');
         var account = await Account.findOne({ 'username' :  username });
-        console.log('ok');
         
-        if (!account) // not exists
+        if (!account) { // not exists
+            console.log('not exists');
             return done(null, false); 
+        }
 
         var checkPass = await account.comparePassword(password);
-        console.log('passed')
 
-        if (!checkPass)  // wrong password
+        if (!checkPass) {// wrong password
+            console.log('Wrong passed');
             return done(null, false); 
+        } 
 
         console.log('success');
         return done(null, account);
