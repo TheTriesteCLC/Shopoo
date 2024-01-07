@@ -28,6 +28,7 @@ router.get('/update-profile/', isLoggedIn, siteController.updateProfile);
 router.post('/update-profile/updated/', siteController.update);
 
 //Signup new profile
+router.post('/signup/available', siteController.avalable);
 router.get('/signup', siteController.signup);
 router.post('/signup',
     passport.authenticate('local-signup', { failureRedirect: './signup' }),
@@ -60,6 +61,8 @@ router.post('/signup',
         });
     }
 );
+
+
 
 //Activate profile
 router.get('/activate', isPending, siteController.activate);
@@ -98,14 +101,15 @@ function isLoggedIn(req, res, next) {
     console.log("Authenticate checking");
     if (req.isAuthenticated()) { // is authenticated
         if (req.user.status === "Active") { // is not Banned or Pending
+            console.log("is Active");
             return next();
-        }
-        if (req.user.status === "Pending") { // is not Banned or Pending
+        } else
+        if (req.user.status === "Pending") { // is Pending
+            console.log("is Pending")
             res.redirect('/customer/activate');
-            
-        }
+        } else console.log("is Banned");
     } else {
-            
+        console.log("is not authenticated")
         // is not authenticated
         res.redirect('/customer/login');
     }
