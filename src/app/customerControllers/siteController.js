@@ -281,7 +281,7 @@ class siteController {
     newOrder.save()
       .then(async () => {
         await User.updateOne(
-          { slug: req.params.slug },
+          { username: req.user.username },
           {
             $set: { 'cart': [] }
           }
