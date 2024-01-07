@@ -7,6 +7,8 @@ const Order = require('../models/Order');
 const moment = require('moment')
 const today = moment().startOf('day')
 
+const itemPerPage = 5;
+
 class siteController {
 
   //[GET] /dashboard
@@ -105,12 +107,48 @@ class siteController {
     console.log(req.query);
     if (Object.keys(req.query).length !== 0) { // not empty
       if (req.query['getall'] === 'users') {
-        await User.find({})
+        var page = parseInt(req.query.page);
+        if (page < 1) page = 1;
+      
+        var pagingFlag = 0;
+
+        if (page === 1){
+          pagingFlag = -1;
+        }
+        
+        var count = await User.countDocuments({});
+        if (page * itemPerPage >= count){
+          page = Math.ceil(count / itemPerPage);
+          pagingFlag = 1;
+        }
+
+        var skip = (page - 1) * itemPerPage;
+
+        await User.find({}).limit(itemPerPage).skip(skip)
           .then(users => {
-            res.json({ users: multipleMongooseToObject(users), titleUsers: 'All users' });
+            res.json({ users: multipleMongooseToObject(users), titleUsers: 'All users', 
+            page: page, pagingFlag: pagingFlag});
           })
-      } else if (req.query['getall'] === 'products') {
-        await Product.find({}).lean()
+      } else 
+      if (req.query['getall'] === 'products') {
+        var page = parseInt(req.query.page);
+        if (page < 1) page = 1;
+      
+        var pagingFlag = 0;
+
+        if (page === 1){
+          pagingFlag = -1;
+        }
+        
+        var count = await Product.countDocuments({});
+        if (page * itemPerPage >= count){
+          page = Math.ceil(count / itemPerPage);
+          pagingFlag = 1;
+        }
+
+        var skip = (page - 1) * itemPerPage;
+
+        await Product.find({}).limit(itemPerPage).skip(skip).lean()
           .then(products => {
             products = products.map((ele) => {
               return {
@@ -118,7 +156,8 @@ class siteController {
                 category: Object.keys(ele).filter((k) => { return ele[k] === true; })
               }
             });
-            res.json({ products: products, titleProducts: 'All products' });
+            res.json({ products: products, titleProducts: 'All products',
+            page: page, pagingFlag: pagingFlag });
           })
       }
 
@@ -130,39 +169,12 @@ class siteController {
 
       const productFrom = await Product.distinct('from').lean();
       const productDate = await Product.distinct('date').lean();
-      await Product.find({}).lean()
-        .then(products => {
 
-          products = products.map((ele) => {
-            return {
-              ...ele,
-              category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-            }
-          });
-          res.render('admin/tables',
-            {
-              layout: 'admin/main', products: products,
-              userFullname, userEmail, productFrom, productDate
-            });
-        })
+      res.render('admin/tables',
+        {
+          layout: 'admin/main', userFullname, userEmail, productFrom, productDate
+        });
     }
-    // await User.find({}).lean()
-    //   .then(async users => {
-    //     await Product.find({}).lean()
-    //       .then(products => {
-
-    //         products = products.map((ele) => {
-    //           return {
-    //             ...ele,
-    //             category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-    //           }
-    //         });
-    //         // res.json(products);
-    //         res.render('admin/tables',
-    //           { layout: 'admin/main', users: users, products: products, userFullname, userEmail, productFrom, productDate });
-    //       })
-    //   })
-    //   .catch(error => next(error));
   }
 
 

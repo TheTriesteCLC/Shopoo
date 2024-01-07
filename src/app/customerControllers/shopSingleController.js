@@ -20,7 +20,7 @@ class shopSingleController {
       var page = 1;
       page = parseInt(req.query.page);
 
-      var skip = (page - 1) * 6;
+      var skip = (page - 1) * productPerPage;
 
       Product.find({}).limit(productPerPage).skip(skip)
       .then(products => {
@@ -40,7 +40,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
     Product.find({ outer: true }).limit(productPerPage).skip(skip)
       .then(products => {
         // res.render('customer/shop-single',
@@ -57,7 +57,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
     Product.find({ top: true }).limit(productPerPage).skip(skip)
       .then(products => {
         // res.render('customer/shop-single',
@@ -73,7 +73,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
     Product.find({ bottom: true }).limit(productPerPage).skip(skip)
       .then(products => {
         // res.render('customer/shop-single',
@@ -89,7 +89,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
     Product.find({ accessories: true }).limit(productPerPage).skip(skip)
       .then(products => {
         // res.render('customer/shop-single',
@@ -105,7 +105,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
     Product.find({ shoes: true }).limit(productPerPage).skip(skip)
       .then(products => {
         // res.render('customer/shop-single',
@@ -122,7 +122,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
     Product.find({}).sort({ price: 1 }).limit(productPerPage).skip(skip)
       .then(products => {
         // res.render('customer/shop-single',
@@ -138,7 +138,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
     Product.find({}).sort({ price: -1 }).limit(productPerPage).skip(skip)
       .then(products => {
         // res.render('customer/shop-single',
@@ -154,7 +154,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
 
     Product.find({ price: { $lt: 50 } }).sort({ price: 1 }).limit(productPerPage).skip(skip)
       .then(products => {
@@ -171,7 +171,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
 
     Product.find({ price: { $lt: 100 } }).sort({ price: 1 }).limit(productPerPage).skip(skip)
       .then(products => {
@@ -188,7 +188,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
 
     Product.find({ price: { $lt: 300 } }).sort({ price: 1 }).limit(productPerPage).skip(skip)
       .then(products => {
@@ -206,7 +206,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
 
     Product.find({ from: req.query.country }).limit(productPerPage).skip(skip)
       .then(products => {
@@ -224,7 +224,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
 
     Product.find({ date: req.query.date }).limit(productPerPage).skip(skip)
       .then(products => {
@@ -243,7 +243,7 @@ class shopSingleController {
       page = parseInt(req.query.page);
     }
 
-    var skip = (page - 1) * 6;
+    var skip = (page - 1) * productPerPage;
     const formData = req.body;
     const constriesChoice = await Product.distinct('from').lean();
 
