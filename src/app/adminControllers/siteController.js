@@ -254,7 +254,7 @@ class siteController {
             category: Object.keys(ele).filter((k) => { return ele[k] === true; })
           }
         });
-        res.json({ products: products, titleProducts: 'Purchased sorted ascending',
+        res.json({ products: products, titleProducts: 'All products',
         page: page, pagingFlag: pagingFlag });
       })
     console.log('Stop');
