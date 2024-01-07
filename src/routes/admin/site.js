@@ -16,7 +16,7 @@ router.post('/login',
 );
 
 //Signup new profile
-router.get('/signup', isLoggedIn, siteController.signup);
+router.get('/signup', siteController.signup);
 router.post('/signup',
     passport.authenticate('local-signup', { failureRedirect: './signup' }),
     function (req, res) {
@@ -26,7 +26,7 @@ router.post('/signup',
 );
 
 //Logout
-router.get('/logout', isLoggedIn, siteController.logout);
+router.get('/logout', siteController.logout);
 
 //Ban or unban user
 router.post('/tables/user/update/:slug', siteController.updateUserSuccess);
@@ -45,10 +45,10 @@ router.get('/tables/product/update-info/:slug', isLoggedIn, siteController.updat
 router.post('/tables/product/update-info/updated/:slug', siteController.updateProductProfileSuccess);
 
 //Tables
-router.get('/tables/user/:slug', siteController.viewUserProfile);
-router.get('/tables/products/purchase-asc/', siteController.purchaseAscSort);
+router.get('/tables/user/:slug', isLoggedIn, siteController.viewUserProfile);
+router.get('/tables/products/purchase-asc/', isLoggedIn, siteController.purchaseAscSort);
 router.get('/tables/product/:slug', isLoggedIn, siteController.viewProductProfile);
-router.get('/tables/', siteController.tables.bind(siteController));
+router.get('/tables/', isLoggedIn, siteController.tables.bind(siteController));
 
 
 //View orders and filtered
@@ -56,11 +56,11 @@ router.get('/orders', isLoggedIn, siteController.orders);
 router.get('/orders/pending', isLoggedIn, siteController.ordersPending);
 router.get('/orders/shipping', isLoggedIn, siteController.ordersShipping);
 router.get('/orders/done', isLoggedIn, siteController.ordersDone);
-router.post('/orders/time', isLoggedIn, siteController.ordersTime);
+router.post('/orders/time', siteController.ordersTime);
 
 //Product report
 router.get('/product-report', isLoggedIn, siteController.productReport);
-router.post('/product-report/time', isLoggedIn, siteController.productReportTime);
+router.post('/product-report/time', siteController.productReportTime);
 
 //Admin profile
 router.get('/profile', isLoggedIn, siteController.profile);
@@ -74,7 +74,7 @@ router.get('/virtual-reality', isLoggedIn, siteController.virtualReality);
 router.get('/billing', isLoggedIn, siteController.billing);
 
 //Report in dashboard
-router.post('/dashboard/time', isLoggedIn, siteController.dashboardTime);
+router.post('/dashboard/time', siteController.dashboardTime);
 router.get('/dashboard', isLoggedIn, siteController.dashboard);
 router.get('/', isLoggedIn, siteController.dashboard);
 
