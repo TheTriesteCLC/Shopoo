@@ -46,12 +46,7 @@ User.methods = {
 
   async setPassword(password) {
     const hashedPassword = await bcrypt.hash(password, 7);
-    this['passwordHashed'] = hashedPassword;
-  },
-
-  async hashPassword(password) {
-    const hashedPassword = await bcrypt.hash(password, 7);
-    return hashedPassword;
+    this.password = hashedPassword;
   }
 }
 

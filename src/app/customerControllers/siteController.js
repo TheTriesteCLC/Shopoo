@@ -322,7 +322,6 @@ class siteController {
 
   //[GET] /forgot-password
   forgot(req, res, next) {
-    const user = req.user;
 
     res.render('customer/forgot', { layout: 'customer/main' });
   }
@@ -331,8 +330,10 @@ class siteController {
   async forgotSuccess(req, res, next) {
     const formData = req.body;
     if (formData.newPassword === formData.againPassword) {
-      const user = await User.findByUsername(formData.username);
-      user.setPassword(formData.newPassword);
+      // var user = await User.findByUsername(formData.username);
+      var hashedPassword = await User.hashPassword(formData.newPassword);
+      await User.updateOne({username: formData.username}, {password: hashedPassword});
+      // user.setPassword(formData.newPassword);
       res.redirect('/customer/login');
     } else {
       res.redirect('/customer/forgot-password');
