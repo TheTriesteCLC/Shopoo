@@ -271,7 +271,7 @@ class shopSingleController {
         // res.render('customer/shop-single',
         //   { layout: 'customer/main', title: `Collection ${req.query.date}`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
         // console.log(multipleMongooseToObject(products));
-        res.json({ title: `Result of ${req.query.word}`, products: multipleMongooseToObject(products) });
+        res.json({ title: `Result of '${req.query.word}'`, products: multipleMongooseToObject(products) });
       })
 
       .catch(error => next(error));

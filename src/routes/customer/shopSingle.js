@@ -7,7 +7,7 @@ const shopSingleController = require('../../app/customerControllers/shopSingleCo
 
 router.post('/adding', isLoggedIn, shopSingleController.adding);
 router.post('/review', isLoggedIn, shopSingleController.review);
-router.post('/search', shopSingleController.search);
+router.get('/search', shopSingleController.search);
 
 router.use('/outer', shopSingleController.outer);
 router.use('/top', shopSingleController.top);
