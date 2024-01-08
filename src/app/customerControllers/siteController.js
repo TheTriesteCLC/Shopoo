@@ -10,7 +10,7 @@ const { generateToken, getMailOptions, getTransport, verifyToken } = require("..
 class siteController {
   //[GET] /
   index(req, res) {
-    res.render('customer/home', { layout: 'customer/main'});
+    res.render('customer/home', { layout: 'customer/main' });
   }
 
   //[GET] /home
@@ -20,7 +20,7 @@ class siteController {
 
   //[GET] /about
   about(req, res) {
-    res.render('customer/about', { layout: 'customer/main'});
+    res.render('customer/about', { layout: 'customer/main' });
   }
 
   //[GET] /elements
@@ -40,7 +40,7 @@ class siteController {
         let subtotalAll = user.cart.map(ele => {
           return {
             name: ele.prod,
-            price: ele.price,   
+            price: ele.price,
             quant: ele.quant,
             subtotal: ele.quant * ele.price
           }
@@ -50,8 +50,10 @@ class siteController {
         }, 0);
 
         if (subtotalAll.length > 0) {
-          res.render('customer/checkout', { layout: 'customer/main', username: user.username,
-          subtotalAll: subtotalAll, grandTotal: grandTotal });
+          res.render('customer/checkout', {
+            layout: 'customer/main', username: user.username,
+            subtotalAll: subtotalAll, grandTotal: grandTotal
+          });
         } else {
           res.redirect('/customer/shop-single');
         }
@@ -85,26 +87,26 @@ class siteController {
   }
 
   //[GET] signup/available
-  async avalable(req, res, next){
+  async avalable(req, res, next) {
     console.log('recieved');
     console.log(req);
     console.log(req.query);
     var account = await User.findOne(req.query);
 
-    if (account){
-      res.json({isAvailable: false});
+    if (account) {
+      res.json({ isAvailable: false });
     } else {
-      res.json({isAvailable: true});
+      res.json({ isAvailable: true });
     }
   }
 
   //[GET] /activate
-  activate(req, res, next){
+  activate(req, res, next) {
     res.render('customer/activate', { layout: 'customer/main', user: req.user })
   }
 
   //[GET] /verify
-  async verify(req, res, next){
+  async verify(req, res, next) {
     const token = req.query.token;
 
     if (Object.keys(token).length === 0) {
@@ -113,7 +115,7 @@ class siteController {
     }
 
     var result = verifyToken(token);
-    
+
     if (!result.success) {
       return res.status(403).json({ error: result.error });
     }
@@ -128,13 +130,13 @@ class siteController {
     console.log("decodedToken");
     console.log(result.data);
 
-    await User.updateOne({ email: result.data.email },{status:'Active'});  
-    
-    if(!req.user){
+    await User.updateOne({ email: result.data.email }, { status: 'Active' });
+
+    if (!req.user) {
       res.redirect('./protected');
       return;
-    }  
-    var user = await User.findOne({ email: result.data.email }).lean();    
+    }
+    var user = await User.findOne({ email: result.data.email }).lean();
     req.session.passport.user = user;
     console.log(user);
     res.redirect('./protected');
@@ -162,15 +164,15 @@ class siteController {
   //[POST] /update-profile/
   async update(req, res, next) {
     const formData = req.body;
-    
+
     // get current user session
-    var user = await User.findOne({username: req.user.username});
+    var user = await User.findOne({ username: req.user.username });
 
     // check two passwords
     var checkPass = await user.comparePassword(formData.password);
 
-    if (checkPass){
-      user = await User.findOneAndUpdate({username: formData.username},
+    if (checkPass) {
+      user = await User.findOneAndUpdate({ username: formData.username },
         {
           fullname: formData.fullname,
           email: formData.email,
@@ -182,17 +184,17 @@ class siteController {
         {
           new: true
         }
-      );      
-  
+      );
+
       console.log('Updated');
-  
+
       if (user === null) {
         res.redirect('/customer/update-profile');
       } else {
         // update session user
         req.session.passport.user = user;
         res.redirect('/customer/profile');
-      }    
+      }
     }
     // res.json({ huhu });
   }
@@ -201,7 +203,7 @@ class siteController {
   async cart(req, res, next) {
     // const user = req.user;
 
-    const user = await User.findOne({username: req.user.username}).lean();
+    const user = await User.findOne({ username: req.user.username }).lean();
     const cartProducts = user.cart;
     let cartWithImg = [];
     let grandTotal = 0;
@@ -218,8 +220,10 @@ class siteController {
       grandTotal += element.quant * element.price;
       cartWithImg.push(element);
     }
-    res.render('customer/cart', { layout: 'customer/main', 
-    user: user, cartWithImg: cartWithImg, grandTotal: grandTotal, })
+    res.render('customer/cart', {
+      layout: 'customer/main',
+      user: user, cartWithImg: cartWithImg, grandTotal: grandTotal,
+    })
   }
 
   //[POST] /customer/cart/update-cart
@@ -308,8 +312,10 @@ class siteController {
           return order;
         });
         // res.json(ordersWithGrandTotal);
-        res.render('customer/order', { layout: 'customer/main', 
-        ordersWithGrandTotal: ordersWithGrandTotal, });
+        res.render('customer/order', {
+          layout: 'customer/main',
+          ordersWithGrandTotal: ordersWithGrandTotal,
+        });
       })
 
   }

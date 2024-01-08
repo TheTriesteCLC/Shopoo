@@ -32,7 +32,7 @@ User.statics = {
     return this.findOne({ username: username });
   },
 
-  async hashPassword(password){
+  async hashPassword(password) {
     const hashedPassword = await bcrypt.hash(password, 7);
     return hashedPassword;
   }
@@ -43,10 +43,15 @@ User.methods = {
     return bcrypt.compare(password, this.password);
     // return password === this.password;
   },
-  
-  async setPassword(password){
+
+  async setPassword(password) {
     const hashedPassword = await bcrypt.hash(password, 7);
-    this.password = hashedPassword;
+    this['passwordHashed'] = hashedPassword;
+  },
+
+  async hashPassword(password) {
+    const hashedPassword = await bcrypt.hash(password, 7);
+    return hashedPassword;
   }
 }
 

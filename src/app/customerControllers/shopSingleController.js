@@ -7,7 +7,7 @@ const User = require('../models/User');
 const productPerPage = 6;
 const reviewPerPage = 4;
 
-class shopSingleController {  
+class shopSingleController {
 
   //[GET] /shop-single/all
   //[GET] /shop-single/?page=
@@ -25,13 +25,13 @@ class shopSingleController {
       var skip = (page - 1) * productPerPage;
 
       Product.find({}).limit(productPerPage).skip(skip)
-      .then(products => {
-        res.json({title:'All', products: multipleMongooseToObject(products)});
-      })
-      .catch(error => next(error));
+        .then(products => {
+          res.json({ title: 'All', products: multipleMongooseToObject(products) });
+        })
+        .catch(error => next(error));
     } else {
       res.render('customer/shop-single',
-          { layout: 'customer/main', countries: constriesChoice, dates: datesChoice });
+        { layout: 'customer/main', countries: constriesChoice, dates: datesChoice });
     }
   }
 
@@ -47,11 +47,11 @@ class shopSingleController {
       .then(products => {
         // res.render('customer/shop-single',
         //   { layout: 'customer/main', title: 'Outerwear', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Outerwear', products: multipleMongooseToObject(products) });
+        res.json({ title: 'Outerwear', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
-  
+
   //[GET] /shop-single/top
   async top(req, res, next) {
     var page = 1;
@@ -64,7 +64,7 @@ class shopSingleController {
       .then(products => {
         // res.render('customer/shop-single',
         //   { layout: 'customer/main', title: 'Top', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Top', products: multipleMongooseToObject(products) });
+        res.json({ title: 'Top', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
@@ -80,7 +80,7 @@ class shopSingleController {
       .then(products => {
         // res.render('customer/shop-single',
         //   { layout: 'customer/main', title: 'Bottom', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Bottom', products: multipleMongooseToObject(products) });
+        res.json({ title: 'Bottom', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
@@ -96,7 +96,7 @@ class shopSingleController {
       .then(products => {
         // res.render('customer/shop-single',
         //   { layout: 'customer/main', title: 'Accessories', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Accessories', products: multipleMongooseToObject(products) });
+        res.json({ title: 'Accessories', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
@@ -129,7 +129,7 @@ class shopSingleController {
       .then(products => {
         // res.render('customer/shop-single',
         //   { layout: 'customer/main', title: 'Ascending price', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Ascending price', products: multipleMongooseToObject(products) });
+        res.json({ title: 'Ascending price', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
@@ -145,7 +145,7 @@ class shopSingleController {
       .then(products => {
         // res.render('customer/shop-single',
         //   { layout: 'customer/main', title: 'Decending price', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Decending price', products: multipleMongooseToObject(products) });
+        res.json({ title: 'Decending price', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
@@ -162,7 +162,7 @@ class shopSingleController {
       .then(products => {
         // res.render('customer/shop-single',
         //   { layout: 'customer/main', title: 'Under $50', products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: 'Under %50', products: multipleMongooseToObject(products) });
+        res.json({ title: 'Under %50', products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
@@ -214,7 +214,7 @@ class shopSingleController {
       .then(products => {
         // res.render('customer/shop-single',
         //   { layout: 'customer/main', title: `From ${req.query.country}`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({title: `From ${req.query.country}`, products: multipleMongooseToObject(products) });
+        res.json({ title: `From ${req.query.country}`, products: multipleMongooseToObject(products) });
       })
       .catch(error => next(error));
   }
@@ -232,7 +232,7 @@ class shopSingleController {
       .then(products => {
         // res.render('customer/shop-single',
         //   { layout: 'customer/main', title: `Collection ${req.query.date}`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        res.json({ title: `Collection ${req.query.date}`, products: multipleMongooseToObject(products)});
+        res.json({ title: `Collection ${req.query.date}`, products: multipleMongooseToObject(products) });
       })
 
       .catch(error => next(error));
@@ -240,23 +240,40 @@ class shopSingleController {
 
   //[GET] /shop-single/search
   async search(req, res, next) {
+    // var page = 1;
+    // if (Object.keys(req.query).length !== 0) { // not empty
+    //   page = parseInt(req.query.page);
+    // }
+
+    // var skip = (page - 1) * productPerPage;
+    // const formData = req.body;
+    // const constriesChoice = await Product.distinct('from').lean();
+
+    // const datesChoice = await Product.distinct('date').lean();
+
+    // Product.find({ $text: { $search: formData.nameSearch, $caseSensitive: false } }).limit(productPerPage).skip(skip)
+    //   .then(products => {
+    //     // res.render('customer/shop-single',
+    //     //   { layout: 'customer/main', title: `Result for "${formData.nameSearch}"`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+    //     res.json({ title: `Result for "${formData.nameSearch}"`, products: multipleMongooseToObject(products) });
+    //   })
+    //   .catch(error => next(error));
+
     var page = 1;
     if (Object.keys(req.query).length !== 0) { // not empty
       page = parseInt(req.query.page);
     }
 
     var skip = (page - 1) * productPerPage;
-    const formData = req.body;
-    const constriesChoice = await Product.distinct('from').lean();
 
-    const datesChoice = await Product.distinct('date').lean();
-
-    Product.find({ $text: { $search: formData.nameSearch, $caseSensitive: false } }).limit(productPerPage).skip(skip)
+    Product.find({ $text: { $search: req.query.word, $caseSensitive: false } }).limit(productPerPage).skip(skip)
       .then(products => {
-        res.render('customer/shop-single',
-          { layout: 'customer/main', title: `Result for "${formData.nameSearch}"`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
-        // res.json({ products: multipleMongooseToObject(products) });
+        // res.render('customer/shop-single',
+        //   { layout: 'customer/main', title: `Collection ${req.query.date}`, products: multipleMongooseToObject(products), countries: constriesChoice, dates: datesChoice });
+        // console.log(multipleMongooseToObject(products));
+        res.json({ title: `Result of ${req.query.word}`, products: multipleMongooseToObject(products) });
       })
+
       .catch(error => next(error));
   }
 
@@ -294,14 +311,14 @@ class shopSingleController {
 
     // findoneandUpdate?
     await User.updateOne(
-      { username: user.username},
+      { username: user.username },
       {
         $pull: { 'cart': { 'prod': productAdded.prod } }
       }
     )
 
     await User.findOneAndUpdate(
-      { username: user.username},
+      { username: user.username },
       {
         $push: {
           cart: {
@@ -325,39 +342,39 @@ class shopSingleController {
     Product.findOne({ slug: req.params.slug }).lean()
       .then(async thisProduct => {
         console.log(req.query);
-        if (Object.keys(req.query).length !== 0){
+        if (Object.keys(req.query).length !== 0) {
           var page = req.query.page;
           var count = await Review.countDocuments({ product: thisProduct.name });
-          var pagingFlag = 0;          
-          
-          if (page == 1){
+          var pagingFlag = 0;
+
+          if (page == 1) {
             pagingFlag = -1;
           }
 
-          if (page * reviewPerPage >= count){
+          if (page * reviewPerPage >= count) {
             page = Math.ceil(count / reviewPerPage);
-      
+
             if (pagingFlag === -1) {
               pagingFlag = 2;
             } else pagingFlag = 1;
           }
-          
+
           var skip = (page - 1) * reviewPerPage;
 
           console.log(page);
           console.log(skip);
           console.log(pagingFlag);
 
-          if (count == 0){
-            res.json({reviews: {}, page: page, pagingFlag: pagingFlag});
+          if (count == 0) {
+            res.json({ reviews: {}, page: page, pagingFlag: pagingFlag });
             return;
           }
-      
+
           const reviews = await (Review.find({ product: thisProduct.name }).limit(reviewPerPage).skip(skip).lean());
-          res.json({reviews: reviews, page: page, pagingFlag: pagingFlag});
+          res.json({ reviews: reviews, page: page, pagingFlag: pagingFlag });
           console.log('HERE');
           return;
-        } 
+        }
 
         var related = [];
 
@@ -381,7 +398,7 @@ class shopSingleController {
         while (related.length > 4) related.pop();
 
         res.render('customer/item',
-          { layout: 'customer/main', title: 'Item', product: thisProduct, related: related});
+          { layout: 'customer/main', title: 'Item', product: thisProduct, related: related });
         // res.json({ title: 'All', products: multipleMongooseToObject(products), countries: constriesChoice });
 
       })
