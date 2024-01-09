@@ -268,14 +268,14 @@ class siteController {
   }
 
   //[GET] /billing
-  billing(req, res) {
-    res.render('admin/billing', { layout: 'admin/main' });
-  }
+  // billing(req, res) {
+  //   res.render('admin/billing', { layout: 'admin/main' });
+  // }
 
   //[GET] /virtual-reality
-  virtualReality(req, res) {
-    res.render('admin/virtual-reality', { layout: 'admin/custom' });
-  }
+  // virtualReality(req, res) {
+  //   res.render('admin/virtual-reality', { layout: 'admin/custom' });
+  // }
 
   //[GET] /rtl
   rtl(req, res) {

@@ -70,8 +70,8 @@ router.post('/update-profile/updated', isLoggedIn, siteController.update);
 
 //Trivial path
 
-router.get('/virtual-reality', isLoggedIn, siteController.virtualReality);
-router.get('/billing', isLoggedIn, siteController.billing);
+// router.get('/virtual-reality', isLoggedIn, siteController.virtualReality);
+// router.get('/billing', isLoggedIn, siteController.billing);
 
 //Report in dashboard
 router.post('/dashboard/time', siteController.dashboardTime);
