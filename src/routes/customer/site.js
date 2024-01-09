@@ -39,7 +39,7 @@ router.post('/signup',
         const token = generateToken({
             email: email
         });
-        const link = `http://localhost:3000/customer/verify?token=${token}`;
+        const link = `https://shopoo.onrender.com/customer/verify?token=${token}`;
         console.log("link");
         console.log(link);
 
