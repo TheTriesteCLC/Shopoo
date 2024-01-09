@@ -72,7 +72,12 @@ class siteController {
 
   //[GET] /login
   login(req, res, next) {
-    res.render('customer/login', { layout: 'customer/main' });
+    let messFailed = "";
+    if (req.query.status === 'failed') {
+      messFailed = 'Wrong username or password.';
+      console.log("dasdasdasdsa");
+    }
+    res.render('customer/login', { layout: 'customer/main', messFailed });
   }
 
   //[GET] /logout
@@ -332,7 +337,7 @@ class siteController {
     if (formData.newPassword === formData.againPassword) {
       // var user = await User.findByUsername(formData.username);
       var hashedPassword = await User.hashPassword(formData.newPassword);
-      await User.updateOne({username: formData.username}, {password: hashedPassword});
+      await User.updateOne({ username: formData.username }, { password: hashedPassword });
       // user.setPassword(formData.newPassword);
       res.redirect('/customer/login');
     } else {

@@ -110,7 +110,7 @@ class siteController {
       // prepare queries
       var condition = {};
 
-      if (req.query.condition === undefined){
+      if (req.query.condition === undefined) {
         console.log("condition is empty")
       } else {
         condition = JSON.parse(req.query.condition);
@@ -119,12 +119,12 @@ class siteController {
 
       var sortBy = {};
 
-      if (req.query.sortBy === undefined){
+      if (req.query.sortBy === undefined) {
         console.log('sort is empty');
       } else {
-        if(req.query.sortBy.includes("purchase")){
+        if (req.query.sortBy.includes("purchase")) {
           console.log('redirect purchase')
-          this.purchaseAscSort({condition: condition, page: req.query.page},res,next);
+          this.purchaseAscSort({ condition: condition, page: req.query.page }, res, next);
           // res.redirect("./products/purchase-asc");
           return;
         }
@@ -134,19 +134,19 @@ class siteController {
 
       var page = parseInt(req.query.page);
       if (page < 1) page = 1;
-    
+
       var pagingFlag = 0;
 
-      if (page === 1){
+      if (page === 1) {
         pagingFlag = -1;
       }
 
       //checking user or product
       if (req.query.getall == 'users') {
-        
+
         var count = await User.countDocuments(condition);
         console.log(count);
-        if (page * itemPerPage >= count){
+        if (page * itemPerPage >= count) {
           page = Math.ceil(count / itemPerPage);
           if (pagingFlag === -1) {
             pagingFlag = 2;
@@ -155,38 +155,42 @@ class siteController {
 
         var skip = (page - 1) * itemPerPage;
 
-        await User.find(condition).limit(itemPerPage).skip(skip).collation({locale:'vi',strength: 2}).sort(sortBy)
+        await User.find(condition).limit(itemPerPage).skip(skip).collation({ locale: 'vi', strength: 2 }).sort(sortBy)
           .then(users => {
-            res.json({ users: multipleMongooseToObject(users), titleUsers: 'All users', 
-            page: page, pagingFlag: pagingFlag});
-          })
-      } else 
-      if (req.query.getall === 'products') {
-        
-        var count = await Product.countDocuments(condition);
-        console.log(count);
-        if (page * itemPerPage >= count){
-          page = Math.ceil(count / itemPerPage);
-          if (pagingFlag === -1) {
-            pagingFlag = 2;
-          } else pagingFlag = 1;
-        }
-        console.log(pagingFlag);
-
-        var skip = (page - 1) * itemPerPage;
-
-        await Product.find(condition).limit(itemPerPage).skip(skip).collation({locale:'vi',strength: 2}).sort(sortBy).lean()
-          .then(products => {
-            products = products.map((ele) => {
-              return {
-                ...ele,
-                category: Object.keys(ele).filter((k) => { return ele[k] === true; })
-              }
+            res.json({
+              users: multipleMongooseToObject(users), titleUsers: 'All users',
+              page: page, pagingFlag: pagingFlag
             });
-            res.json({ products: products, titleProducts: 'All products',
-            page: page, pagingFlag: pagingFlag });
           })
-      }
+      } else
+        if (req.query.getall === 'products') {
+
+          var count = await Product.countDocuments(condition);
+          console.log(count);
+          if (page * itemPerPage >= count) {
+            page = Math.ceil(count / itemPerPage);
+            if (pagingFlag === -1) {
+              pagingFlag = 2;
+            } else pagingFlag = 1;
+          }
+          console.log(pagingFlag);
+
+          var skip = (page - 1) * itemPerPage;
+
+          await Product.find(condition).limit(itemPerPage).skip(skip).collation({ locale: 'vi', strength: 2 }).sort(sortBy).lean()
+            .then(products => {
+              products = products.map((ele) => {
+                return {
+                  ...ele,
+                  category: Object.keys(ele).filter((k) => { return ele[k] === true; })
+                }
+              });
+              res.json({
+                products: products, titleProducts: 'All products',
+                page: page, pagingFlag: pagingFlag
+              });
+            })
+        }
 
     } else {
       console.log('render');
@@ -204,7 +208,7 @@ class siteController {
     }
   }
 
-  
+
   // products/purchase
   async purchaseAscSort(req, res, next) {
 
@@ -213,7 +217,7 @@ class siteController {
     var condition = req.condition;
     var pagingFlag = 0;
 
-    if (page == 1){
+    if (page == 1) {
       pagingFlag = -1;
     }
 
@@ -222,7 +226,7 @@ class siteController {
     var count = await Product.countDocuments(condition);
     console.log(count);
 
-    if (page * itemPerPage >= count){
+    if (page * itemPerPage >= count) {
       page = Math.ceil(count / itemPerPage);
 
       if (pagingFlag === -1) {
@@ -254,8 +258,10 @@ class siteController {
             category: Object.keys(ele).filter((k) => { return ele[k] === true; })
           }
         });
-        res.json({ products: products, titleProducts: 'All products',
-        page: page, pagingFlag: pagingFlag });
+        res.json({
+          products: products, titleProducts: 'All products',
+          page: page, pagingFlag: pagingFlag
+        });
       })
     console.log('Stop');
     return;
@@ -407,7 +413,11 @@ class siteController {
 
   //[GET] /login
   login(req, res, next) {
-    res.render('admin/login', { layout: 'admin/customSignin' });
+    let messFailed = "";
+    if (req.query.status === 'failed') {
+      messFailed = 'Wrong username or password.';
+    }
+    res.render('admin/login', { layout: 'admin/customSignin', messFailed });
   }
 
   //[GET] /signup

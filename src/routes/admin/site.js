@@ -8,7 +8,7 @@ const siteController = require('../../app/adminControllers/siteController');
 //Login
 router.get('/login', siteController.login);
 router.post('/login',
-    passport.authenticate('local-login', { failureRedirect: './login' }),
+    passport.authenticate('local-login', { failureRedirect: './login?status=failed' }),
     function (req, res) {
         console.log("redirecting");
         res.redirect('./dashboard');

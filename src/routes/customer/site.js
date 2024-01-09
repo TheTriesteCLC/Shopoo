@@ -10,7 +10,7 @@ const siteController = require('../../app/customerControllers/siteController');
 //Login
 router.get('/login', siteController.login);
 router.post('/login',
-    passport.authenticate('local-login', { failureRedirect: './login' }),
+    passport.authenticate('local-login', { failureRedirect: './login?status=failed' }),
     function (req, res) {
         console.log("redirecting");
         res.redirect('./protected');
@@ -45,7 +45,7 @@ router.post('/signup',
 
         //Create mailrequest
         let mailRequest = getMailOptions(email, link);
-        
+
         //Send mail
         return getTransport().sendMail(mailRequest, (error) => {
             if (error) {
@@ -90,7 +90,7 @@ router.get('/order/', isLoggedIn, siteController.order);
 router.get('/thankyou', isLoggedIn, siteController.thankyou);
 router.get('/contact', siteController.contact);
 router.get('/elements', siteController.elements);
-router.get('/about',siteController.about);
+router.get('/about', siteController.about);
 router.get('/home', siteController.home);
 router.get('/', siteController.index);
 
@@ -103,10 +103,10 @@ function isLoggedIn(req, res, next) {
             console.log("is Active");
             return next();
         } else
-        if (req.user.status === "Pending") { // is Pending
-            console.log("is Pending")
-            res.redirect('/customer/activate');
-        } else console.log("is Banned");
+            if (req.user.status === "Pending") { // is Pending
+                console.log("is Pending")
+                res.redirect('/customer/activate');
+            } else console.log("is Banned");
     } else {
         console.log("is not authenticated")
         // is not authenticated
@@ -115,7 +115,7 @@ function isLoggedIn(req, res, next) {
 
 }
 
-function isPending(req, res, next){
+function isPending(req, res, next) {
     if (req.isAuthenticated()) { // is authenticated
         if (req.user.status === "Pending") {
             return next();
