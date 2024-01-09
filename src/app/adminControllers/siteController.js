@@ -610,7 +610,7 @@ class siteController {
     };
 
     const newProduct = new Product(formData);
-    newProduct.image = "null";
+    // newProduct.image = "null";
     newProduct.save();
     // newProduct
     console.log(newProduct);
