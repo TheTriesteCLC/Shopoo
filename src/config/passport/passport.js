@@ -1,5 +1,5 @@
 var LocalStrategy = require('passport-local').Strategy;
-var bcrypt = require('bcrypt'); 
+var bcrypt = require('bcryptjs'); 
 var Account;
 
 module.exports = function(passport) {
