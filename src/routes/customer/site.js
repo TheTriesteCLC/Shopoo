@@ -88,9 +88,6 @@ router.get('/order/', isLoggedIn, siteController.order);
 
 //Trivial path
 router.get('/thankyou', isLoggedIn, siteController.thankyou);
-router.get('/contact', siteController.contact);
-router.get('/elements', siteController.elements);
-router.get('/about', siteController.about);
 router.get('/home', siteController.home);
 router.get('/', siteController.index);
 

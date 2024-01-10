@@ -18,21 +18,6 @@ class siteController {
     res.render('customer/home', { layout: 'customer/main' });
   }
 
-  //[GET] /about
-  about(req, res) {
-    res.render('customer/about', { layout: 'customer/main' });
-  }
-
-  //[GET] /elements
-  elements(req, res) {
-    res.render('customer/elements', { layout: 'customer/main' });
-  }
-
-  //[GET] /contact
-  contact(req, res) {
-    res.render('customer/contact', { layout: 'customer/main' });
-  }
-
   //[GET] /checkout/:slug
   async checkout(req, res, next) {
     await User.findOne({ username: req.user.username }).lean()
