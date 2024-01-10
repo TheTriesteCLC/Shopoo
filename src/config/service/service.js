@@ -24,15 +24,15 @@ exports.generateToken = (email) => {
 
 exports.getMailOptions = (email, link) => {
   let body = `
-  <h2>Hey ${email}</h2>
-  <p>Here's the special magic link you requested:</p>
+  <h2>Hey ${email},</h2>
+  <p>Here's the link to activate your account:</p>
   <p>${link}</p>
-  <p>Please note that for added security this link becomes invalid after 1 hour</p>
-  <p>Stay Jiggy</p>`;
+  <p>Please note that this link becomes invalid after 1 hour.</p>
+  <p>Thank you for using our services.</p>`;
 
   return {
     body,
-    subject: "Account verify",
+    subject: "Shopoo account verify",
     to: email,
     html: body,
     from: emailAddr,
